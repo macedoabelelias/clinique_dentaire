@@ -271,35 +271,28 @@
 
         <!-- LOGO -->
 
-        <div class="card shadow-sm mb-4">
+<div class="card shadow-sm mb-4">
 
-            <div class="card-header">
+    <div class="card-header">
+        Logo da Clínica
+    </div>
 
-                Logo da Clínica
+    <div class="card-body">
 
-            </div>
+        <div class="text-center mb-3">
 
-            <div class="card-body">
-
-                {% if config.logo %}
-
-                    <img
-                        src="{{ config.logo.url }}"
-                        style="max-height:120px;"
-                        class="mb-3"
-                    >
-
-                {% endif %}
-
-                <input
-                    type="file"
-                    name="logo"
-                    class="form-control"
-                >
-
-            </div>
+            <img
+                src="{% static 'img/logo_odonto2.png' %}"
+                alt="Logo Clinique Dentaire"
+                style="max-height:120px; max-width:100%;"
+                class="img-fluid"
+            >
 
         </div>
+
+    </div>
+
+</div>
 
         <!-- OBSERVAÇÃO PADRÃO -->
 

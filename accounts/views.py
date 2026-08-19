@@ -6041,6 +6041,7 @@ def excluir_orcamento(request, id):
 # =========================================
 
 @login_required(login_url='/')
+@permissao_required("convenios", "visualizar")
 def convenios(request):
 
     convenios = (
@@ -6052,6 +6053,21 @@ def convenios(request):
     form = ConvenioForm()
 
     if request.method == 'POST':
+
+        # =========================================
+        # PERMISSÃO PARA INSERIR
+        # =========================================
+
+        if not tem_permissao(
+            request.user,
+            "convenios",
+            "inserir"
+        ):
+            messages.error(
+                request,
+                "Você não possui permissão para cadastrar convênios."
+            )
+            return redirect("convenios")
 
         form = ConvenioForm(request.POST)
 
@@ -6074,13 +6090,9 @@ def convenios(request):
     }
 
     return render(
-
         request,
-
         'accounts/convenios.html',
-
         context
-
     )
 
 
@@ -6089,6 +6101,7 @@ def convenios(request):
 # =========================================
 
 @login_required(login_url='/')
+@permissao_required("convenios", "editar")
 def editar_convenio(request, id):
 
     convenio = get_object_or_404(
@@ -6099,11 +6112,8 @@ def editar_convenio(request, id):
     if request.method == 'POST':
 
         form = ConvenioForm(
-
             request.POST,
-
             instance=convenio
-
         )
 
         if form.is_valid():
@@ -6137,13 +6147,9 @@ def editar_convenio(request, id):
     }
 
     return render(
-
         request,
-
         'accounts/convenios.html',
-
         context
-
     )
 
 
@@ -6152,6 +6158,7 @@ def editar_convenio(request, id):
 # =========================================
 
 @login_required(login_url='/')
+@permissao_required("convenios", "excluir")
 def excluir_convenio(request, id):
 
     convenio = get_object_or_404(
@@ -7385,7 +7392,7 @@ def imprimir_documento(request, id):
         settings.BASE_DIR,
         'static',
         'img',
-        'logo.png'
+       'logo_odonto2.png'
     )
 
     if os.path.exists(logo_path):
