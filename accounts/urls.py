@@ -307,6 +307,12 @@ path(
         name='upload_anexo'
     ),
 
+    path(
+        'anexos/<int:anexo_id>/excluir/',
+        views.excluir_anexo_paciente,
+        name='excluir_anexo_paciente'
+    ),
+
     # =========================================
     # ORÇAMENTO
     # =========================================

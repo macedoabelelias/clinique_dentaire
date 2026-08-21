@@ -85,4 +85,82 @@ Novo Lead
 
 </div>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    function aplicarMascaraTelefone(input) {
+
+        if (!input) {
+            return;
+        }
+
+        input.setAttribute("maxlength", "15");
+        input.setAttribute("inputmode", "numeric");
+
+        input.addEventListener("input", function () {
+
+            let valor = this.value.replace(/\D/g, "");
+
+            if (valor.length > 11) {
+                valor = valor.substring(0, 11);
+            }
+
+            if (valor.length <= 10) {
+
+                // (11) 9999-9999
+                valor = valor.replace(
+                    /^(\d{2})(\d)/,
+                    "($1) $2"
+                );
+
+                valor = valor.replace(
+                    /(\d{4})(\d)/,
+                    "$1-$2"
+                );
+
+            } else {
+
+                // (11) 99999-9999
+                valor = valor.replace(
+                    /^(\d{2})(\d)/,
+                    "($1) $2"
+                );
+
+                valor = valor.replace(
+                    /(\d{5})(\d)/,
+                    "$1-$2"
+                );
+
+            }
+
+            this.value = valor;
+
+        });
+
+    }
+
+
+    // =========================================
+    // TELEFONE
+    // =========================================
+
+    aplicarMascaraTelefone(
+        document.querySelector('[name="telefone"]')
+    );
+
+
+    // =========================================
+    // WHATSAPP
+    // =========================================
+
+    aplicarMascaraTelefone(
+        document.querySelector('[name="whatsapp"]')
+    );
+
+});
+
+</script>
+
+
 {% endblock %}

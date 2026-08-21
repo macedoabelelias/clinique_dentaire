@@ -111,45 +111,41 @@ CONTENT BOTTOM - ACD
 
         </div>
 
-        <div class="material-item">
+        {% for produto in lista_produtos_criticos %}
 
-            <span>Luvas P</span>
+<div class="material-item">
 
-            <span class="material-alerta">
-                Baixo
-            </span>
+    <span>
+        {{ produto.nome }}
+    </span>
 
-        </div>
+    {% if produto.estoque == 0 %}
 
-        <div class="material-item">
+        <span class="material-critico">
+            Crítico
+        </span>
 
-            <span>Máscaras</span>
+    {% else %}
 
-            <span class="material-alerta">
-                Baixo
-            </span>
+        <span class="material-alerta">
+            Baixo
+        </span>
 
-        </div>
+    {% endif %}
 
-        <div class="material-item">
+</div>
 
-            <span>Anestésico</span>
+{% empty %}
 
-            <span class="material-critico">
-                Crítico
-            </span>
+<div class="material-item">
 
-        </div>
+    <span class="text-muted">
+        Nenhum material em baixa.
+    </span>
 
-        <div class="material-item">
+</div>
 
-            <span>Sugador</span>
-
-            <span class="material-alerta">
-                Baixo
-            </span>
-
-        </div>
+{% endfor %}
 
     </div>
 

@@ -1,11 +1,6 @@
 <style>
 
 /* =========================================================
-   POSICIONAMENTO CLÍNICO DOS DENTES
-   ========================================================= */
-
-
-/* =========================================================
    BASE — IMAGEM DOS DENTES
    ========================================================= */
 
@@ -1348,6 +1343,212 @@
         10px;
 }
 
+/* =========================================================
+   RADIOGRAFIAS E FOTOS — ODONTOGRAMA
+   ========================================================= */
+
+.anexos-odontograma-card {
+
+    height: 410px !important;
+
+    min-height: 410px !important;
+
+    max-height: 410px !important;
+
+    overflow: hidden !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    padding: 16px !important;
+
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.anexos-odontograma-card .card-header {
+
+    flex: 0 0 auto !important;
+
+    margin-bottom: 10px !important;
+
+}
+
+
+/* =========================================================
+   ÁREA INTERNA — RADIOGRAFIAS E FOTOS
+   ========================================================= */
+
+.anexos-odontograma-body {
+
+    flex: 1 1 auto !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow-y: auto !important;
+
+    overflow-x: hidden !important;
+
+    padding-right: 6px !important;
+
+    padding-bottom: 8px !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    gap: 10px !important;
+
+}
+
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+.anexos-odontograma-body::-webkit-scrollbar {
+
+    width: 6px;
+
+}
+
+.anexos-odontograma-body::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+.anexos-odontograma-body::-webkit-scrollbar-thumb {
+
+    background: #c4ccd6;
+
+    border-radius: 10px;
+
+}
+
+
+/* =========================================================
+   CADA ANEXO
+   ========================================================= */
+
+.anexo-odontograma-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px;
+
+    min-height: 92px;
+
+    border: 1px solid #e1e7ef;
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    flex: 0 0 auto;
+
+}
+
+
+/* =========================================================
+   LINK DA IMAGEM
+   ========================================================= */
+
+.anexo-odontograma-item a {
+
+    display: block;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =========================================================
+   MINIATURA
+   ========================================================= */
+
+.anexo-odontograma-thumb {
+
+    width: 100px;
+
+    height: 72px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+
+    border: 1px solid #d5dde8;
+
+    background: #f3f6fa;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.anexo-odontograma-thumb:hover {
+
+    transform: scale(1.04);
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.15);
+
+}
+
+
+/* =========================================================
+   INFORMAÇÕES
+   ========================================================= */
+
+.anexo-odontograma-info {
+
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 4px;
+
+}
+
+
+.anexo-odontograma-info strong {
+
+    font-size: 12px;
+
+    line-height: 16px;
+
+    color: #111827;
+
+}
+
+
+.anexo-odontograma-info small {
+
+    font-size: 10px;
+
+    color: #6b7280;
+
+}
 
 /* =========================================================
    RESPONSIVO
@@ -2248,61 +2449,67 @@ LAYOUT
 
         </div>
 
-        <div class="historico-card">
+        <!-- =========================================
+CARD RADIOGRAFIAS E FOTOS
+========================================= -->
 
-            <div class="historico-header">
+<div class="historico-card anexos-odontograma-card">
 
-                <h5>
+    <div class="historico-header">
 
-                    📚 Histórico
+        <h5>
+            🖼️ Radiografias e Fotos
+        </h5>
 
-                </h5>
+    </div>
+
+    <div class="historico-body anexos-odontograma-body">
+
+        {% for anexo in anexos_imagem %}
+
+        <div class="anexo-odontograma-item">
+
+            <a
+                href="{{ anexo.arquivo.url }}"
+                target="_blank"
+                title="Visualizar {{ anexo.descricao }}"
+            >
+
+                <img
+                    src="{{ anexo.arquivo.url }}"
+                    class="anexo-odontograma-thumb"
+                    alt="{{ anexo.descricao }}"
+                >
+
+            </a>
+
+            <div class="anexo-odontograma-info">
+
+                <strong>
+                    {{ anexo.descricao }}
+                </strong>
+
+                <small>
+                    {{ anexo.criado_em|date:"d/m/Y" }}
+                </small>
 
             </div>
 
-            <div class="historico-body">
+        </div>
 
-                {% for tratamento in historico_tratamentos %}
+        {% empty %}
 
-                <div class="historico-item">
+        <div class="historico-item">
 
-                    <strong>
+            Nenhuma radiografia ou foto cadastrada.
 
-                        {{ tratamento.titulo }}
+        </div>
 
-                    </strong>
+        {% endfor %}
 
-                    <br>
+    </div>
 
-                    <small>
-
-                        Início:
-                        {{ tratamento.data_inicio|date:"d/m/Y" }}
-
-                    </small>
-
-                    <br>
-
-                    <small>
-
-                        Encerrado:
-                        {{ tratamento.data_encerramento|date:"d/m/Y" }}
-
-                    </small>
-
-                </div>
-
-                {% empty %}
-
-                <div class="historico-item">
-
-                    Nenhum tratamento encerrado.
-
-                </div>
-
-                {% endfor %}
-
-            </div> <!-- historico-body -->
+</div>
 
         </div> <!-- historico-card -->
 

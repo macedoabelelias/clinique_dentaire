@@ -3169,43 +3169,146 @@ class Produto(models.Model):
 
 class Compra(models.Model):
 
+    # =========================================
+    # FORMAS DE PAGAMENTO
+    # =========================================
+
+    FORMA_PAGAMENTO_CHOICES = [
+
+        ('DINHEIRO', 'Dinheiro'),
+
+        ('PIX', 'PIX'),
+
+        ('DEBITO', 'Cartão de Débito'),
+
+        ('CREDITO', 'Cartão de Crédito'),
+
+        ('BOLETO', 'Boleto'),
+
+        ('TRANSFERENCIA', 'Transferência Bancária'),
+
+        ('CHEQUE', 'Cheque'),
+
+        ('OUTRO', 'Outro'),
+
+    ]
+
+    # =========================================
+    # FORNECEDOR
+    # =========================================
+
     fornecedor = models.ForeignKey(
+
         Fornecedor,
+
         on_delete=models.PROTECT
+
     )
+
+    # =========================================
+    # DADOS DA COMPRA
+    # =========================================
 
     data_compra = models.DateField()
 
     numero_nf = models.CharField(
+
         max_length=50,
+
         blank=True,
+
         null=True
+
     )
 
     observacoes = models.TextField(
+
         blank=True,
+
         null=True
+
     )
 
     arquivo_nf = models.FileField(
+
         upload_to='notas_fiscais/',
+
         blank=True,
+
         null=True
+
     )
+
+    # =========================================
+    # VALOR TOTAL
+    # =========================================
 
     valor_total = models.DecimalField(
+
         max_digits=12,
+
         decimal_places=2,
+
         default=0
+
     )
 
-    criado_em = models.DateTimeField(
-        auto_now_add=True
+    # =========================================
+    # CONDIÇÃO DE PAGAMENTO
+    # =========================================
+
+    forma_pagamento = models.CharField(
+
+        max_length=30,
+
+        choices=FORMA_PAGAMENTO_CHOICES,
+
+        default='PIX'
+
     )
+
+    entrada = models.DecimalField(
+
+        max_digits=12,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+
+    parcelas = models.PositiveIntegerField(
+
+        default=1
+
+    )
+
+    primeiro_vencimento = models.DateField(
+
+        blank=True,
+
+        null=True
+
+    )
+
+    # =========================================
+    # CONTROLE
+    # =========================================
+
+    criado_em = models.DateTimeField(
+
+        auto_now_add=True
+
+    )
+
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
 
     def __str__(self):
 
-        return f'Compra #{self.id}'    
+        return f'Compra #{self.id}'
+
 
 # =========================================
 # ITENS DA COMPRA
@@ -3214,34 +3317,51 @@ class Compra(models.Model):
 class ItemCompra(models.Model):
 
     compra = models.ForeignKey(
+
         Compra,
+
         on_delete=models.CASCADE,
+
         related_name='itens'
+
     )
 
     produto = models.ForeignKey(
+
         Produto,
+
         on_delete=models.PROTECT
+
     )
 
     quantidade = models.PositiveIntegerField()
 
     valor_unitario = models.DecimalField(
+
         max_digits=10,
+
         decimal_places=2
+
     )
 
     subtotal = models.DecimalField(
+
         max_digits=12,
+
         decimal_places=2,
+
         default=0
+
     )
 
     def save(self, *args, **kwargs):
 
         self.subtotal = (
+
             self.quantidade *
+
             self.valor_unitario
+
         )
 
         super().save(*args, **kwargs)
@@ -3249,9 +3369,285 @@ class ItemCompra(models.Model):
     def __str__(self):
 
         return (
+
             f'{self.produto.nome} '
+
             f'({self.quantidade})'
+
         )
+
+
+# =========================================
+# CONTAS A PAGAR
+# =========================================
+
+class ContaPagar(models.Model):
+
+    STATUS_CHOICES = [
+
+        ('PENDENTE', 'Pendente'),
+
+        ('PAGO', 'Pago'),
+
+        ('VENCIDO', 'Vencido')
+
+    ]
+
+    # =========================================
+    # ORIGEM
+    # =========================================
+
+    fornecedor = models.ForeignKey(
+
+        Fornecedor,
+
+        on_delete=models.PROTECT,
+
+        related_name='contas_pagar',
+
+        blank=True,
+
+        null=True
+
+    )
+
+    profissional = models.ForeignKey(
+
+        PerfilUsuario,
+
+        on_delete=models.PROTECT,
+
+        related_name='contas_pagar',
+
+        blank=True,
+
+        null=True
+
+    )
+
+    compra = models.ForeignKey(
+
+        Compra,
+
+        on_delete=models.SET_NULL,
+
+        blank=True,
+
+        null=True,
+
+        related_name='contas_pagar'
+
+    )
+
+    # =========================================
+    # CONTA A RECEBER QUE GEROU A COMISSÃO
+    # =========================================
+
+    conta_receber = models.OneToOneField(
+
+        'ContaReceber',
+
+        on_delete=models.SET_NULL,
+
+        blank=True,
+
+        null=True,
+
+        related_name='comissao'
+
+    )
+
+    # =========================================
+    # DADOS DA CONTA
+    # =========================================
+
+    descricao = models.CharField(
+
+        max_length=255
+
+    )
+
+    valor = models.DecimalField(
+
+        max_digits=12,
+
+        decimal_places=2
+
+    )
+
+    # =========================================
+    # PARCELAMENTO
+    # =========================================
+
+    parcela = models.PositiveIntegerField(
+
+        default=1
+
+    )
+
+    total_parcelas = models.PositiveIntegerField(
+
+        default=1
+
+    )
+
+    # =========================================
+    # FORMA DE PAGAMENTO
+    # =========================================
+
+    forma_pagamento = models.CharField(
+
+        max_length=50,
+
+        blank=True,
+
+        null=True
+
+    )
+
+    # =========================================
+    # DATAS
+    # =========================================
+
+    vencimento = models.DateField()
+
+    data_pagamento = models.DateField(
+
+        blank=True,
+
+        null=True
+
+    )
+
+    # =========================================
+    # STATUS
+    # =========================================
+
+    status = models.CharField(
+
+        max_length=20,
+
+        choices=STATUS_CHOICES,
+
+        default='PENDENTE'
+
+    )
+
+    # =========================================
+    # OBSERVAÇÃO
+    # =========================================
+
+    observacao = models.TextField(
+
+        blank=True,
+
+        null=True
+
+    )
+
+    # =========================================
+    # CONTROLE
+    # =========================================
+
+    criado_em = models.DateTimeField(
+
+        auto_now_add=True
+
+    )
+
+    atualizado_em = models.DateTimeField(
+
+        auto_now=True
+
+    )
+
+    # =========================================
+    # CONFIGURAÇÃO
+    # =========================================
+
+    class Meta:
+
+        ordering = [
+
+            'vencimento'
+
+        ]
+
+        verbose_name = 'Conta a Pagar'
+
+        verbose_name_plural = 'Contas a Pagar'
+
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
+
+    def __str__(self):
+
+        if self.profissional:
+
+            destino = (
+                self.profissional.usuario.get_full_name()
+            )
+
+            if not destino:
+
+                destino = (
+                    self.profissional.usuario.username
+                )
+
+        elif self.fornecedor:
+
+            destino = self.fornecedor.nome
+
+        else:
+
+            destino = "Sem destino"
+
+        return (
+
+            f"{destino} - "
+
+            f"{self.descricao} - "
+
+            f"R$ {self.valor}"
+
+        )
+
+    # =========================================
+    # VERIFICAR VENCIMENTO
+    # =========================================
+
+    @property
+    def esta_vencida(self):
+
+        from datetime import date
+
+        return (
+
+            self.status != 'PAGO'
+
+            and
+
+            self.vencimento < date.today()
+
+        )
+
+    # =========================================
+    # ORIGEM
+    # =========================================
+
+    @property
+    def origem(self):
+
+        if self.profissional:
+
+            return "COMISSÃO"
+
+        if self.fornecedor:
+
+            return "FORNECEDOR"
+
+        return "-"
     
 
 # =========================================
@@ -3372,203 +3768,7 @@ class LoteProduto(models.Model):
 
         )
 
-
-# =========================================
-# CONTAS A PAGAR
-# =========================================
-
-class ContaPagar(models.Model):
-
-    STATUS_CHOICES = [
-
-        ('PENDENTE', 'Pendente'),
-        ('PAGO', 'Pago'),
-        ('VENCIDO', 'Vencido')
-
-    ]
-
-    # =========================================
-    # ORIGEM
-    # =========================================
-
-    fornecedor = models.ForeignKey(
-
-        Fornecedor,
-
-        on_delete=models.PROTECT,
-
-        related_name='contas_pagar',
-
-        blank=True,
-
-        null=True
-
-    )
-
-    profissional = models.ForeignKey(
-
-        PerfilUsuario,
-
-        on_delete=models.PROTECT,
-
-        related_name='contas_pagar',
-
-        blank=True,
-
-        null=True
-
-    )
-
-    compra = models.ForeignKey(
-
-        Compra,
-
-        on_delete=models.SET_NULL,
-
-        blank=True,
-
-        null=True,
-
-        related_name='contas_pagar'
-
-    )
-
-    # =========================================
-    # CONTA A RECEBER QUE GEROU A COMISSÃO
-    # =========================================
-
-    conta_receber = models.OneToOneField(
-
-        'ContaReceber',
-
-        on_delete=models.SET_NULL,
-
-        blank=True,
-
-        null=True,
-
-        related_name='comissao'
-
-    )
-
-    # =========================================
-    # DADOS DA CONTA
-    # =========================================
-
-    descricao = models.CharField(
-
-        max_length=255
-
-    )
-
-    valor = models.DecimalField(
-
-        max_digits=12,
-
-        decimal_places=2
-
-    )
-
-    vencimento = models.DateField()
-
-    data_pagamento = models.DateField(
-
-        blank=True,
-
-        null=True
-
-    )
-
-    status = models.CharField(
-
-        max_length=20,
-
-        choices=STATUS_CHOICES,
-
-        default='PENDENTE'
-
-    )
-
-    observacao = models.TextField(
-
-        blank=True,
-
-        null=True
-
-    )
-
-    criado_em = models.DateTimeField(
-
-        auto_now_add=True
-
-    )
-
-    atualizado_em = models.DateTimeField(
-
-        auto_now=True
-
-    )
-
-    class Meta:
-
-        ordering = [
-
-            'vencimento'
-
-        ]
-
-        verbose_name = 'Conta a Pagar'
-
-        verbose_name_plural = 'Contas a Pagar'
-
-    def __str__(self):
-
-        if self.profissional:
-
-            destino = self.profissional.usuario.get_full_name()
-
-            if not destino:
-
-                destino = self.profissional.usuario.username
-
-        elif self.fornecedor:
-
-            destino = self.fornecedor.nome
-
-        else:
-
-            destino = "Sem destino"
-
-        return f"{destino} - {self.descricao} - R$ {self.valor}"
-
-    @property
-    def esta_vencida(self):
-
-        from datetime import date
-
-        return (
-
-            self.status != 'PAGO'
-
-            and
-
-            self.vencimento < date.today()
-
-        )
-
-    @property
-    def origem(self):
-
-        if self.profissional:
-
-            return "COMISSÃO"
-
-        if self.fornecedor:
-
-            return "FORNECEDOR"
-
-        return "-"
-        
+           
 # =========================================
 # CONTAS A RECEBER
 # =========================================

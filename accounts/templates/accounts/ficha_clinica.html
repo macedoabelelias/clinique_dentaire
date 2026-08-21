@@ -252,41 +252,63 @@ COLUNA DIREITA
 
                 {% for anexo in anexos %}
 
-                <div class="timeline-item">
+<div class="timeline-item">
 
-                    <div class="timeline-dot"></div>
+    <div class="timeline-dot"></div>
 
-                    <div class="timeline-content">
+    <div class="timeline-content">
 
-                        <div class="timeline-top">
+        <div class="timeline-top">
 
-                            <strong>
-                                {{ anexo.descricao }}
-                            </strong>
+            <strong>
+                {{ anexo.descricao }}
+            </strong>
 
-                            <span>
-                                {{ anexo.criado_em|date:"d/m/Y H:i" }}
-                            </span>
+            <span>
+                {{ anexo.criado_em|date:"d/m/Y H:i" }}
+            </span>
 
-                        </div>
+        </div>
 
-                        <a href="{{ anexo.arquivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
-                            Visualizar Arquivo
-                        </a>
+        <div class="mt-2 d-flex gap-2">
 
-                    </div>
+            <!-- VISUALIZAR -->
+            <a
+                href="{{ anexo.arquivo.url }}"
+                target="_blank"
+                class="btn btn-sm btn-outline-primary"
+            >
+                <i class="fa-solid fa-eye"></i>
+                Visualizar Arquivo
+            </a>
 
-                </div>
+            <!-- EXCLUIR -->
+            <a
+                href="{% url 'excluir_anexo_paciente' anexo.id %}"
+                class="btn btn-sm btn-outline-danger"
+                onclick="return confirm('Deseja realmente excluir este anexo?');"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Excluir
+            </a>
 
-                {% empty %}
+        </div>
 
-                <div class="empty-timeline">
-                    Nenhum anexo cadastrado.
-                </div>
+    </div>
 
-                {% endfor %}
+</div>
 
-            </div>
+{% empty %}
+
+<div class="empty-timeline">
+
+    Nenhum anexo cadastrado.
+
+</div>
+
+{% endfor %}
+
+</div>
 
             <!-- DOCUMENTOS -->
             <div class="tab-content" id="tab-documentos" style="display:none;">

@@ -18,214 +18,417 @@
 
     </div>
 
+
     <div class="card shadow-sm">
 
         <div class="card-body">
 
             <form method="POST" enctype="multipart/form-data">
 
-    {% csrf_token %}
+                {% csrf_token %}
 
-    <!-- DADOS DA COMPRA -->
 
-    <div class="row">
+                <!-- =========================================
+                     DADOS DA COMPRA
+                     ========================================= -->
 
-        <div class="col-md-4 mb-3">
+                <div class="row">
 
-            <label class="form-label">
+                    <div class="col-md-4 mb-3">
 
-                Fornecedor
+                        <label class="form-label">
 
-            </label>
+                            Fornecedor
 
-            <select
-                name="fornecedor"
-                class="form-select"
-                required
-            >
+                        </label>
 
-                <option value="">
+                        <select
+                            name="fornecedor"
+                            class="form-select"
+                            required
+                        >
 
-                    Selecione
+                            <option value="">
 
-                </option>
+                                Selecione
 
-                {% for fornecedor in fornecedores %}
+                            </option>
 
-                <option value="{{ fornecedor.id }}">
+                            {% for fornecedor in fornecedores %}
 
-                    {{ fornecedor.nome }}
+                            <option value="{{ fornecedor.id }}">
 
-                </option>
+                                {{ fornecedor.nome }}
 
-                {% endfor %}
+                            </option>
 
-            </select>
+                            {% endfor %}
 
-        </div>
+                        </select>
 
-        <div class="col-md-2 mb-3">
+                    </div>
 
-            <label class="form-label">
 
-                Data da Compra
+                    <div class="col-md-2 mb-3">
 
-            </label>
+                        <label class="form-label">
 
-            <input
-                type="date"
-                name="data_compra"
-                class="form-control"
-                required
-            >
+                            Data da Compra
 
-        </div>
+                        </label>
 
-        <div class="col-md-3 mb-3">
+                        <input
+                            type="date"
+                            name="data_compra"
+                            class="form-control"
+                            required
+                        >
 
-            <label class="form-label">
+                    </div>
 
-                Vencimento
 
-            </label>
+                    <div class="col-md-3 mb-3">
 
-            <input
-                type="date"
-                name="vencimento"
-                class="form-control"
-                required
-            >
+                        <label class="form-label">
 
-        </div>
+                            Número da NF
 
-        <div class="col-md-3 mb-3">
+                        </label>
 
-            <label class="form-label">
+                        <input
+                            type="text"
+                            name="numero_nf"
+                            class="form-control"
+                        >
 
-                Número da NF
+                    </div>
 
-            </label>
 
-            <input
-                type="text"
-                name="numero_nf"
-                class="form-control"
-            >
+                    <div class="col-md-3 mb-3">
 
-        </div>
+                        <label class="form-label">
 
-    </div>
+                            Arquivo da NF
 
-    <div class="row">
+                        </label>
 
-        <div class="col-md-6 mb-3">
+                        <input
+                            type="file"
+                            name="arquivo_nf"
+                            class="form-control"
+                        >
 
-            <label class="form-label">
-
-                Arquivo da NF
-
-            </label>
-
-            <input
-                type="file"
-                name="arquivo_nf"
-                class="form-control"
-            >
-
-            <small class="text-muted">
-
-                PDF ou XML da nota fiscal
-
-            </small>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <label class="form-label">
-
-                Observações
-
-            </label>
-
-            <textarea
-                name="observacoes"
-                class="form-control"
-                rows="3"
-            ></textarea>
-
-        </div>
-
-    </div>
-
-    <hr>
-
-    <!-- PRODUTOS DA COMPRA -->
-
-    <h5 class="mb-3">
-
-        <i class="fa-solid fa-cart-shopping"></i>
-
-        Produtos da Compra
-
-    </h5>
-
-    <!-- ITENS DA COMPRA -->
-
-    <div class="mb-3">
-
-        <button
-            type="button"
-            class="btn btn-success"
-            onclick="adicionarItem()"
-        >
-
-            <i class="fa-solid fa-plus"></i>
-
-            Adicionar Produto
-
-        </button>
-
-    </div>
-
-    <div class="table-responsive">
-
-        <table class="table table-bordered">
-
-            <thead>
-
-                <tr>
-
-                    <th>Produto</th>
-
-                    <th width="120">
-                        Quantidade
-                    </th>
-
-                    <th width="180">
-                        Valor Unitário
-                    </th>
-
-                    <th width="180">
-                        Subtotal
-                    </th>
-
-                    <th width="80">
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="itens-compra">
-
-            </tbody>
-
-        </table>
-
-</div>
+                    </div>
 
                 </div>
+
+
+                <!-- =========================================
+                     CONDIÇÃO DE PAGAMENTO
+                     ========================================= -->
+
+                <hr>
+
+                <h5 class="mb-3">
+
+                    <i class="fa-solid fa-credit-card"></i>
+
+                    Condição de Pagamento
+
+                </h5>
+
+
+                <div class="row">
+
+                    <!-- FORMA DE PAGAMENTO -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Forma de Pagamento
+
+                        </label>
+
+                        <select
+                            name="forma_pagamento"
+                            id="forma_pagamento"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="PIX">
+
+                                PIX
+
+                            </option>
+
+                            <option value="DINHEIRO">
+
+                                Dinheiro
+
+                            </option>
+
+                            <option value="DEBITO">
+
+                                Cartão de Débito
+
+                            </option>
+
+                            <option value="CREDITO">
+
+                                Cartão de Crédito
+
+                            </option>
+
+                            <option value="BOLETO">
+
+                                Boleto
+
+                            </option>
+
+                            <option value="TRANSFERENCIA">
+
+                                Transferência Bancária
+
+                            </option>
+
+                            <option value="CHEQUE">
+
+                                Cheque
+
+                            </option>
+
+                            <option value="OUTRO">
+
+                                Outro
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ENTRADA -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Entrada
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+
+                                R$
+
+                            </span>
+
+                            <input
+                                type="number"
+                                name="entrada"
+                                id="entrada"
+                                class="form-control"
+                                value="0.00"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            Valor pago no ato da compra.
+
+                        </small>
+
+                    </div>
+
+
+                    <!-- PARCELAS -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Número de Parcelas
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="parcelas"
+                            id="parcelas"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                            step="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PRIMEIRO VENCIMENTO -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Primeiro Vencimento
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="primeiro_vencimento"
+                            id="primeiro_vencimento"
+                            class="form-control"
+                        >
+
+                        <small class="text-muted">
+
+                            Data da primeira parcela.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESUMO FINANCEIRO -->
+
+                <div
+                    id="resumo-pagamento"
+                    class="alert alert-light border"
+                >
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <strong>
+                                Total da Compra:
+                            </strong>
+
+                            <span id="resumo-total">
+                                R$ 0,00
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>
+                                Entrada:
+                            </strong>
+
+                            <span id="resumo-entrada">
+                                R$ 0,00
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>
+                                Saldo a Pagar:
+                            </strong>
+
+                            <span
+                                id="resumo-saldo"
+                                class="fw-bold"
+                            >
+                                R$ 0,00
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     PRODUTOS DA COMPRA
+                     ========================================= -->
+
+                <hr>
+
+                <h5 class="mb-3">
+
+                    <i class="fa-solid fa-cart-shopping"></i>
+
+                    Produtos da Compra
+
+                </h5>
+
+
+                <div class="mb-3">
+
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        onclick="adicionarItem()"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Adicionar Produto
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Produto
+                                </th>
+
+                                <th width="120">
+                                    Quantidade
+                                </th>
+
+                                <th width="180">
+                                    Valor Unitário
+                                </th>
+
+                                <th width="180">
+                                    Subtotal
+                                </th>
+
+                                <th width="80">
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="itens-compra">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- =========================================
+                     TOTAL
+                     ========================================= -->
 
                 <div class="row">
 
@@ -237,15 +440,24 @@
 
                         </label>
 
-                        <input type="text" id="total_compra" class="form-control fw-bold" readonly>
+                        <input
+                            type="text"
+                            id="total_compra"
+                            class="form-control fw-bold"
+                            value="0.00"
+                            readonly
+                        >
 
                     </div>
 
                 </div>
 
-                <hr>
 
-                <!-- OBSERVAÇÕES -->
+                <!-- =========================================
+                     OBSERVAÇÕES
+                     ========================================= -->
+
+                <hr>
 
                 <div class="mb-3">
 
@@ -255,24 +467,41 @@
 
                     </label>
 
-                    <textarea name="observacoes" rows="4" class="form-control"></textarea>
+                    <textarea
+                        name="observacoes"
+                        rows="4"
+                        class="form-control"
+                    ></textarea>
 
                 </div>
 
-                <div class="alert alert-warning">
 
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                <!-- =========================================
+                     AVISO
+                     ========================================= -->
 
-                    Nesta primeira versão será possível adicionar
-                    um produto por compra. Na próxima etapa
-                    implementaremos múltiplos itens e cálculo
-                    automático do total.
+                <div class="alert alert-info">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    Ao salvar, o sistema registrará a compra,
+                    atualizará o estoque e criará automaticamente
+                    as parcelas correspondentes em
+                    <strong>Contas a Pagar</strong>.
 
                 </div>
+
+
+                <!-- =========================================
+                     BOTÃO
+                     ========================================= -->
 
                 <div class="d-flex justify-content-end">
 
-                    <button type="submit" class="btn btn-primary">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
 
                         <i class="fa-solid fa-floppy-disk"></i>
 
@@ -290,91 +519,107 @@
 
 </div>
 
+
 <script>
+
+/* =========================================
+   ADICIONAR ITEM
+   ========================================= */
 
 function adicionarItem() {
 
     const linha = `
 
-    <tr>
+        <tr>
 
-        <td>
+            <td>
 
-            <select
-                name="produto[]"
-                class="form-control"
-                required>
+                <select
+                    name="produto[]"
+                    class="form-control"
+                    required
+                >
 
-                <option value="">
-                    Selecione
-                </option>
+                    <option value="">
+                        Selecione
+                    </option>
 
-                {% for produto in produtos %}
+                    {% for produto in produtos %}
 
-                <option value="{{ produto.id }}">
+                    <option value="{{ produto.id }}">
 
-                    {{ produto.nome }}
+                        {{ produto.nome }}
 
-                </option>
+                    </option>
 
-                {% endfor %}
+                    {% endfor %}
 
-            </select>
+                </select>
 
-        </td>
+            </td>
 
-        <td>
 
-            <input
-                type="number"
-                name="quantidade[]"
-                class="form-control quantidade"
-                value="1"
-                min="1">
+            <td>
 
-        </td>
+                <input
+                    type="number"
+                    name="quantidade[]"
+                    class="form-control quantidade"
+                    value="1"
+                    min="1"
+                    required
+                >
 
-        <td>
+            </td>
 
-            <input
-                type="number"
-                step="0.01"
-                name="valor_unitario[]"
-                class="form-control valor"
-                value="0">
 
-        </td>
+            <td>
 
-        <td>
+                <input
+                    type="number"
+                    step="0.01"
+                    name="valor_unitario[]"
+                    class="form-control valor"
+                    value="0.00"
+                    min="0"
+                    required
+                >
 
-            <input
-                type="text"
-                class="form-control subtotal"
-                readonly>
+            </td>
 
-        </td>
 
-        <td>
+            <td>
 
-            <button
-                type="button"
-                class="btn btn-danger"
-                onclick="removerItem(this)">
+                <input
+                    type="text"
+                    class="form-control subtotal"
+                    value="0.00"
+                    readonly
+                >
 
-                <i class="fa-solid fa-trash"></i>
+            </td>
 
-            </button>
 
-        </td>
+            <td>
 
-    </tr>
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    onclick="removerItem(this)"
+                >
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </td>
+
+        </tr>
 
     `;
 
     document
-        .getElementById(
-            'itens-compra'
-        )
+        .getElementById('itens-compra')
         .insertAdjacentHTML(
             'beforeend',
             linha
@@ -386,15 +631,27 @@ function adicionarItem() {
 
 }
 
-function removerItem(botao){
 
-    botao.closest('tr').remove();
+/* =========================================
+   REMOVER ITEM
+   ========================================= */
+
+function removerItem(botao) {
+
+    botao
+        .closest('tr')
+        .remove();
 
     calcularTotal();
 
 }
 
-function configurarEventos(){
+
+/* =========================================
+   EVENTOS
+   ========================================= */
+
+function configurarEventos() {
 
     document
         .querySelectorAll(
@@ -402,14 +659,18 @@ function configurarEventos(){
         )
         .forEach(campo => {
 
-            campo.oninput =
-                calcularTotal;
+            campo.oninput = calcularTotal;
 
         });
 
 }
 
-function calcularTotal(){
+
+/* =========================================
+   CALCULAR TOTAL
+   ========================================= */
+
+function calcularTotal() {
 
     let total = 0;
 
@@ -421,12 +682,16 @@ function calcularTotal(){
 
             const qtd =
                 parseFloat(
-                    linha.querySelector('.quantidade').value
+                    linha.querySelector(
+                        '.quantidade'
+                    ).value
                 ) || 0;
 
             const valor =
                 parseFloat(
-                    linha.querySelector('.valor').value
+                    linha.querySelector(
+                        '.valor'
+                    ).value
                 ) || 0;
 
             const subtotal =
@@ -441,6 +706,7 @@ function calcularTotal(){
 
         });
 
+
     document
         .getElementById(
             'total_compra'
@@ -448,11 +714,97 @@ function calcularTotal(){
         .value =
         total.toFixed(2);
 
+
+    atualizarResumo(
+        total
+    );
+
 }
+
+
+/* =========================================
+   RESUMO DO PAGAMENTO
+   ========================================= */
+
+function atualizarResumo(total) {
+
+    const entrada =
+        parseFloat(
+            document.getElementById(
+                'entrada'
+            ).value
+        ) || 0;
+
+    let saldo =
+        total - entrada;
+
+    if (saldo < 0) {
+
+        saldo = 0;
+
+    }
+
+
+    document.getElementById(
+        'resumo-total'
+    ).textContent =
+        'R$ ' +
+        total.toFixed(2)
+            .replace('.', ',');
+
+
+    document.getElementById(
+        'resumo-entrada'
+    ).textContent =
+        'R$ ' +
+        entrada.toFixed(2)
+            .replace('.', ',');
+
+
+    document.getElementById(
+        'resumo-saldo'
+    ).textContent =
+        'R$ ' +
+        saldo.toFixed(2)
+            .replace('.', ',');
+
+}
+
+
+/* =========================================
+   EVENTO DA ENTRADA
+   ========================================= */
+
+document
+    .getElementById(
+        'entrada'
+    )
+    .addEventListener(
+        'input',
+        function() {
+
+            const total =
+                parseFloat(
+                    document.getElementById(
+                        'total_compra'
+                    ).value
+                ) || 0;
+
+            atualizarResumo(
+                total
+            );
+
+        }
+    );
+
+
+/* =========================================
+   DATA PADRÃO
+   ========================================= */
 
 document.addEventListener(
     'DOMContentLoaded',
-    function(){
+    function() {
 
         adicionarItem();
 

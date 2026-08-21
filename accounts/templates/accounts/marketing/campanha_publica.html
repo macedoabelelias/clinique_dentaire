@@ -99,6 +99,24 @@
 
         }
 
+    /* =========================================
+       IMAGEM DA CAMPANHA
+       ========================================= */
+
+        .campanha-imagem-container {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .campanha-imagem {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }   
+
     </style>
 
 </head>
@@ -112,9 +130,7 @@
         <div class="mb-3">
 
             <strong class="text-primary fs-4">
-
-                AM Systems
-
+                Clinique Dentaire
             </strong>
 
         </div>
@@ -126,11 +142,15 @@
 
         {% if campanha.imagem %}
 
-            <img
-                src="{{ campanha.imagem.url }}"
-                class="campanha-imagem"
-                alt="{{ campanha.nome }}"
-            >
+            <div class="campanha-imagem-container">
+
+                <img
+                    src="{{ campanha.imagem.url }}"
+                    class="campanha-imagem"
+                    alt="{{ campanha.nome }}"
+                >
+
+            </div>
 
         {% endif %}
 

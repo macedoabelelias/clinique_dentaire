@@ -2,7 +2,8 @@ import os
 import json
 
 from datetime import date, datetime, timedelta
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
 
 from django.conf import settings
 
@@ -47,8 +48,8 @@ from django.core.paginator import Paginator
 
 from reportlab.lib import colors
 from reportlab.lib.styles import (
-    ParagraphStyle,
     getSampleStyleSheet,
+    ParagraphStyle,
 )
 from reportlab.lib.units import mm
 
@@ -2150,12 +2151,17 @@ def dashboard_view(request):
 
     pagar_hoje_qtd = contas_pagar_hoje.count()
 
-    # -----------------------------------------
-    # ESTOQUE
-    # -----------------------------------------
+    # =========================================
+    # ESTOQUE - MATERIAIS EM BAIXA
+    # =========================================
 
-    produtos_criticos = Produto.objects.filter(
-        estoque__lte=F("estoque_minimo")
+    produtos_criticos = (
+        Produto.objects
+        .filter(
+            ativo=True,
+            estoque__lte=F("estoque_minimo")
+        )
+        .order_by("estoque", "nome")
     )
 
     total_produtos_criticos = produtos_criticos.count()
@@ -2764,6 +2770,8 @@ def dashboard_view(request):
         # =========================================
 
         "produtos_criticos": total_produtos_criticos,
+
+        "lista_produtos_criticos": produtos_criticos[:5],
 
         # =========================================
         # RANKING DOS DENTISTAS
@@ -3950,6 +3958,36 @@ def odontograma(request, id):
         itens_orcamento = ItemOrcamento.objects.none()
 
     # =========================================
+    # ANEXOS — RADIOGRAFIAS E FOTOS
+    # =========================================
+
+    anexos = AnexoPaciente.objects.filter(
+        paciente=paciente
+    ).order_by(
+        "-criado_em"
+    )
+
+    anexos_imagem = []
+
+    for anexo in anexos:
+
+        if not anexo.arquivo:
+            continue
+
+        nome_arquivo = anexo.arquivo.name.lower()
+
+        if nome_arquivo.endswith((
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif",
+            ".bmp"
+        )):
+
+            anexos_imagem.append(anexo)
+
+    # =========================================
     # PROCEDIMENTOS
     # =========================================
 
@@ -4157,6 +4195,9 @@ def odontograma(request, id):
 
         "itens_orcamento":
             itens_orcamento,
+
+        "anexos_imagem":
+            anexos_imagem,
 
         "procedimentos":
             procedimentos,
@@ -4956,7 +4997,7 @@ def anamnese(request, id):
     )
 
 @login_required(login_url='/')
-@permissao_required("anamnese", "visualizar")
+@permissao_required("evolucoes", "visualizar")
 def ficha_clinica(request, id):
 
     paciente = get_object_or_404(
@@ -5004,6 +5045,7 @@ def ficha_clinica(request, id):
         .select_related('procedimento')
         .order_by('-id')
     )
+   
 
     # =========================================
     # RESUMO CLÍNICO
@@ -5133,6 +5175,40 @@ def upload_anexo(request, id):
     return redirect(
         'ficha_clinica',
         id=paciente.id
+    )
+
+# =========================================
+# EXCLUIR ANEXO DO PACIENTE
+# =========================================
+
+@login_required
+def excluir_anexo_paciente(request, anexo_id):
+
+    anexo = get_object_or_404(
+        AnexoPaciente,
+        id=anexo_id
+    )
+
+    paciente_id = anexo.paciente.id
+
+    # Exclui o arquivo físico
+    if anexo.arquivo:
+
+        anexo.arquivo.delete(
+            save=False
+        )
+
+    # Exclui o registro do banco
+    anexo.delete()
+
+    messages.success(
+        request,
+        'Anexo excluído com sucesso.'
+    )
+
+    return redirect(
+        'ficha_clinica',
+        id=paciente_id
     )
 
 # =========================================
@@ -5406,16 +5482,30 @@ def orcamento(request, id):
 
     orcamento = (
         Orcamento.objects
-        .filter(paciente=paciente)
+        .filter(
+            paciente=paciente
+        )
         .order_by("-id")
         .first()
     )
 
+    # =========================================
+    # SE NÃO EXISTIR ORÇAMENTO
+    # =========================================
+
     if orcamento is None:
+
+        # -----------------------------------------
+        # BUSCA TRATAMENTO ATIVO
+        # -----------------------------------------
 
         tratamento = paciente.tratamentos.filter(
             status="ATIVO"
         ).first()
+
+        # -----------------------------------------
+        # SE NÃO EXISTIR, CRIA TRATAMENTO
+        # -----------------------------------------
 
         if tratamento is None:
 
@@ -5425,26 +5515,29 @@ def orcamento(request, id):
                 titulo="Tratamento Inicial"
             )
 
-            # =====================================
-            # ORÇAMENTO DO TRATAMENTO
-            # =====================================
-
-            orcamento, created = Orcamento.objects.get_or_create(
-
-                paciente=paciente,
-
-                tratamento=tratamento,
-
-                defaults={
-                    'tratamento': tratamento
-                }
-
-            )
+        # -----------------------------------------
+        # CRIA O ORÇAMENTO
+        # -----------------------------------------
 
         orcamento = Orcamento.objects.create(
             paciente=paciente,
             tratamento=tratamento
         )
+
+    # =========================================
+    # BUSCA OS ITENS DO ORÇAMENTO
+    # =========================================
+
+    itens_orcamento = (
+        ItemOrcamento.objects
+        .filter(
+            orcamento=orcamento
+        )
+        .select_related(
+            'procedimento'
+        )
+        .order_by('id')
+    )
 
     # =========================================
     # FORMULÁRIO
@@ -5471,19 +5564,28 @@ def orcamento(request, id):
             try:
 
                 entrada = (
-                    request.POST.get("entrada", "0")
+                    request.POST.get(
+                        "entrada",
+                        "0"
+                    )
                     .replace(",", ".")
                     .strip()
                 )
 
                 desconto = (
-                    request.POST.get("desconto", "0")
+                    request.POST.get(
+                        "desconto",
+                        "0"
+                    )
                     .replace(",", ".")
                     .strip()
                 )
 
                 acrescimo = (
-                    request.POST.get("acrescimo", "0")
+                    request.POST.get(
+                        "acrescimo",
+                        "0"
+                    )
                     .replace(",", ".")
                     .strip()
                 )
@@ -5498,15 +5600,20 @@ def orcamento(request, id):
                     "pix"
                 )
 
+                # =====================================
+                # VALORES
+                # =====================================
+
                 orcamento.entrada = Decimal(
                     entrada or "0"
                 )
 
-                # Agora representam PERCENTUAIS
+                # Desconto em percentual
                 orcamento.desconto = Decimal(
                     desconto or "0"
                 )
 
+                # Acréscimo em percentual
                 orcamento.acrescimo = Decimal(
                     acrescimo or "0"
                 )
@@ -5516,11 +5623,13 @@ def orcamento(request, id):
                     int(parcelas or 1)
                 )
 
-                orcamento.forma_pagamento = forma_pagamento
+                orcamento.forma_pagamento = (
+                    forma_pagamento
+                )
 
-                # =============================
+                # =====================================
                 # VALIDAÇÕES
-                # =============================
+                # =====================================
 
                 if orcamento.desconto < 0:
 
@@ -5570,8 +5679,9 @@ def orcamento(request, id):
                         id=paciente.id
                     )
 
-                # Agora utiliza a property TOTAL do model,
-                # que já calcula desconto e acréscimo em %.
+                # =====================================
+                # VALIDA ENTRADA X TOTAL
+                # =====================================
 
                 if orcamento.entrada > orcamento.total:
 
@@ -5584,12 +5694,42 @@ def orcamento(request, id):
                         "orcamento",
                         id=paciente.id
                     )
+
+                # =====================================
+                # DEBUG
+                # =====================================
+
                 print("=" * 50)
-                print("DESCONTO:", orcamento.desconto)
-                print("ACRESCIMO:", orcamento.acrescimo)
-                print("ENTRADA:", orcamento.entrada)
-                print("PARCELAS:", orcamento.parcelas)
+                print(
+                    "ORÇAMENTO:",
+                    orcamento.id
+                )
+                print(
+                    "DESCONTO:",
+                    orcamento.desconto
+                )
+                print(
+                    "ACRESCIMO:",
+                    orcamento.acrescimo
+                )
+                print(
+                    "ENTRADA:",
+                    orcamento.entrada
+                )
+                print(
+                    "PARCELAS:",
+                    orcamento.parcelas
+                )
+                print(
+                    "TOTAL:",
+                    orcamento.total
+                )
                 print("=" * 50)
+
+                # =====================================
+                # SALVA
+                # =====================================
+
                 orcamento.save()
 
                 orcamento.refresh_from_db()
@@ -5599,7 +5739,10 @@ def orcamento(request, id):
                     "Dados financeiros salvos com sucesso."
                 )
 
-            except (ValueError, InvalidOperation) as erro:
+            except (
+                ValueError,
+                InvalidOperation
+            ) as erro:
 
                 messages.error(
                     request,
@@ -5618,7 +5761,6 @@ def orcamento(request, id):
                 id=paciente.id
             )
 
-        
         # =====================================
         # ADICIONAR PROCEDIMENTO
         # =====================================
@@ -5635,21 +5777,45 @@ def orcamento(request, id):
                     commit=False
                 )
 
+                # =================================
+                # VINCULA AO ORÇAMENTO
+                # =================================
+
                 item.orcamento = orcamento
+
+                # =================================
+                # DENTE
+                # =================================
 
                 item.dente = request.POST.get(
                     "dente"
                 )
 
+                # =================================
+                # FACE
+                # =================================
+
                 item.face = request.POST.get(
                     "face"
                 )
 
+                # =================================
+                # STATUS
+                # =================================
+
                 item.status = "planejado"
+
+                # =================================
+                # VALOR
+                # =================================
 
                 item.valor_unitario = (
                     item.procedimento.valor_particular
                 )
+
+                # =================================
+                # SALVA ITEM
+                # =================================
 
                 item.save()
 
@@ -5668,7 +5834,22 @@ def orcamento(request, id):
                 "Verifique os dados do procedimento."
             )
 
-        # =========================================
+    # =========================================
+    # ATUALIZA OS ITENS
+    # =========================================
+
+    itens_orcamento = (
+        ItemOrcamento.objects
+        .filter(
+            orcamento=orcamento
+        )
+        .select_related(
+            'procedimento'
+        )
+        .order_by('id')
+    )
+
+    # =========================================
     # CONTEXT
     # =========================================
 
@@ -5680,16 +5861,18 @@ def orcamento(request, id):
 
         'item_form': item_form,
 
+        'itens_orcamento': itens_orcamento,
+
     }
 
+    # =========================================
+    # RENDER
+    # =========================================
+
     return render(
-
         request,
-
         'accounts/orcamento.html',
-
         context
-
     )
 
 # =========================================
@@ -6830,7 +7013,7 @@ def imprimir_prontuario(request, id):
         settings.BASE_DIR,
         'static',
         'img',
-        'logo.png'
+        'logo_odonto2.png'
     )
 
     if os.path.exists(logo_path):
@@ -7144,6 +7327,8 @@ def imprimir_prontuario(request, id):
 
     return response
 # =========================================
+# NOVO DOCUMENTO
+# =========================================
 
 @login_required(login_url='/')
 def novo_documento(request, id):
@@ -7185,11 +7370,15 @@ def novo_documento(request, id):
                 id=template_id
             )
 
-            # usa o tipo do template
+            # Usa o tipo do template
             tipo_documento = template.tipo
 
-            # usa o conteúdo do template
+            # Usa o conteúdo do template
             conteudo = template.conteudo
+
+            # =========================================
+            # DADOS DO PACIENTE
+            # =========================================
 
             conteudo = conteudo.replace(
                 '{{ paciente_nome }}',
@@ -7201,19 +7390,27 @@ def novo_documento(request, id):
                 paciente.cpf or ''
             )
 
+            # =========================================
+            # DATAS
+            # =========================================
+
+            data_atual = timezone.now().strftime(
+                '%d/%m/%Y'
+            )
+
             conteudo = conteudo.replace(
                 '{{ data_atual }}',
-                timezone.now().strftime(
-                    '%d/%m/%Y'
-                )
+                data_atual
             )
 
             conteudo = conteudo.replace(
                 '{{ data_atendimento }}',
-                timezone.now().strftime(
-                    '%d/%m/%Y'
-                )
+                data_atual
             )
+
+            # =========================================
+            # DATA DE NASCIMENTO
+            # =========================================
 
             if paciente.nascimento:
 
@@ -7231,6 +7428,10 @@ def novo_documento(request, id):
                     ''
                 )
 
+                        # =========================================
+            # CONFIGURAÇÃO DA CLÍNICA
+            # =========================================
+
             config = ConfiguracaoClinica.objects.first()
 
             conteudo = conteudo.replace(
@@ -7238,10 +7439,66 @@ def novo_documento(request, id):
                 config.cro if config and config.cro else ''
             )
 
-            # se não informar título,
-            # usa o nome do template
+            # =========================================
+            # DENTISTA RESPONSÁVEL
+            # =========================================
+
+            dentista_nome = ''
+            dentista_cro = ''
+
+            # Dentista vinculado ao paciente
+            dentista = getattr(
+                paciente,
+                'dentista',
+                None
+            )
+
+            if dentista:
+
+                # Nome completo do dentista
+                dentista_nome = (
+                    dentista.get_full_name()
+                    or dentista.username
+                )
+
+                # Perfil profissional do dentista
+                perfil_dentista = getattr(
+                    dentista,
+                    'perfil',
+                    None
+                )
+
+                if perfil_dentista:
+
+                    dentista_cro = (
+                        perfil_dentista.cro
+                        or ''
+                    )
+
+            # =========================================
+            # SUBSTITUIR DADOS DO DENTISTA NO DOCUMENTO
+            # =========================================
+
+            conteudo = conteudo.replace(
+                '{{ dentista_nome }}',
+                dentista_nome
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_cro }}',
+                dentista_cro
+            )
+
+            # =========================================
+            # TÍTULO DO DOCUMENTO
+            # =========================================
+
             if not titulo:
                 titulo = template.nome
+
+        # =========================================
+        # CRIAR DOCUMENTO
+        # =========================================
 
         documento = DocumentoClinico.objects.create(
 
@@ -7262,6 +7519,10 @@ def novo_documento(request, id):
             documento.id
         )
 
+    # =========================================
+    # MODELOS DISPONÍVEIS
+    # =========================================
+
     templates = TemplateDocumento.objects.filter(
         ativo=True
     ).order_by('nome')
@@ -7273,11 +7534,8 @@ def novo_documento(request, id):
         'accounts/documento_form.html',
 
         {
-
             'paciente': paciente,
-
             'templates': templates
-
         }
 
     )
@@ -7384,7 +7642,7 @@ def imprimir_documento(request, id):
 
     elementos = []
 
-   # =========================================
+    # =========================================
     # LOGO
     # =========================================
 
@@ -7392,7 +7650,7 @@ def imprimir_documento(request, id):
         settings.BASE_DIR,
         'static',
         'img',
-       'logo_odonto2.png'
+        'logo_odonto2.png'
     )
 
     if os.path.exists(logo_path):
@@ -7432,18 +7690,26 @@ def imprimir_documento(request, id):
     # TÍTULO
     # =========================================
 
+    estilo_titulo = ParagraphStyle(
+        'TituloDocumento',
+        parent=styles['Title'],
+        fontSize=16,
+        leading=20,
+        alignment=1,  # Centralizado
+        spaceBefore=8,
+        spaceAfter=10,
+    )
+
     elementos.append(
         Paragraph(
-            f'''
-            <para align="center">
-            <b>{documento.titulo.upper()}</b>
-            </para>
-            ''',
-            styles['Title']
+            documento.titulo.upper(),
+            estilo_titulo
         )
     )
 
-    elementos.append(Spacer(1, 10))
+    # =========================================
+    # LINHA
+    # =========================================
 
     elementos.append(
         HRFlowable(
@@ -7453,35 +7719,13 @@ def imprimir_documento(request, id):
         )
     )
 
-    elementos.append(Spacer(1, 15))
-
-    # =========================================
-    # PACIENTE
-    # =========================================
-
     elementos.append(
-        Paragraph(
-            f'<b>Paciente:</b> {paciente.nome}',
-            styles['Normal']
-        )
+        Spacer(1, 20)
     )
-
-    if paciente.cpf:
-
-        elementos.append(
-            Paragraph(
-                f'<b>CPF:</b> {paciente.cpf}',
-                styles['Normal']
-            )
-        )
-
-    elementos.append(Spacer(1, 15))
 
     # =========================================
     # CONTEÚDO
     # =========================================
-
-    from reportlab.lib.styles import ParagraphStyle
 
     estilo_conteudo = ParagraphStyle(
         'ConteudoDocumento',
@@ -7493,7 +7737,65 @@ def imprimir_documento(request, id):
         spaceAfter=12,
     )
 
-    conteudo = documento.conteudo.replace(
+    conteudo = documento.conteudo
+
+    # =========================================
+    # DEIXAR DENTISTA E CRO EM NEGRITO
+    # =========================================
+
+    if documento.tipo == 'atestado':
+
+        dentista = getattr(
+            paciente,
+            'dentista',
+            None
+        )
+
+        if dentista:
+
+            dentista_nome = (
+                dentista.get_full_name()
+                or dentista.username
+            )
+
+            perfil_dentista = getattr(
+                dentista,
+                'perfil',
+                None
+            )
+
+            dentista_cro = ''
+
+            if perfil_dentista:
+                dentista_cro = (
+                    perfil_dentista.cro
+                    or ''
+                )
+
+            if dentista_nome:
+
+                conteudo = conteudo.replace(
+                    dentista_nome,
+                    f'<b>{dentista_nome}</b>'
+                )
+
+            if dentista_cro:
+
+                conteudo = conteudo.replace(
+                    f'CRO {dentista_cro}',
+                    f'<b>CRO {dentista_cro}</b>'
+                )
+
+    # =========================================
+    # QUEBRAS DE LINHA
+    # =========================================
+
+    conteudo = conteudo.replace(
+        '\n\n',
+        '<br/><br/>'
+    )
+
+    conteudo = conteudo.replace(
         '\n',
         '<br/>'
     )
@@ -7525,6 +7827,7 @@ def imprimir_documento(request, id):
             styles['Normal']
         )
     )
+
     # =========================================
     # DADOS DA CLÍNICA
     # =========================================
@@ -7613,6 +7916,10 @@ def imprimir_documento(request, id):
                 styles['BodyText']
             )
         )
+
+    # =========================================
+    # GERAR PDF
+    # =========================================
 
     doc.build(elementos)
 
@@ -8226,7 +8533,7 @@ def imprimir_receita(request, id):
         settings.BASE_DIR,
         'static',
         'img',
-        'logo.png'
+        'logo_odonto2.png'
     )
 
     if os.path.exists(logo_path):
@@ -8981,7 +9288,7 @@ def imprimir_solicitacao_exame(request, id):
         settings.BASE_DIR,
         'static',
         'img',
-        'logo.png'
+        'logo_odonto2.png'
     )
 
     if os.path.exists(logo_path):
@@ -10927,7 +11234,7 @@ def novo_fornecedor(request):
 
 @login_required
 @permissao_required("fornecedores", "editar")
-def editar_fornecedor(request):
+def editar_fornecedor(request, fornecedor_id):
 
     fornecedor = get_object_or_404(
         Fornecedor,
@@ -10981,7 +11288,7 @@ def editar_fornecedor(request):
                         'fornecedor': fornecedor
                     }
                 )
-
+       
         fornecedor.nome = request.POST.get(
             'nome'
         )
@@ -10991,18 +11298,6 @@ def editar_fornecedor(request):
         )
 
         fornecedor.cnpj = cnpj
-
-        fornecedor.nome = request.POST.get(
-            'nome'
-        )
-
-        fornecedor.razao_social = request.POST.get(
-            'razao_social'
-        )
-
-        fornecedor.cnpj = request.POST.get(
-            'cnpj'
-        )
 
         fornecedor.contato = request.POST.get(
             'contato'
@@ -11386,144 +11681,460 @@ def nova_compra(request):
 
     if request.method == 'POST':
 
-        fornecedor_id = request.POST.get(
-            'fornecedor'
-        )
+        try:
 
-        data_compra = request.POST.get(
-            'data_compra'
-        )
+            # =========================================
+            # DADOS DA COMPRA
+            # =========================================
 
-        vencimento = request.POST.get(
-            'vencimento'
-        )
-
-        numero_nf = request.POST.get(
-            'numero_nf'
-        )
-
-        observacoes = request.POST.get(
-            'observacoes'
-        )
-
-        arquivo_nf = request.FILES.get(
-            'arquivo_nf'
-        )
-
-        compra = Compra.objects.create(
-
-            fornecedor_id=fornecedor_id,
-
-            data_compra=data_compra,
-
-            numero_nf=numero_nf,
-
-            observacoes=observacoes,
-
-            arquivo_nf=arquivo_nf,
-
-            valor_total=0
-
-        )
-
-        produtos_ids = request.POST.getlist(
-            'produto[]'
-        )
-
-        quantidades = request.POST.getlist(
-            'quantidade[]'
-        )
-
-        valores = request.POST.getlist(
-            'valor_unitario[]'
-        )
-
-        total_compra = Decimal('0.00')
-
-        for i in range(
-            len(produtos_ids)
-        ):
-
-            produto = Produto.objects.get(
-                id=produtos_ids[i]
+            fornecedor_id = request.POST.get(
+                'fornecedor'
             )
 
-            quantidade = int(
-                quantidades[i]
+            data_compra = request.POST.get(
+                'data_compra'
             )
 
-            valor_unitario = Decimal(
-                valores[i]
+            numero_nf = request.POST.get(
+                'numero_nf'
             )
 
-            subtotal = (
-                quantidade *
-                valor_unitario
+            observacoes = request.POST.get(
+                'observacoes'
             )
 
-            ItemCompra.objects.create(
+            arquivo_nf = request.FILES.get(
+                'arquivo_nf'
+            )
 
-                compra=compra,
+            # =========================================
+            # CONDIÇÃO DE PAGAMENTO
+            # =========================================
 
-                produto=produto,
+            forma_pagamento = request.POST.get(
+                'forma_pagamento',
+                'PIX'
+            )
 
-                quantidade=quantidade,
+            entrada = Decimal(
+                request.POST.get(
+                    'entrada',
+                    '0'
+                ).replace(',', '.')
+                or '0'
+            )
 
-                valor_unitario=valor_unitario,
+            parcelas = int(
+                request.POST.get(
+                    'parcelas',
+                    '1'
+                )
+                or 1
+            )
 
-                subtotal=subtotal
+            primeiro_vencimento = request.POST.get(
+                'primeiro_vencimento'
+            )
+
+            # Compatibilidade com o campo antigo
+            if not primeiro_vencimento:
+
+                primeiro_vencimento = request.POST.get(
+                    'vencimento'
+                )
+
+            # =========================================
+            # VALIDAÇÕES
+            # =========================================
+
+            if not fornecedor_id:
+
+                messages.error(
+                    request,
+                    'Selecione um fornecedor.'
+                )
+
+                return redirect(
+                    'nova_compra'
+                )
+
+            if entrada < 0:
+
+                messages.error(
+                    request,
+                    'A entrada não pode ser negativa.'
+                )
+
+                return redirect(
+                    'nova_compra'
+                )
+
+            if parcelas < 1:
+
+                messages.error(
+                    request,
+                    'A quantidade de parcelas deve ser no mínimo 1.'
+                )
+
+                return redirect(
+                    'nova_compra'
+                )
+
+            # =========================================
+            # CRIA A COMPRA
+            # =========================================
+
+            compra = Compra.objects.create(
+
+                fornecedor_id=fornecedor_id,
+
+                data_compra=data_compra,
+
+                numero_nf=numero_nf,
+
+                observacoes=observacoes,
+
+                arquivo_nf=arquivo_nf,
+
+                valor_total=Decimal('0.00'),
+
+                forma_pagamento=forma_pagamento,
+
+                entrada=entrada,
+
+                parcelas=parcelas,
+
+                primeiro_vencimento=(
+                    primeiro_vencimento
+                    if primeiro_vencimento
+                    else None
+                )
 
             )
 
-            # Atualiza estoque
-            produto.estoque += quantidade
+            # =========================================
+            # ITENS
+            # =========================================
 
-            produto.save()
+            produtos_ids = request.POST.getlist(
+                'produto[]'
+            )
 
-            total_compra += subtotal
+            quantidades = request.POST.getlist(
+                'quantidade[]'
+            )
 
-        compra.valor_total = total_compra
+            valores = request.POST.getlist(
+                'valor_unitario[]'
+            )
 
-        compra.save()
+            total_compra = Decimal('0.00')
+
+            for i in range(
+                len(produtos_ids)
+            ):
+
+                if not produtos_ids[i]:
+
+                    continue
+
+                produto = Produto.objects.get(
+                    id=produtos_ids[i]
+                )
+
+                quantidade = int(
+                    quantidades[i]
+                )
+
+                valor_unitario = Decimal(
+                    valores[i].replace(',', '.')
+                )
+
+                if quantidade <= 0:
+
+                    raise ValueError(
+                        'A quantidade deve ser maior que zero.'
+                    )
+
+                if valor_unitario < 0:
+
+                    raise ValueError(
+                        'O valor unitário não pode ser negativo.'
+                    )
+
+                subtotal = (
+                    quantidade *
+                    valor_unitario
+                )
+
+                # =====================================
+                # ITEM DA COMPRA
+                # =====================================
+
+                ItemCompra.objects.create(
+
+                    compra=compra,
+
+                    produto=produto,
+
+                    quantidade=quantidade,
+
+                    valor_unitario=valor_unitario,
+
+                    subtotal=subtotal
+
+                )
+
+                # =====================================
+                # ATUALIZA ESTOQUE
+                # =====================================
+
+                produto.estoque += quantidade
+
+                produto.save()
+
+                total_compra += subtotal
+
+            # =========================================
+            # ATUALIZA TOTAL DA COMPRA
+            # =========================================
+
+            compra.valor_total = total_compra
+
+            # =========================================
+            # VALIDA ENTRADA
+            # =========================================
+
+            if entrada > total_compra:
+
+                compra.delete()
+
+                messages.error(
+                    request,
+                    'A entrada não pode ser maior que o valor total da compra.'
+                )
+
+                return redirect(
+                    'nova_compra'
+                )
+
+            compra.save()
+
+            # =========================================
+            # SALDO A PAGAR
+            # =========================================
+
+            saldo_a_pagar = (
+                total_compra -
+                entrada
+            )
+
+            # =========================================
+            # CRIA CONTAS A PAGAR
+            # =========================================
+
+            if saldo_a_pagar > 0:
+
+                if not primeiro_vencimento:
+
+                    compra.delete()
+
+                    messages.error(
+                        request,
+                        'Informe o primeiro vencimento das parcelas.'
+                    )
+
+                    return redirect(
+                        'nova_compra'
+                    )
+
+                # -------------------------------------
+                # CONVERTE A DATA
+                # -------------------------------------
+
+                from datetime import datetime
+
+                data_primeiro_vencimento = (
+                    datetime.strptime(
+                        primeiro_vencimento,
+                        '%Y-%m-%d'
+                    ).date()
+                )
+
+                # -------------------------------------
+                # VALOR DAS PARCELAS
+                # -------------------------------------
+
+                valor_parcela = (
+                    saldo_a_pagar /
+                    Decimal(parcelas)
+                )
+
+                valor_parcela = (
+                    valor_parcela.quantize(
+                        Decimal('0.01')
+                    )
+                )
+
+                # -------------------------------------
+                # AJUSTE DE CENTAVOS
+                # -------------------------------------
+
+                valor_total_parcelas = (
+                    valor_parcela *
+                    parcelas
+                )
+
+                diferenca = (
+                    saldo_a_pagar -
+                    valor_total_parcelas
+                )
+
+                # -------------------------------------
+                # CRIA AS PARCELAS
+                # -------------------------------------
+
+                import calendar
+
+                for numero_parcela in range(
+                    1,
+                    parcelas + 1
+                ):
+
+                    # ================================
+                    # CALCULA O VENCIMENTO
+                    # ================================
+
+                    mes = (
+                        data_primeiro_vencimento.month
+                        - 1
+                        + (numero_parcela - 1)
+                    )
+
+                    ano = (
+                        data_primeiro_vencimento.year
+                        + mes // 12
+                    )
+
+                    mes = (
+                        mes % 12
+                    ) + 1
+
+                    ultimo_dia = calendar.monthrange(
+                        ano,
+                        mes
+                    )[1]
+
+                    dia = min(
+                        data_primeiro_vencimento.day,
+                        ultimo_dia
+                    )
+
+                    vencimento_parcela = (
+                        data_primeiro_vencimento.replace(
+                            year=ano,
+                            month=mes,
+                            day=dia
+                        )
+                    )
+
+                    # ================================
+                    # AJUSTE DA ÚLTIMA PARCELA
+                    # ================================
+
+                    valor_da_parcela = (
+                        valor_parcela
+                    )
+
+                    if numero_parcela == parcelas:
+
+                        valor_da_parcela += (
+                            diferenca
+                        )
+
+                    # ================================
+                    # CONTA A PAGAR
+                    # ================================
+
+                    ContaPagar.objects.create(
+
+                        fornecedor=(
+                            compra.fornecedor
+                        ),
+
+                        compra=compra,
+
+                        descricao=(
+                            f'Compra #{compra.id} - '
+                            f'Parcela '
+                            f'{numero_parcela}/{parcelas}'
+                        ),
+
+                        valor=valor_da_parcela,
+
+                        parcela=numero_parcela,
+
+                        total_parcelas=parcelas,
+
+                        forma_pagamento=(
+                            compra.get_forma_pagamento_display()
+                        ),
+
+                        vencimento=(
+                            vencimento_parcela
+                        ),
+
+                        status='PENDENTE'
+
+                    )
+
+            # =========================================
+            # MENSAGEM
+            # =========================================
+
+            if saldo_a_pagar > 0:
+
+                messages.success(
+                    request,
+                    (
+                        f'Compra cadastrada com sucesso. '
+                        f'{parcelas} parcela(s) '
+                        f'gerada(s) em Contas a Pagar.'
+                    )
+                )
+
+            else:
+
+                messages.success(
+                    request,
+                    'Compra cadastrada e totalmente paga na entrada.'
+                )
+
+            return redirect(
+                'compras'
+            )
 
         # =========================================
-        # GERA CONTA A PAGAR AUTOMÁTICA
+        # ERROS
         # =========================================
 
-        ContaPagar.objects.create(
+        except ValueError as erro:
 
-            fornecedor=compra.fornecedor,
+            messages.error(
+                request,
+                f'Valor inválido: {erro}'
+            )
 
-            compra=compra,
+        except Exception as erro:
 
-            descricao=(
-                f'Compra NF '
-                f'{compra.numero_nf or compra.id}'
-            ),
+            messages.error(
+                request,
+                f'Erro ao cadastrar compra: {erro}'
+            )
 
-            valor=compra.valor_total,
-
-            vencimento=vencimento,
-
-            observacao=(
-                compra.observacoes
-            ),
-
-            status='PENDENTE'
-
-        )
-
-        messages.success(
-
-            request,
-
-            'Compra cadastrada com sucesso.'
-
-        )
-
-        return redirect(
-            'compras'
-        )
+    # =========================================
+    # FORMULÁRIO
+    # =========================================
 
     context = {
 
@@ -11542,8 +12153,7 @@ def nova_compra(request):
         context
 
     )
-
-
+        
 # =========================================
 # VISUALIZAR COMPRA
 # =========================================
@@ -11587,7 +12197,7 @@ def visualizar_compra(request, compra_id):
 
 @login_required
 @permissao_required("compras", "editar")
-def editar_compra(request):
+def editar_compra(request, compra_id):
 
     compra = get_object_or_404(
         Compra,
@@ -11712,11 +12322,8 @@ def editar_compra(request):
             item.save()
 
         messages.success(
-
             request,
-
             'Compra atualizada com sucesso.'
-
         )
 
         return redirect(
@@ -11736,13 +12343,9 @@ def editar_compra(request):
     }
 
     return render(
-
         request,
-
         'accounts/compra_editar.html',
-
         context
-
     )
 
 # =========================================
@@ -11751,12 +12354,16 @@ def editar_compra(request):
 
 @login_required
 @permissao_required("compras", "excluir")
-def excluir_compra(request):
+def excluir_compra(request, compra_id):
 
     compra = get_object_or_404(
         Compra,
         id=compra_id
     )
+
+    # =========================================
+    # RETIRA OS ITENS DO ESTOQUE
+    # =========================================
 
     itens = ItemCompra.objects.filter(
         compra=compra
@@ -11769,16 +12376,27 @@ def excluir_compra(request):
         produto.estoque -= item.quantidade
 
         if produto.estoque < 0:
-
             produto.estoque = 0
 
         produto.save()
+
+    # =========================================
+    # EXCLUI CONTAS A PAGAR DA COMPRA
+    # =========================================
+
+    ContaPagar.objects.filter(
+        compra=compra
+    ).delete()
+
+    # =========================================
+    # EXCLUI A COMPRA
+    # =========================================
 
     compra.delete()
 
     messages.success(
         request,
-        'Compra excluída com sucesso.'
+        'Compra e respectivas contas a pagar foram excluídas com sucesso.'
     )
 
     return redirect(
