@@ -11,6 +11,13 @@ from django.utils import timezone
 import re
 from urllib.parse import quote
 
+import uuid
+
+from django.core.validators import (
+    MinValueValidator,
+    MaxValueValidator,
+)
+
 # =========================================
 # PACIENTES
 # =========================================
@@ -1385,6 +1392,17 @@ class PosTratamento(models.Model):
     )
 
     # =========================================
+    # TOKEN DA PESQUISA
+    # =========================================
+
+    token_pesquisa = models.UUIDField(
+        "Token da pesquisa",
+        default=uuid.uuid4,
+        unique=True,
+        editable=False
+    )
+
+    # =========================================
     # AGRADECIMENTO
     # =========================================
 
@@ -1430,17 +1448,35 @@ class PosTratamento(models.Model):
         default="PENDENTE"
     )
 
+    # Data em que a clínica enviou a pesquisa
+
     data_pesquisa = models.DateField(
         "Data da pesquisa",
         null=True,
         blank=True
     )
 
-    nota_satisfacao = models.PositiveSmallIntegerField(
-        "Nota de satisfação",
+    # Data em que o paciente respondeu
+
+    data_resposta = models.DateField(
+        "Data da resposta",
         null=True,
         blank=True
     )
+
+    # Nota de 0 a 10
+
+    nota_satisfacao = models.PositiveSmallIntegerField(
+        "Nota de satisfação",
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(10),
+        ]
+    )
+
+    # Comentário opcional do paciente
 
     comentario_pesquisa = models.TextField(
         "Comentário da pesquisa",
@@ -1554,6 +1590,9 @@ class PosTratamento(models.Model):
 
     def save(self, *args, **kwargs):
 
+        # Calcula automaticamente a data
+        # do retorno quando ainda não existir.
+
         if not self.data_retorno:
 
             self.data_retorno = (
@@ -1575,7 +1614,7 @@ class PosTratamento(models.Model):
             f"{self.tratamento.paciente.nome} - "
             f"Pós-Tratamento"
         )
-
+    
 # =========================================
 # POSICIONAMENTO DO DENTE
 # =========================================

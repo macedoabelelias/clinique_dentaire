@@ -209,6 +209,21 @@ path(
     views.contatar_retorno,
     name='contatar_retorno'
 ),
+# =========================================
+# PESQUISA DE SATISFAÇÃO — PÚBLICA
+# =========================================
+
+path(
+    "pesquisa-satisfacao/<uuid:token>/",
+    views.pesquisa_satisfacao,
+    name="pesquisa_satisfacao"
+),
+
+path(
+    "marketing/pos-tratamento/<int:pos_id>/avaliacao/",
+    views.ver_avaliacao,
+    name="ver_avaliacao",
+),
 
 
 # =========================================

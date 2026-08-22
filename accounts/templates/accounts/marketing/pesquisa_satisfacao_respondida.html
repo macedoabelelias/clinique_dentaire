@@ -1,0 +1,134 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}
+Avaliação Enviada | Clinique Dentaire
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-7 col-lg-8 col-md-10">
+
+            <!-- =========================================
+                 CONFIRMAÇÃO
+            ========================================== -->
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center p-5">
+
+                    <!-- ÍCONE -->
+
+                    <div
+                        class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-4"
+                        style="
+                            width:80px;
+                            height:80px;
+                            font-size:36px;
+                        "
+                    >
+
+                        <i class="bi bi-check-lg"></i>
+
+                    </div>
+
+
+                    <!-- TÍTULO -->
+
+                    <h2 class="fw-bold mb-3">
+
+                        Avaliação enviada!
+
+                    </h2>
+
+
+                    <!-- MENSAGEM -->
+
+                    <p class="text-muted mb-4">
+
+                        Olá,
+
+                        <strong>
+                            {{ paciente.nome }}
+                        </strong>!
+
+                        <br><br>
+
+                        Agradecemos por dedicar alguns minutos
+                        para avaliar sua experiência com a
+                        <strong>Clinique Dentaire</strong>.
+
+                        <br><br>
+
+                        Sua opinião é muito importante para nós
+                        e nos ajuda a melhorar continuamente
+                        nosso atendimento.
+
+                    </p>
+
+
+                    <!-- NOTA -->
+
+                    {% if pos.nota_satisfacao is not None %}
+
+                        <div class="mb-4">
+
+                            <small class="text-muted d-block mb-2">
+
+                                Sua avaliação
+
+                            </small>
+
+                            <div
+                                class="fw-bold text-primary"
+                                style="font-size:42px;"
+                            >
+
+                                {{ pos.nota_satisfacao }}
+
+                                <span
+                                    class="fs-5 text-muted"
+                                >
+                                    / 10
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- RODAPÉ -->
+
+                    <div class="border-top pt-4 mt-4">
+
+                        <p class="mb-1">
+
+                            Obrigado pela confiança e pela preferência. 💙
+
+                        </p>
+
+                        <strong>
+
+                            Clinique Dentaire
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

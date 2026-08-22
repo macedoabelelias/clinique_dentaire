@@ -1,0 +1,180 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}
+Confirmar Pesquisa | AM Systems
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- =========================================
+         CABEÇALHO
+    ========================================== -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold mb-1">
+
+            <i class="bi bi-star text-warning me-2"></i>
+
+            Enviar Pesquisa de Satisfação
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            Confira o conteúdo antes de confirmar o envio.
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         PACIENTE
+    ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center me-3"
+                    style="
+                        width:52px;
+                        height:52px;
+                        font-weight:700;
+                        font-size:20px;
+                    "
+                >
+
+                    {{ paciente.nome|slice:":1" }}
+
+                </div>
+
+                <div>
+
+                    <small class="text-muted d-block">
+                        Paciente
+                    </small>
+
+                    <strong class="fs-5">
+                        {{ paciente.nome }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         MENSAGEM
+    ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+
+                <i class="bi bi-chat-text text-warning me-2"></i>
+
+                Mensagem
+
+            </h5>
+
+            <small class="text-muted">
+
+                Esta é a mensagem que será utilizada no contato com o paciente.
+
+            </small>
+
+        </div>
+
+
+        <div class="card-body px-4 pb-4">
+
+            <div
+                class="border rounded-4 p-4"
+                style="
+                    background:#f8fafc;
+                    white-space:pre-line;
+                    line-height:1.7;
+                    color:#334155;
+                "
+            >
+
+                {{ mensagem }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         AVISO
+    ========================================== -->
+
+    <div class="alert alert-info rounded-4 border-0 mb-4">
+
+        <i class="bi bi-info-circle me-2"></i>
+
+        Neste momento o sistema apenas registra a pesquisa como enviada.
+        A integração com WhatsApp ou e-mail será realizada posteriormente.
+
+    </div>
+
+
+    <!-- =========================================
+         AÇÕES
+    ========================================== -->
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <a
+            href="{% url 'pos_tratamento' %}"
+            class="btn btn-light rounded-pill px-4"
+        >
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Voltar
+
+        </a>
+
+
+        <form
+            method="post"
+            action="{% url 'confirmar_pesquisa' pos.id %}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-warning rounded-pill px-4"
+            >
+
+                <i class="bi bi-check-circle me-1"></i>
+
+                Confirmar envio
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

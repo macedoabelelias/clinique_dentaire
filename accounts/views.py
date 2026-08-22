@@ -14546,11 +14546,16 @@ def enviar_pesquisa(request, pos_id):
         return redirect("pos_tratamento")
 
     pos = get_object_or_404(
-        PosTratamento,
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
         id=pos_id
     )
 
-    # Evita envio duplicado
+    # =========================================
+    # EVITA DUPLICIDADE
+    # =========================================
 
     if pos.status_pesquisa != "PENDENTE":
 
@@ -14561,14 +14566,86 @@ def enviar_pesquisa(request, pos_id):
 
         return redirect("pos_tratamento")
 
+    paciente = pos.tratamento.paciente
+
     # =========================================
-    # MARCA COMO ENVIADA
+    # MENSAGEM DA PESQUISA
+    # =========================================
+
+    mensagem = f"""Olá, {paciente.nome}! 😊
+
+Gostaríamos de saber como foi sua experiência com a nossa clínica durante o tratamento.
+
+Sua opinião é muito importante para nós e nos ajuda a melhorar continuamente nosso atendimento.
+
+Preparamos uma rápida pesquisa de satisfação. Sua participação será muito importante para nossa equipe.
+
+Agradecemos pela confiança e pela preferência! 💙
+
+Clinique Dentaire"""
+
+    # =========================================
+    # ABRE A TELA DE CONFIRMAÇÃO
+    # =========================================
+
+    return render(
+        request,
+        "accounts/marketing/confirmar_pesquisa.html",
+        {
+            "pos": pos,
+            "paciente": paciente,
+            "mensagem": mensagem,
+        }
+    )
+
+    # =========================================
+# CONFIRMAR PESQUISA — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def confirmar_pesquisa(request, pos_id):
+
+    if request.method != "POST":
+
+        return redirect("pos_tratamento")
+
+    pos = get_object_or_404(
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
+        id=pos_id
+    )
+
+    # =========================================
+    # EVITA DUPLICIDADE
+    # =========================================
+
+    if pos.status_pesquisa == "ENVIADA":
+
+        messages.warning(
+            request,
+            "A pesquisa já foi enviada."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # REGISTRA O ENVIO
     # =========================================
 
     pos.status_pesquisa = "ENVIADA"
+
     pos.data_pesquisa = timezone.now().date()
 
-    pos.save()
+    pos.save(
+        update_fields=[
+            "status_pesquisa",
+            "data_pesquisa",
+            "atualizado_em",
+        ]
+    )
 
     messages.success(
         request,
@@ -14578,6 +14655,191 @@ def enviar_pesquisa(request, pos_id):
 
     return redirect("pos_tratamento")
 
+# =========================================
+# PESQUISA DE SATISFAÇÃO — PÁGINA PÚBLICA
+# =========================================
+
+def pesquisa_satisfacao(request, token):
+
+    pos = get_object_or_404(
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
+        token_pesquisa=token
+    )
+
+    paciente = pos.tratamento.paciente
+
+    # =========================================
+    # PESQUISA JÁ RESPONDIDA
+    # =========================================
+
+    if pos.status_pesquisa == "RESPONDIDA":
+
+        return render(
+            request,
+            "accounts/marketing/pesquisa_satisfacao_respondida.html",
+            {
+                "pos": pos,
+                "paciente": paciente,
+            }
+        )
+
+    # =========================================
+    # RECEBER A AVALIAÇÃO
+    # =========================================
+
+    if request.method == "POST":
+
+        nota = request.POST.get("nota_satisfacao")
+        comentario = request.POST.get(
+            "comentario_pesquisa",
+            ""
+        ).strip()
+
+        # =========================================
+        # VALIDA A NOTA
+        # =========================================
+
+        try:
+
+            nota = int(nota)
+
+        except (TypeError, ValueError):
+
+            messages.error(
+                request,
+                "Por favor, selecione uma nota de 0 a 10."
+            )
+
+            return render(
+                request,
+                "accounts/marketing/pesquisa_satisfacao.html",
+                {
+                    "pos": pos,
+                    "paciente": paciente,
+                }
+            )
+
+        if nota < 0 or nota > 10:
+
+            messages.error(
+                request,
+                "A nota deve estar entre 0 e 10."
+            )
+
+            return render(
+                request,
+                "accounts/marketing/pesquisa_satisfacao.html",
+                {
+                    "pos": pos,
+                    "paciente": paciente,
+                }
+            )
+
+        # =========================================
+        # REGISTRA A AVALIAÇÃO
+        # =========================================
+
+        pos.nota_satisfacao = nota
+
+        pos.comentario_pesquisa = comentario
+
+        pos.status_pesquisa = "RESPONDIDA"
+
+        pos.data_resposta = timezone.now().date()
+
+        pos.save(
+            update_fields=[
+                "nota_satisfacao",
+                "comentario_pesquisa",
+                "status_pesquisa",
+                "data_resposta",
+                "atualizado_em",
+            ]
+        )
+
+        # =========================================
+        # PÁGINA DE AGRADECIMENTO
+        # =========================================
+
+        return render(
+            request,
+            "accounts/marketing/pesquisa_satisfacao_respondida.html",
+            {
+                "pos": pos,
+                "paciente": paciente,
+            }
+        )
+
+    # =========================================
+    # PESQUISA DISPONÍVEL
+    # =========================================
+
+    if pos.status_pesquisa == "ENVIADA":
+
+        return render(
+            request,
+            "accounts/marketing/pesquisa_satisfacao.html",
+            {
+                "pos": pos,
+                "paciente": paciente,
+            }
+        )
+
+    # =========================================
+    # PESQUISA AINDA NÃO FOI ENVIADA
+    # =========================================
+
+    return render(
+        request,
+        "accounts/marketing/pesquisa_satisfacao_indisponivel.html",
+        {
+            "pos": pos,
+            "paciente": paciente,
+        }
+    )
+
+    # =========================================
+# VER AVALIAÇÃO — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "visualizar")
+def ver_avaliacao(request, pos_id):
+
+    pos = get_object_or_404(
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
+        id=pos_id
+    )
+
+    # =========================================
+    # SOMENTE PESQUISAS RESPONDIDAS
+    # =========================================
+
+    if pos.status_pesquisa != "RESPONDIDA":
+
+        messages.warning(
+            request,
+            "Esta pesquisa ainda não foi respondida."
+        )
+
+        return redirect("pos_tratamento")
+
+    paciente = pos.tratamento.paciente
+
+    return render(
+        request,
+        "accounts/marketing/ver_avaliacao.html",
+        {
+            "pos": pos,
+            "paciente": paciente,
+        }
+    )  
 
 # =========================================
 # CONTATAR PACIENTE — RETORNO
