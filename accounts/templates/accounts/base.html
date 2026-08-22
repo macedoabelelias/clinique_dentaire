@@ -755,41 +755,58 @@ MARKETING
     <ul class="submenu">
 
 
-        <!-- =========================================
-        LEADS
-        ========================================== -->
+    <!-- =========================================
+    LEADS
+    ========================================== -->
 
-        <li class="{% if '/marketing/leads' in request.path %}active{% endif %}">
+    <li class="{% if '/marketing/leads' in request.path %}active{% endif %}">
 
-            <a href="{% url 'leads' %}">
+        <a href="{% url 'leads' %}">
 
-                <i class="bi bi-person-lines-fill"></i>
+            <i class="bi bi-person-lines-fill"></i>
 
-                <span>Leads</span>
+            <span>Leads</span>
 
-            </a>
+        </a>
 
-        </li>
-
-
-        <!-- =========================================
-        CAMPANHAS
-        ========================================== -->
-
-        <li class="{% if '/marketing/campanhas' in request.path %}active{% endif %}">
-
-            <a href="{% url 'campanhas_marketing' %}">
-
-                <i class="bi bi-megaphone"></i>
-
-                <span>Campanhas</span>
-
-            </a>
-
-        </li>
+    </li>
 
 
-    </ul>
+    <!-- =========================================
+    CAMPANHAS
+    ========================================== -->
+
+    <li class="{% if '/marketing/campanhas' in request.path %}active{% endif %}">
+
+        <a href="{% url 'campanhas_marketing' %}">
+
+            <i class="bi bi-megaphone"></i>
+
+            <span>Campanhas</span>
+
+        </a>
+
+    </li>
+
+
+    <!-- =========================================
+    PÓS-TRATAMENTO
+    ========================================== -->
+
+    <li class="{% if '/marketing/pos-tratamento' in request.path %}active{% endif %}">
+
+        <a href="{% url 'pos_tratamento' %}">
+
+            <i class="bi bi-heart-pulse"></i>
+
+            <span>Pós-Tratamento</span>
+
+        </a>
+
+    </li>
+
+
+</ul>
 
 </li>
 

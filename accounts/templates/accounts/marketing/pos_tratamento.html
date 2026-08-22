@@ -1,0 +1,481 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}
+Pós-Tratamento | Clinique Dentaire
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- =========================================
+         CABEÇALHO
+    ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-heart-pulse text-primary me-2"></i>
+
+                Pós-Tratamento
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Acompanhamento dos pacientes após o encerramento do tratamento.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+     CARDS RESUMO
+========================================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- =========================================
+         AGRADECIMENTOS
+    ========================================== -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Agradecimentos Pendentes
+                        </small>
+
+                        <h2 class="fw-bold text-primary mb-0">
+                            {{ agradecimentos_pendentes }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-envelope-heart fs-1 text-primary opacity-50"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         PESQUISAS
+    ========================================== -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Pesquisas Pendentes
+                        </small>
+
+                        <h2 class="fw-bold text-warning mb-0">
+                            {{ pesquisas_pendentes }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-star fs-1 text-warning opacity-50"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         RETORNOS
+    ========================================== -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Retornos Pendentes
+                        </small>
+
+                        <h2 class="fw-bold text-success mb-0">
+                            {{ retornos_pendentes }}
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-calendar-check fs-1 text-success opacity-50"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <!-- =========================================
+         LISTA DE PÓS-TRATAMENTO
+    ========================================= -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+
+                <i class="bi bi-people text-primary me-2"></i>
+
+                Pacientes em Pós-Tratamento
+
+            </h5>
+
+            <small class="text-muted">
+
+                Tratamentos encerrados que necessitam de acompanhamento.
+
+            </small>
+
+        </div>
+
+
+        <div class="card-body px-4">
+
+            {% for pos in pos_tratamentos %}
+
+            <div class="border rounded-4 p-3 mb-3">
+
+                <div class="row align-items-center g-3">
+
+                    <!-- =========================================
+                         PACIENTE
+                    ========================================== -->
+
+                    <div class="col-xl-3 col-lg-3 col-md-6">
+
+                        <strong>
+
+                            {{ pos.tratamento.paciente.nome }}
+
+                        </strong>
+
+                        <div class="small text-muted">
+
+                            Tratamento:
+
+                            {{ pos.tratamento.titulo }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         ENCERRAMENTO
+                    ========================================== -->
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+
+                        <small class="text-muted d-block">
+
+                            Encerramento
+
+                        </small>
+
+                        <strong>
+
+                            {{ pos.tratamento.data_encerramento|date:"d/m/Y" }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- =========================================
+     AGRADECIMENTO
+========================================== -->
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+
+                        <small class="text-muted d-block mb-1">
+                            Agradecimento
+                        </small>
+
+                        {% if pos.status_agradecimento == "PENDENTE" %}
+
+                        <!-- STATUS -->
+
+                        <span class="badge bg-warning text-dark mb-2">
+
+                            <i class="bi bi-clock me-1"></i>
+
+                            Pendente
+
+                        </span>
+
+                        <!-- ABRE A TELA DE CONFIRMAÇÃO -->
+
+                        <div>
+
+                            <a href="{% url 'confirmar_agradecimento' pos.id %}"
+                                class="btn btn-sm btn-outline-primary rounded-pill">
+
+                                <i class="bi bi-send me-1"></i>
+
+                                Enviar agradecimento
+
+                            </a>
+
+                        </div>
+
+                        {% else %}
+
+                        <!-- STATUS ENVIADO -->
+
+                        <span class="badge bg-success">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Enviado
+
+                        </span>
+
+                        <!-- DATA DO ENVIO -->
+
+                        {% if pos.data_agradecimento %}
+
+                        <div class="small text-muted mt-1">
+
+                            {{ pos.data_agradecimento|date:"d/m/Y" }}
+
+                        </div>
+
+                        {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- =========================================
+                         PESQUISA
+                    ========================================== -->
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+
+                        <small class="text-muted d-block mb-1">
+
+                            Pesquisa
+
+                        </small>
+
+
+                        {% if pos.status_pesquisa == "PENDENTE" %}
+
+                        <span class="badge bg-warning text-dark mb-2">
+
+                            Pendente
+
+                        </span>
+
+                        <form method="post" action="{% url 'enviar_pesquisa' pos.id %}">
+
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-sm btn-outline-warning">
+
+                                <i class="bi bi-star me-1"></i>
+
+                                Enviar pesquisa
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif pos.status_pesquisa == "ENVIADA" %}
+
+                        <span class="badge bg-primary">
+
+                            <i class="bi bi-send-check me-1"></i>
+
+                            Enviada
+
+                        </span>
+
+                        {% if pos.data_pesquisa %}
+
+                        <div class="small text-muted mt-1">
+
+                            {{ pos.data_pesquisa|date:"d/m/Y" }}
+
+                        </div>
+
+                        {% endif %}
+
+
+                        {% else %}
+
+                        <span class="badge bg-success">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Respondida
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- =========================================
+                         RETORNO
+                    ========================================== -->
+
+                    <div class="col-xl-3 col-lg-3 col-md-12">
+
+                        <small class="text-muted d-block">
+
+                            Retorno
+
+                        </small>
+
+                        <div class="mb-2">
+
+                            <strong>
+
+                                {{ pos.data_retorno|date:"d/m/Y" }}
+
+                            </strong>
+
+                            <span class="badge bg-secondary ms-1">
+
+                                {{ pos.intervalo_retorno }} meses
+
+                            </span>
+
+                        </div>
+
+
+                        {% if pos.status_retorno == "PENDENTE" %}
+
+                        <span class="badge bg-warning text-dark mb-2">
+
+                            Pendente
+
+                        </span>
+
+                        <form method="post" action="{% url 'contatar_retorno' pos.id %}">
+
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-sm btn-outline-success">
+
+                                <i class="bi bi-telephone me-1"></i>
+
+                                Contatar paciente
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif pos.status_retorno == "CONTATADO" %}
+
+                        <span class="badge bg-info text-dark">
+
+                            <i class="bi bi-telephone-check me-1"></i>
+
+                            Contatado
+
+                        </span>
+
+
+                        {% elif pos.status_retorno == "AGENDADO" %}
+
+                        <span class="badge bg-primary">
+
+                            <i class="bi bi-calendar-check me-1"></i>
+
+                            Agendado
+
+                        </span>
+
+
+                        {% elif pos.status_retorno == "REALIZADO" %}
+
+                        <span class="badge bg-success">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Realizado
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <!-- =========================================
+                 VAZIO
+            ========================================== -->
+
+            <div class="text-center text-muted py-5">
+
+                <i class="bi bi-check-circle fs-1 d-block mb-3"></i>
+
+                Nenhum paciente em pós-tratamento.
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

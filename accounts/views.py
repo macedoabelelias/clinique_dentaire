@@ -127,6 +127,7 @@ from .models import (
     SolicitacaoExame,
     TemplateDocumento,
     Tratamento,
+    PosTratamento,
     PosicionamentoDente,
 )
 
@@ -14200,7 +14201,10 @@ def encerrar_tratamento(request, tratamento_id):
         id=tratamento_id
     )
 
-    # Evita encerrar duas vezes
+    # =========================================
+    # EVITA ENCERRAR DUAS VEZES
+    # =========================================
+
     if tratamento.status == "ENCERRADO":
 
         messages.warning(
@@ -14218,9 +14222,19 @@ def encerrar_tratamento(request, tratamento_id):
     # =========================================
 
     tratamento.status = "ENCERRADO"
+
     tratamento.data_encerramento = timezone.now().date()
 
     tratamento.save()
+
+
+    # =========================================
+    # CRIA O PÓS-TRATAMENTO
+    # =========================================
+
+    PosTratamento.objects.get_or_create(
+        tratamento=tratamento
+    )
 
     # =========================================
     # FINALIZA O ORÇAMENTO DO TRATAMENTO
@@ -14235,11 +14249,16 @@ def encerrar_tratamento(request, tratamento_id):
     if orcamento:
 
         orcamento.status = "finalizado"
+
         orcamento.save()
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
 
     messages.success(
         request,
-        "Tratamento encerrado e orçamento finalizado com sucesso."
+        "Tratamento encerrado e pós-tratamento criado com sucesso."
     )
 
     return redirect(
@@ -14247,6 +14266,419 @@ def encerrar_tratamento(request, tratamento_id):
         id=tratamento.paciente.id
     )
 
+# =========================================
+# PÓS-TRATAMENTO — MARKETING
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "visualizar")
+def pos_tratamento(request):
+
+    pos_tratamentos = PosTratamento.objects.select_related(
+        "tratamento",
+        "tratamento__paciente",
+        "tratamento__dentista",
+    ).order_by(
+        "data_retorno"
+    )
+
+    # =========================================
+    # CONTADORES
+    # =========================================
+
+    agradecimentos_pendentes = pos_tratamentos.filter(
+        status_agradecimento="PENDENTE"
+    ).count()
+
+    pesquisas_pendentes = pos_tratamentos.filter(
+        status_pesquisa="PENDENTE"
+    ).count()
+
+    retornos_pendentes = pos_tratamentos.filter(
+        status_retorno="PENDENTE"
+    ).count()
+
+    return render(
+        request,
+        "accounts/marketing/pos_tratamento.html",
+        {
+            "pos_tratamentos": pos_tratamentos,
+
+            "agradecimentos_pendentes":
+                agradecimentos_pendentes,
+
+            "pesquisas_pendentes":
+                pesquisas_pendentes,
+
+            "retornos_pendentes":
+                retornos_pendentes,
+        }
+    )
+
+# # =========================================
+# # ENVIAR AGRADECIMENTO — PÓS-TRATAMENTO
+# # =========================================
+
+# @login_required(login_url="/")
+# @permissao_required("marketing", "editar")
+# def enviar_agradecimento(request, pos_id):
+
+#     if request.method != "POST":
+
+#         return redirect("pos_tratamento")
+
+#     pos = get_object_or_404(
+#         PosTratamento.objects.select_related(
+#             "tratamento",
+#             "tratamento__paciente",
+#         ),
+#         id=pos_id
+#     )
+
+#     # =========================================
+#     # EVITA ENVIO DUPLICADO
+#     # =========================================
+
+#     if pos.status_agradecimento == "ENVIADO":
+
+#         messages.warning(
+#             request,
+#             "O agradecimento já foi enviado."
+#         )
+
+#         return redirect("pos_tratamento")
+
+#     paciente = pos.tratamento.paciente
+
+#     # =========================================
+#     # MENSAGEM PADRÃO
+#     # =========================================
+
+#     mensagem = (
+#         f"Olá, {paciente.nome}! 😊\n\n"
+#         f"A equipe da AM Systems agradece por confiar "
+#         f"em nossa clínica durante seu tratamento.\n\n"
+#         f"Foi um prazer cuidar de você e esperamos que "
+#         f"esteja satisfeito(a) com o atendimento recebido.\n\n"
+#         f"Sua opinião é muito importante para nós. "
+#         f"Em breve enviaremos uma pequena pesquisa para "
+#         f"que você possa avaliar sua experiência conosco.\n\n"
+#         f"Obrigado pela preferência! 💙\n\n"
+#         f"AM Systems — Odontologia"
+#     )
+
+#     # =========================================
+#     # MOSTRA A MENSAGEM PARA CONFERÊNCIA
+#     # =========================================
+
+#     return render(
+#         request,
+#         "accounts/marketing/confirmar_agradecimento.html",
+#         {
+#             "pos": pos,
+#             "paciente": paciente,
+#             "mensagem": mensagem,
+#         }
+#     )
+
+# =========================================
+# CONFIRMAR AGRADECIMENTO — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def confirmar_agradecimento(request, pos_id):
+
+    # =========================================
+    # LOCALIZA O PÓS-TRATAMENTO
+    # =========================================
+
+    pos = get_object_or_404(
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
+        id=pos_id
+    )
+
+    # =========================================
+    # EVITA DUPLICIDADE
+    # =========================================
+
+    if pos.status_agradecimento == "ENVIADO":
+
+        messages.warning(
+            request,
+            "O agradecimento deste paciente já foi enviado."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # GET
+    # MOSTRA A PÁGINA DE CONFIRMAÇÃO
+    # =========================================
+
+    if request.method == "GET":
+
+        return render(
+            request,
+            "accounts/marketing/confirmar_agradecimento.html",
+            {
+                "pos": pos,
+            }
+        )
+
+    # =========================================
+    # POST
+    # CONFIRMA O ENVIO
+    # =========================================
+
+    if request.method == "POST":
+
+        pos.status_agradecimento = "ENVIADO"
+
+        pos.data_agradecimento = timezone.now().date()
+
+        pos.save(
+            update_fields=[
+                "status_agradecimento",
+                "data_agradecimento",
+                "atualizado_em",
+            ]
+        )
+
+        messages.success(
+            request,
+            f"Agradecimento registrado para "
+            f"{pos.tratamento.paciente.nome}."
+        )
+
+        return redirect(
+            "pos_tratamento"
+        )
+
+    # =========================================
+    # MÉTODO NÃO PERMITIDO
+    # =========================================
+
+    return redirect(
+        "pos_tratamento"
+    )
+
+# =========================================
+# CONFIRMAR PESQUISA DE SATISFAÇÃO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def confirmar_pesquisa(request, pos_id):
+
+    pos = get_object_or_404(
+        PosTratamento,
+        id=pos_id
+    )
+
+    paciente = pos.tratamento.paciente
+
+    # =========================================
+    # EVITA NOVA PESQUISA
+    # =========================================
+
+    if pos.status_pesquisa == "ENVIADA":
+
+        messages.warning(
+            request,
+            "A pesquisa de satisfação já foi enviada."
+        )
+
+        return redirect("pos_tratamento")
+
+    if pos.status_pesquisa == "RESPONDIDA":
+
+        messages.warning(
+            request,
+            "Esta pesquisa já foi respondida."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # MENSAGEM DA PESQUISA
+    # =========================================
+
+    mensagem = f"""
+Olá, {paciente.nome}! 😊
+
+A equipe da Clinique Dentaire agradece por confiar em nossa clínica.
+
+Gostaríamos de saber como foi sua experiência durante o atendimento.
+
+Sua opinião é muito importante para nós e nos ajuda a melhorar cada vez mais nosso atendimento.
+
+Em breve você poderá responder uma rápida pesquisa de satisfação.
+
+Obrigado pela preferência! 💙
+
+Clinique Dentaire
+"""
+
+    return render(
+        request,
+        "accounts/marketing/confirmar_pesquisa.html",
+        {
+            "pos": pos,
+            "paciente": paciente,
+            "mensagem": mensagem,
+        }
+    )
+
+# =========================================
+# ENVIAR PESQUISA — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def enviar_pesquisa(request, pos_id):
+
+    if request.method != "POST":
+
+        return redirect("pos_tratamento")
+
+    pos = get_object_or_404(
+        PosTratamento,
+        id=pos_id
+    )
+
+    # Evita envio duplicado
+
+    if pos.status_pesquisa != "PENDENTE":
+
+        messages.warning(
+            request,
+            "A pesquisa já foi enviada."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # MARCA COMO ENVIADA
+    # =========================================
+
+    pos.status_pesquisa = "ENVIADA"
+    pos.data_pesquisa = timezone.now().date()
+
+    pos.save()
+
+    messages.success(
+        request,
+        f"Pesquisa registrada para "
+        f"{pos.tratamento.paciente.nome}."
+    )
+
+    return redirect("pos_tratamento")
+
+
+# =========================================
+# CONTATAR PACIENTE — RETORNO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def contatar_retorno(request, pos_id):
+
+    if request.method != "POST":
+
+        return redirect("pos_tratamento")
+
+    pos = get_object_or_404(
+        PosTratamento,
+        id=pos_id
+    )
+
+    # Evita alterar retorno já finalizado
+
+    if pos.status_retorno in (
+        "AGENDADO",
+        "REALIZADO"
+    ):
+
+        messages.warning(
+            request,
+            "Este retorno já está agendado ou realizado."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # MARCA COMO CONTATADO
+    # =========================================
+
+    pos.status_retorno = "CONTATADO"
+
+    pos.save()
+
+    messages.success(
+        request,
+        f"Contato registrado para "
+        f"{pos.tratamento.paciente.nome}."
+    )
+
+    return redirect("pos_tratamento")
+
+# =========================================
+# ENVIAR AGRADECIMENTO — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def enviar_agradecimento(request, pos_id):
+
+    if request.method != "POST":
+
+        return redirect("pos_tratamento")
+
+    pos = get_object_or_404(
+        PosTratamento,
+        id=pos_id
+    )
+
+    # =========================================
+    # EVITA ENVIO DUPLICADO
+    # =========================================
+
+    if pos.status_agradecimento == "ENVIADO":
+
+        messages.warning(
+            request,
+            "O agradecimento deste paciente já foi enviado."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # REGISTRA O ENVIO
+    # =========================================
+
+    pos.status_agradecimento = "ENVIADO"
+
+    pos.data_agradecimento = timezone.now().date()
+
+    pos.save(
+        update_fields=[
+            "status_agradecimento",
+            "data_agradecimento",
+            "atualizado_em",
+        ]
+    )
+
+    messages.success(
+        request,
+        f"Agradecimento registrado para "
+        f"{pos.tratamento.paciente.nome}."
+    )
+
+    return redirect("pos_tratamento")
 
 # =========================================
 # CANCELAR TRATAMENTO

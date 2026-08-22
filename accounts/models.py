@@ -1369,6 +1369,214 @@ POSICOES_DENTE = (
 )
 
 # =========================================
+# PÓS-TRATAMENTO
+# =========================================
+
+class PosTratamento(models.Model):
+
+    # =========================================
+    # TRATAMENTO
+    # =========================================
+
+    tratamento = models.OneToOneField(
+        Tratamento,
+        on_delete=models.CASCADE,
+        related_name="pos_tratamento"
+    )
+
+    # =========================================
+    # AGRADECIMENTO
+    # =========================================
+
+    STATUS_AGRADECIMENTO_CHOICES = [
+
+        ("PENDENTE", "Pendente"),
+
+        ("ENVIADO", "Enviado"),
+
+    ]
+
+    status_agradecimento = models.CharField(
+        "Status do agradecimento",
+        max_length=15,
+        choices=STATUS_AGRADECIMENTO_CHOICES,
+        default="PENDENTE"
+    )
+
+    data_agradecimento = models.DateField(
+        "Data do agradecimento",
+        null=True,
+        blank=True
+    )
+
+    # =========================================
+    # PESQUISA DE SATISFAÇÃO
+    # =========================================
+
+    STATUS_PESQUISA_CHOICES = [
+
+        ("PENDENTE", "Pendente"),
+
+        ("ENVIADA", "Enviada"),
+
+        ("RESPONDIDA", "Respondida"),
+
+    ]
+
+    status_pesquisa = models.CharField(
+        "Status da pesquisa",
+        max_length=15,
+        choices=STATUS_PESQUISA_CHOICES,
+        default="PENDENTE"
+    )
+
+    data_pesquisa = models.DateField(
+        "Data da pesquisa",
+        null=True,
+        blank=True
+    )
+
+    nota_satisfacao = models.PositiveSmallIntegerField(
+        "Nota de satisfação",
+        null=True,
+        blank=True
+    )
+
+    comentario_pesquisa = models.TextField(
+        "Comentário da pesquisa",
+        blank=True
+    )
+
+    # =========================================
+    # RETORNO DO PACIENTE
+    # =========================================
+
+    INTERVALO_RETORNO_CHOICES = [
+
+        (3, "3 meses"),
+
+        (6, "6 meses"),
+
+        (12, "12 meses"),
+
+    ]
+
+    intervalo_retorno = models.PositiveSmallIntegerField(
+        "Intervalo para retorno",
+        choices=INTERVALO_RETORNO_CHOICES,
+        default=6
+    )
+
+    data_retorno = models.DateField(
+        "Data prevista para retorno",
+        null=True,
+        blank=True
+    )
+
+    STATUS_RETORNO_CHOICES = [
+
+        ("PENDENTE", "Pendente"),
+
+        ("CONTATADO", "Contatado"),
+
+        ("AGENDADO", "Agendado"),
+
+        ("REALIZADO", "Realizado"),
+
+    ]
+
+    status_retorno = models.CharField(
+        "Status do retorno",
+        max_length=15,
+        choices=STATUS_RETORNO_CHOICES,
+        default="PENDENTE"
+    )
+
+    # =========================================
+    # CONTROLE
+    # =========================================
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "Pós-Tratamento"
+
+        verbose_name_plural = "Pós-Tratamentos"
+
+        ordering = ["-criado_em"]
+
+    # =========================================
+    # CALCULAR DATA DO RETORNO
+    # =========================================
+
+    def calcular_data_retorno(self):
+
+        from calendar import monthrange
+
+        if not self.tratamento.data_encerramento:
+
+            return None
+
+        data = self.tratamento.data_encerramento
+
+        mes = data.month - 1 + self.intervalo_retorno
+
+        ano = data.year + (mes // 12)
+
+        mes = (mes % 12) + 1
+
+        ultimo_dia = monthrange(
+            ano,
+            mes
+        )[1]
+
+        dia = min(
+            data.day,
+            ultimo_dia
+        )
+
+        return data.replace(
+            year=ano,
+            month=mes,
+            day=dia
+        )
+
+    # =========================================
+    # SAVE
+    # =========================================
+
+    def save(self, *args, **kwargs):
+
+        if not self.data_retorno:
+
+            self.data_retorno = (
+                self.calcular_data_retorno()
+            )
+
+        super().save(
+            *args,
+            **kwargs
+        )
+
+    # =========================================
+    # STRING
+    # =========================================
+
+    def __str__(self):
+
+        return (
+            f"{self.tratamento.paciente.nome} - "
+            f"Pós-Tratamento"
+        )
+
+# =========================================
 # POSICIONAMENTO DO DENTE
 # =========================================
 

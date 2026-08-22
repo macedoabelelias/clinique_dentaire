@@ -170,6 +170,46 @@ path(
     name="excluir_lead",
 ),
 
+# =========================================
+# PÓS-TRATAMENTO — MARKETING
+# =========================================
+
+path(
+    "marketing/pos-tratamento/",
+    views.pos_tratamento,
+    name="pos_tratamento"
+),
+
+# path(
+#     'marketing/pos-tratamento/<int:pos_id>/agradecimento/',
+#     views.enviar_agradecimento,
+#     name='enviar_agradecimento'
+# ),
+
+path(
+    "marketing/pos-tratamento/<int:pos_id>/agradecimento/confirmar/",
+    views.confirmar_agradecimento,
+    name="confirmar_agradecimento"
+),
+
+path(
+    'marketing/pos-tratamento/<int:pos_id>/pesquisa/',
+    views.enviar_pesquisa,
+    name='enviar_pesquisa'
+),
+
+path(
+    'marketing/pos-tratamento/<int:pos_id>/pesquisa/confirmar/',
+    views.confirmar_pesquisa,
+    name='confirmar_pesquisa'
+),
+
+path(
+    'marketing/pos-tratamento/<int:pos_id>/contatar/',
+    views.contatar_retorno,
+    name='contatar_retorno'
+),
+
 
 # =========================================
 # CAMPANHAS DE MARKETING
