@@ -209,6 +209,13 @@ path(
     views.contatar_retorno,
     name='contatar_retorno'
 ),
+
+path(
+    "marketing/pos-tratamento/<int:pos_id>/agendar-retorno/",
+    views.agendar_retorno,
+    name="agendar_retorno",
+),
+
 # =========================================
 # PESQUISA DE SATISFAÇÃO — PÚBLICA
 # =========================================

@@ -235,6 +235,29 @@ def alterar_status_agendamento(agendamento_id, status):
 
     agendamento.save()
 
+    # =========================================
+    # SINCRONIZA PÓS-TRATAMENTO
+    # =========================================
+
+    if (
+        status == "finalizado"
+        and agendamento.pos_tratamento_id
+    ):
+
+        pos = agendamento.pos_tratamento
+
+        # Só altera se ainda não estiver realizado
+        if pos.status_retorno != "REALIZADO":
+
+            pos.status_retorno = "REALIZADO"
+
+            pos.save(
+                update_fields=[
+                    "status_retorno",
+                    "atualizado_em",
+                ]
+            )
+
     return agendamento
 
 # =========================================
@@ -1012,7 +1035,10 @@ def cancelar_agendamento(request, agendamento_id):
         'agenda'
     )
 
-@require_POST
+# =========================================
+# ALTERAR STATUS — AJAX
+# =========================================
+
 @login_required(login_url='/')
 @permissao_required("agenda", "editar")
 @require_POST
@@ -1025,12 +1051,36 @@ def alterar_status_ajax(request):
         id=dados['agendamento_id']
     )
 
-    agendamento.status = dados['status']
+    novo_status = dados['status']
+
+    agendamento.status = novo_status
 
     agendamento.save()
 
-    return JsonResponse({
-    'sucesso': True,
-    'status': agendamento.status
-})
+    # =========================================
+    # SINCRONIZA PÓS-TRATAMENTO
+    # =========================================
 
+    if (
+        novo_status == "finalizado"
+        and agendamento.pos_tratamento_id
+    ):
+
+        pos = agendamento.pos_tratamento
+
+        # Só altera se ainda não estiver realizado
+        if pos.status_retorno != "REALIZADO":
+
+            pos.status_retorno = "REALIZADO"
+
+            pos.save(
+                update_fields=[
+                    "status_retorno",
+                    "atualizado_em",
+                ]
+            )
+
+    return JsonResponse({
+        "sucesso": True,
+        "status": agendamento.status
+    })

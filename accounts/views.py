@@ -159,6 +159,11 @@ from .forms import (
 
 from decimal import InvalidOperation
 
+from django.urls import reverse
+from urllib.parse import quote
+
+from agenda.models import Agendamento
+
 
 # =========================================
 # LOGIN
@@ -14229,11 +14234,46 @@ def encerrar_tratamento(request, tratamento_id):
 
 
     # =========================================
+    # INTERVALO DO PÓS-TRATAMENTO
+    # =========================================
+
+    intervalo_retorno = request.POST.get(
+        "intervalo_retorno",
+        "6"
+    )
+
+    try:
+
+        intervalo_retorno = int(
+            intervalo_retorno
+        )
+
+    except (TypeError, ValueError):
+
+        intervalo_retorno = 6
+
+
+    # =========================================
+    # VALORES PERMITIDOS
+    # =========================================
+
+    if intervalo_retorno not in [3, 6, 12]:
+
+        intervalo_retorno = 6
+
+
+    # =========================================
     # CRIA O PÓS-TRATAMENTO
     # =========================================
 
     PosTratamento.objects.get_or_create(
-        tratamento=tratamento
+
+        tratamento=tratamento,
+
+        defaults={
+            "intervalo_retorno": intervalo_retorno,
+        }
+
     )
 
     # =========================================
@@ -14298,6 +14338,77 @@ def pos_tratamento(request):
         status_retorno="PENDENTE"
     ).count()
 
+    # =========================================
+    # LINKS DAS PESQUISAS
+    # =========================================
+
+    for pos in pos_tratamentos:
+
+        paciente = pos.tratamento.paciente
+
+        telefone = paciente.telefone or ""
+
+        # Remove máscara, espaços, parênteses etc.
+        telefone = "".join(
+            caractere
+            for caractere in telefone
+            if caractere.isdigit()
+        )
+
+        # Adiciona código do Brasil
+        if telefone and not telefone.startswith("55"):
+
+            telefone = "55" + telefone
+
+        # =========================================
+        # LINK PÚBLICO DA PESQUISA
+        # =========================================
+
+        url_pesquisa = request.build_absolute_uri(
+            reverse(
+                "pesquisa_satisfacao",
+                args=[pos.token_pesquisa]
+            )
+        )
+
+        # =========================================
+        # MENSAGEM WHATSAPP
+        # =========================================
+
+        mensagem = (
+            f"Olá, {paciente.nome}! 😊\n\n"
+            f"Aqui é da Clinique Dentaire.\n\n"
+            f"Gostaríamos de saber como foi sua "
+            f"experiência com a nossa clínica durante "
+            f"o tratamento.\n\n"
+            f"Sua opinião é muito importante para nós. "
+            f"Preparamos uma rápida pesquisa de satisfação.\n\n"
+            f"Para responder, acesse o link abaixo:\n\n"
+            f"{url_pesquisa}\n\n"
+            f"Agradecemos pela confiança e pela "
+            f"preferência! 💙\n\n"
+            f"Clinique Dentaire"
+        )
+
+        # =========================================
+        # LINK WHATSAPP
+        # =========================================
+
+        if telefone:
+
+            pos.link_whatsapp_pesquisa = (
+                f"https://wa.me/{telefone}"
+                f"?text={quote(mensagem)}"
+            )
+
+        else:
+
+            pos.link_whatsapp_pesquisa = None
+
+    # =========================================
+    # RENDER
+    # =========================================
+
     return render(
         request,
         "accounts/marketing/pos_tratamento.html",
@@ -14315,71 +14426,54 @@ def pos_tratamento(request):
         }
     )
 
-# # =========================================
-# # ENVIAR AGRADECIMENTO — PÓS-TRATAMENTO
-# # =========================================
+# =========================================
+# LINK WHATSAPP — PESQUISA DE SATISFAÇÃO
+# =========================================
 
-# @login_required(login_url="/")
-# @permissao_required("marketing", "editar")
-# def enviar_agradecimento(request, pos_id):
+def gerar_link_whatsapp_pesquisa(request, pos):
 
-#     if request.method != "POST":
+    paciente = pos.tratamento.paciente
 
-#         return redirect("pos_tratamento")
+    telefone = paciente.telefone or ""
 
-#     pos = get_object_or_404(
-#         PosTratamento.objects.select_related(
-#             "tratamento",
-#             "tratamento__paciente",
-#         ),
-#         id=pos_id
-#     )
+    # Remove tudo que não for número
+    telefone = "".join(
+        filtro for filtro in telefone
+        if filtro.isdigit()
+    )
 
-#     # =========================================
-#     # EVITA ENVIO DUPLICADO
-#     # =========================================
+    if not telefone:
+        return None
 
-#     if pos.status_agradecimento == "ENVIADO":
+    # Adiciona código do Brasil caso ainda não exista
+    if not telefone.startswith("55"):
+        telefone = "55" + telefone
 
-#         messages.warning(
-#             request,
-#             "O agradecimento já foi enviado."
-#         )
+    # URL pública da pesquisa
+    url_pesquisa = request.build_absolute_uri(
+        reverse(
+            "pesquisa_satisfacao",
+            args=[pos.token_pesquisa]
+        )
+    )
 
-#         return redirect("pos_tratamento")
+    mensagem = (
+        f"Olá, {paciente.nome}! 😊\n\n"
+        f"Aqui é da Clinique Dentaire.\n\n"
+        f"Gostaríamos de saber como foi sua experiência "
+        f"com a nossa clínica durante o tratamento.\n\n"
+        f"Sua opinião é muito importante para nós. "
+        f"Preparamos uma rápida pesquisa de satisfação.\n\n"
+        f"Para responder, acesse o link abaixo:\n\n"
+        f"{url_pesquisa}\n\n"
+        f"Agradecemos pela confiança e pela preferência! 💙\n\n"
+        f"Clinique Dentaire"
+    )
 
-#     paciente = pos.tratamento.paciente
-
-#     # =========================================
-#     # MENSAGEM PADRÃO
-#     # =========================================
-
-#     mensagem = (
-#         f"Olá, {paciente.nome}! 😊\n\n"
-#         f"A equipe da AM Systems agradece por confiar "
-#         f"em nossa clínica durante seu tratamento.\n\n"
-#         f"Foi um prazer cuidar de você e esperamos que "
-#         f"esteja satisfeito(a) com o atendimento recebido.\n\n"
-#         f"Sua opinião é muito importante para nós. "
-#         f"Em breve enviaremos uma pequena pesquisa para "
-#         f"que você possa avaliar sua experiência conosco.\n\n"
-#         f"Obrigado pela preferência! 💙\n\n"
-#         f"AM Systems — Odontologia"
-#     )
-
-#     # =========================================
-#     # MOSTRA A MENSAGEM PARA CONFERÊNCIA
-#     # =========================================
-
-#     return render(
-#         request,
-#         "accounts/marketing/confirmar_agradecimento.html",
-#         {
-#             "pos": pos,
-#             "paciente": paciente,
-#             "mensagem": mensagem,
-#         }
-#     )
+    return (
+        f"https://wa.me/{telefone}"
+        f"?text={quote(mensagem)}"
+    )
 
 # =========================================
 # CONFIRMAR AGRADECIMENTO — PÓS-TRATAMENTO
@@ -14849,20 +14943,33 @@ def ver_avaliacao(request, pos_id):
 @permissao_required("marketing", "editar")
 def contatar_retorno(request, pos_id):
 
+    # =========================================
+    # SOMENTE POST
+    # =========================================
+
     if request.method != "POST":
 
         return redirect("pos_tratamento")
 
+    # =========================================
+    # LOCALIZA O PÓS-TRATAMENTO
+    # =========================================
+
     pos = get_object_or_404(
-        PosTratamento,
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+        ),
         id=pos_id
     )
 
-    # Evita alterar retorno já finalizado
+    # =========================================
+    # EVITA ALTERAR RETORNO FINALIZADO
+    # =========================================
 
     if pos.status_retorno in (
         "AGENDADO",
-        "REALIZADO"
+        "REALIZADO",
     ):
 
         messages.warning(
@@ -14878,12 +14985,250 @@ def contatar_retorno(request, pos_id):
 
     pos.status_retorno = "CONTATADO"
 
-    pos.save()
+    pos.save(
+        update_fields=[
+            "status_retorno",
+            "atualizado_em",
+        ]
+    )
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
 
     messages.success(
         request,
         f"Contato registrado para "
         f"{pos.tratamento.paciente.nome}."
+    )
+
+    return redirect("pos_tratamento")
+
+
+# =========================================
+# AGENDAR RETORNO — PÓS-TRATAMENTO
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("marketing", "editar")
+def agendar_retorno(request, pos_id):
+
+    if request.method != "POST":
+
+        return redirect("pos_tratamento")
+
+    pos = get_object_or_404(
+        PosTratamento.objects.select_related(
+            "tratamento",
+            "tratamento__paciente",
+            "tratamento__dentista",
+        ),
+        id=pos_id
+    )
+
+    # =========================================
+    # SÓ PODE AGENDAR SE FOI CONTATADO
+    # =========================================
+
+    if pos.status_retorno != "CONTATADO":
+
+        messages.warning(
+            request,
+            "O paciente precisa ser contatado antes "
+            "de agendar o retorno."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # RECEBE DATA E HORÁRIO
+    # =========================================
+
+    data_retorno = request.POST.get("data_retorno")
+    hora_retorno = request.POST.get("hora_retorno")
+
+    if not data_retorno:
+
+        messages.error(
+            request,
+            "Informe a data do retorno."
+        )
+
+        return redirect("pos_tratamento")
+
+    if not hora_retorno:
+
+        messages.error(
+            request,
+            "Informe o horário do retorno."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # CONVERTE DATA E HORÁRIO
+    # =========================================
+
+    from datetime import datetime
+
+    try:
+
+        data_retorno = datetime.strptime(
+            data_retorno,
+            "%Y-%m-%d"
+        ).date()
+
+        hora_retorno = datetime.strptime(
+            hora_retorno,
+            "%H:%M"
+        ).time()
+
+    except ValueError:
+
+        messages.error(
+            request,
+            "A data ou o horário informado é inválido."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # VERIFICA O DENTISTA
+    # =========================================
+
+    if not pos.tratamento.dentista:
+
+        messages.error(
+            request,
+            "Não é possível agendar o retorno porque "
+            "o tratamento não possui dentista definido."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # LOCALIZA O PROFISSIONAL DA AGENDA
+    # =========================================
+
+    from agenda.models import Agendamento, Profissional
+
+    profissional = Profissional.objects.filter(
+        usuario_id=pos.tratamento.dentista_id,
+        ativo=True
+    ).first()
+
+    if not profissional:
+
+        messages.error(
+            request,
+            "O dentista do tratamento não possui "
+            "um profissional ativo na Agenda."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # EVITA DUPLICIDADE DO PRÓPRIO RETORNO
+    # =========================================
+
+    agendamento_existente = Agendamento.objects.filter(
+        pos_tratamento=pos,
+        status__in=[
+            "agendado",
+            "confirmado",
+            "atendimento",
+        ],
+    ).first()
+
+    if agendamento_existente:
+
+        messages.warning(
+            request,
+            "Este retorno já possui um agendamento ativo "
+            "na Agenda."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # EVITA AGENDAMENTO DUPLICADO
+    # MESMO PACIENTE + DATA + HORÁRIO
+    # =========================================
+
+    agendamento_existente = Agendamento.objects.filter(
+        paciente=pos.tratamento.paciente,
+        data=data_retorno,
+        hora_inicio=hora_retorno,
+        observacoes="Retorno de Pós-Tratamento",
+        status__in=[
+            "agendado",
+            "confirmado",
+            "atendimento",
+        ],
+    ).first()
+
+    if agendamento_existente:
+
+        messages.warning(
+            request,
+            "Já existe um retorno desse paciente "
+            "agendado para essa data e horário."
+        )
+
+        return redirect("pos_tratamento")
+
+    # =========================================
+    # CRIA O AGENDAMENTO
+    # =========================================
+
+    Agendamento.objects.create(
+
+        paciente=pos.tratamento.paciente,
+
+        # VÍNCULO DIRETO COM O PÓS-TRATAMENTO
+        pos_tratamento=pos,
+
+        profissional=profissional,
+
+        procedimento=None,
+
+        data=data_retorno,
+
+        hora_inicio=hora_retorno,
+
+        duracao=60,
+
+        observacoes="Retorno de Pós-Tratamento",
+
+        status="agendado",
+    )
+
+    # =========================================
+    # ATUALIZA O PÓS-TRATAMENTO
+    # =========================================
+
+    pos.data_retorno = data_retorno
+
+    pos.status_retorno = "AGENDADO"
+
+    pos.save(
+        update_fields=[
+            "data_retorno",
+            "status_retorno",
+            "atualizado_em",
+        ]
+    )
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
+
+    messages.success(
+        request,
+        f"Retorno de {pos.tratamento.paciente.nome} "
+        f"agendado para "
+        f"{data_retorno.strftime('%d/%m/%Y')} "
+        f"às {hora_retorno.strftime('%H:%M')}."
     )
 
     return redirect("pos_tratamento")
@@ -24124,3 +24469,4 @@ def dre(request):
         "accounts/dre.html",
         context
     )
+

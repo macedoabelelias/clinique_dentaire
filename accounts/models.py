@@ -1232,6 +1232,8 @@ class Tratamento(models.Model):
         related_name="tratamentos"
     )
 
+    
+
     # =========================================
     # DENTISTA RESPONSÁVEL
     # =========================================
@@ -1321,11 +1323,23 @@ class Tratamento(models.Model):
         Regras do tratamento:
 
         - Apenas um tratamento ativo por paciente.
-        - O dentista responsável deve ser informado na criação
-        do tratamento.
+        - Se o tratamento não possuir dentista,
+          utiliza o dentista definido no paciente.
         """
 
-        # Garante apenas um tratamento ativo por paciente.
+        # =========================================
+        # HERDA O DENTISTA DO PACIENTE
+        # =========================================
+
+        if not self.dentista_id and self.paciente_id:
+
+            if self.paciente.dentista_id:
+
+                self.dentista_id = self.paciente.dentista_id
+
+        # =========================================
+        # GARANTE APENAS UM TRATAMENTO ATIVO
+        # =========================================
 
         if self.status == "ATIVO":
 

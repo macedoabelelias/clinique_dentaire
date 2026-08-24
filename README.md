@@ -19,3 +19,38 @@ Hoje está assim: <div class="documento-cabecalho">
         class="logo-clinica"
         alt="Clinique Dentaire"
     >
+
+
+    Para zerar todo banco de dados, apagar completamente o db.sqlite3, posso usar: no PoweShell - python manage.py flush
+
+    Para zerar o banco sem apagar dados (shell)= from accounts.models import *
+from agenda.models import *
+
+print("\n========== CONTAS ==========")
+
+for modelo in [
+    Procedimento,
+    Paciente,
+    Tratamento,
+    PosTratamento,
+    Orcamento,
+    ItemOrcamento,
+    ContaReceber,
+    ContaPagar,
+]:
+    try:
+        print(f"{modelo.__name__}: {modelo.objects.count()}")
+    except Exception as e:
+        print(f"{modelo.__name__}: ERRO - {e}")
+
+
+print("\n========== AGENDA ==========")
+
+for modelo in [
+    Agendamento,
+    Profissional,
+]:
+    try:
+        print(f"{modelo.__name__}: {modelo.objects.count()}")
+    except Exception as e:
+        print(f"{modelo.__name__}: ERRO - {e}")

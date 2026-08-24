@@ -80,6 +80,19 @@ class Agendamento(models.Model):
         related_name="agendamentos",
     )
 
+    # =========================================
+    # PÓS-TRATAMENTO
+    # =========================================
+
+    pos_tratamento = models.ForeignKey(
+        "accounts.PosTratamento",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="agendamentos_retorno",
+        verbose_name="Pós-Tratamento",
+    )
+
     profissional = models.ForeignKey(
         Profissional,
         on_delete=models.PROTECT,

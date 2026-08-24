@@ -227,8 +227,8 @@ Pós-Tratamento | Clinique Dentaire
 
 
                     <!-- =========================================
-     AGRADECIMENTO
-========================================== -->
+                        AGRADECIMENTO
+                    ========================================== -->
 
                     <div class="col-xl-2 col-lg-2 col-md-6">
 
@@ -291,256 +291,305 @@ Pós-Tratamento | Clinique Dentaire
 
                     </div>
 
-
                     <!-- =========================================
      PESQUISA
-========================================== -->
+========================================= -->
 
-<div class="col-xl-2 col-lg-2 col-md-6">
+                    <div class="col-xl-2 col-lg-2 col-md-6">
 
-    <small class="text-muted d-block mb-1">
-
-        Pesquisa
-
-    </small>
+                        <small class="text-muted d-block mb-1">
+                            Pesquisa
+                        </small>
 
 
-    {% if pos.status_pesquisa == "PENDENTE" %}
+                        {% if pos.status_pesquisa == "PENDENTE" %}
 
-        <!-- =========================================
+                        <!-- =========================================
              PESQUISA PENDENTE
         ========================================== -->
 
-        <span class="badge bg-warning text-dark mb-2">
+                        <span class="badge bg-warning text-dark mb-2">
 
-            <i class="bi bi-clock me-1"></i>
+                            <i class="bi bi-clock me-1"></i>
 
-            Pendente
+                            Pendente
 
-        </span>
-
-
-        <form
-            method="post"
-            action="{% url 'enviar_pesquisa' pos.id %}"
-        >
-
-            {% csrf_token %}
-
-            <button
-                type="submit"
-                class="btn btn-sm btn-outline-warning"
-            >
-
-                <i class="bi bi-star me-1"></i>
-
-                Enviar pesquisa
-
-            </button>
-
-        </form>
+                        </span>
 
 
-    {% elif pos.status_pesquisa == "ENVIADA" %}
+                        <form method="post" action="{% url 'enviar_pesquisa' pos.id %}">
 
-        <!-- =========================================
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-sm btn-outline-warning">
+
+                                <i class="bi bi-star me-1"></i>
+
+                                Enviar pesquisa
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif pos.status_pesquisa == "ENVIADA" %}
+
+                        <!-- =========================================
              PESQUISA ENVIADA
         ========================================== -->
 
-        <span class="badge bg-primary">
+                        <span class="badge bg-primary">
 
-            <i class="bi bi-send-check me-1"></i>
+                            <i class="bi bi-send-check me-1"></i>
 
-            Enviada
+                            Enviada
 
-        </span>
-
-
-        {% if pos.data_pesquisa %}
-
-            <div class="small text-muted mt-1">
-
-                {{ pos.data_pesquisa|date:"d/m/Y" }}
-
-            </div>
-
-        {% endif %}
+                        </span>
 
 
-    {% elif pos.status_pesquisa == "RESPONDIDA" %}
+                        {% if pos.data_pesquisa %}
 
-        <!-- =========================================
-             PESQUISA RESPONDIDA
-        ========================================== -->
+                        <div class="small text-muted mt-1">
 
-        <span class="badge bg-success">
+                            {{ pos.data_pesquisa|date:"d/m/Y" }}
 
-            <i class="bi bi-check-circle me-1"></i>
+                        </div>
 
-            Respondida
-
-        </span>
-
-
-        {% if pos.nota_satisfacao is not None %}
-
-            <div class="mt-1">
-
-                <strong class="text-success">
-
-                    {{ pos.nota_satisfacao }}/10
-
-                </strong>
-
-            </div>
-
-        {% endif %}
-
-
-        {% if pos.data_resposta %}
-
-            <div class="small text-muted">
-
-                {{ pos.data_resposta|date:"d/m/Y" }}
-
-            </div>
-
-        {% endif %}
-
-
-        <!-- =========================================
-             VER AVALIAÇÃO
-        ========================================== -->
-
-        <a
-            href="{% url 'ver_avaliacao' pos.id %}"
-            class="btn btn-sm btn-outline-success mt-2"
-        >
-
-            <i class="bi bi-eye me-1"></i>
-
-            Ver avaliação
-
-        </a>
-
-
-    {% endif %}
-
-</div>
+                        {% endif %}
 
 
                         <!-- =========================================
+             ABRIR PESQUISA
+        ========================================== -->
+
+                        <a href="{% url 'pesquisa_satisfacao' pos.token_pesquisa %}" target="_blank"
+                            class="btn btn-sm btn-outline-primary mt-2">
+
+                            <i class="bi bi-box-arrow-up-right me-1"></i>
+
+                            Abrir pesquisa
+
+                        </a>
+
+
+                        {% elif pos.status_pesquisa == "RESPONDIDA" %}
+
+                        <!-- =========================================
+             PESQUISA RESPONDIDA
+        ========================================== -->
+
+                        <span class="badge bg-success">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Respondida
+
+                        </span>
+
+
+                        {% if pos.nota_satisfacao is not None %}
+
+                        <div class="mt-1">
+
+                            <strong class="text-success">
+
+                                {{ pos.nota_satisfacao }}/10
+
+                            </strong>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if pos.data_resposta %}
+
+                        <div class="small text-muted">
+
+                            {{ pos.data_resposta|date:"d/m/Y" }}
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <a href="{% url 'ver_avaliacao' pos.id %}" class="btn btn-sm btn-outline-success mt-2">
+
+                            <i class="bi bi-eye me-1"></i>
+
+                            Ver avaliação
+
+                        </a>
+
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- =========================================
                             RETORNO
                         ========================================== -->
 
-                        <div class="col-xl-3 col-lg-3 col-md-12">
+                    <div class="col-xl-3 col-lg-3 col-md-12">
 
-                            <small class="text-muted d-block">
+                        <small class="text-muted d-block">
 
-                                Retorno
+                            Retorno
 
-                            </small>
+                        </small>
 
-                            <div class="mb-2">
+                        <div class="mb-2">
 
-                                <strong>
+                            <strong>
 
-                                    {{ pos.data_retorno|date:"d/m/Y" }}
+                                {{ pos.data_retorno|date:"d/m/Y" }}
 
-                                </strong>
+                            </strong>
 
-                                <span class="badge bg-secondary ms-1">
+                            <span class="badge bg-secondary ms-1">
 
-                                    {{ pos.intervalo_retorno }} meses
-
-                                </span>
-
-                            </div>
-
-
-                            {% if pos.status_retorno == "PENDENTE" %}
-
-                            <span class="badge bg-warning text-dark mb-2">
-
-                                Pendente
+                                {{ pos.intervalo_retorno }} meses
 
                             </span>
-
-                            <form method="post" action="{% url 'contatar_retorno' pos.id %}">
-
-                                {% csrf_token %}
-
-                                <button type="submit" class="btn btn-sm btn-outline-success">
-
-                                    <i class="bi bi-telephone me-1"></i>
-
-                                    Contatar paciente
-
-                                </button>
-
-                            </form>
-
-
-                            {% elif pos.status_retorno == "CONTATADO" %}
-
-                            <span class="badge bg-info text-dark">
-
-                                <i class="bi bi-telephone-check me-1"></i>
-
-                                Contatado
-
-                            </span>
-
-
-                            {% elif pos.status_retorno == "AGENDADO" %}
-
-                            <span class="badge bg-primary">
-
-                                <i class="bi bi-calendar-check me-1"></i>
-
-                                Agendado
-
-                            </span>
-
-
-                            {% elif pos.status_retorno == "REALIZADO" %}
-
-                            <span class="badge bg-success">
-
-                                <i class="bi bi-check-circle me-1"></i>
-
-                                Realizado
-
-                            </span>
-
-                            {% endif %}
 
                         </div>
+
+
+                        {% if pos.status_retorno == "PENDENTE" %}
+
+                        <span class="badge bg-warning text-dark mb-2">
+
+                            Pendente
+
+                        </span>
+
+                        <form method="post" action="{% url 'contatar_retorno' pos.id %}">
+
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-sm btn-outline-success">
+
+                                <i class="bi bi-telephone me-1"></i>
+
+                                Contatar paciente
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif pos.status_retorno == "CONTATADO" %}
+
+<span class="badge bg-info text-dark mb-2">
+
+    <i class="bi bi-telephone-check me-1"></i>
+
+    Contatado
+
+</span>
+
+
+<form method="post"
+      action="{% url 'agendar_retorno' pos.id %}"
+      class="mt-2">
+
+    {% csrf_token %}
+
+    <!-- DATA -->
+
+    <div class="mb-2">
+
+        <input
+            type="date"
+            name="data_retorno"
+            class="form-control form-control-sm"
+            value="{{ pos.data_retorno|date:'Y-m-d' }}"
+            required
+        >
+
+    </div>
+
+
+    <!-- HORÁRIO -->
+
+    <div class="mb-2">
+
+        <input
+            type="time"
+            name="hora_retorno"
+            class="form-control form-control-sm"
+            value="08:00"
+            required
+        >
+
+    </div>
+
+
+    <!-- BOTÃO -->
+
+    <button
+        type="submit"
+        class="btn btn-sm btn-outline-primary">
+
+        <i class="bi bi-calendar-plus me-1"></i>
+
+        Agendar retorno
+
+    </button>
+
+</form>
+
+
+                        {% elif pos.status_retorno == "AGENDADO" %}
+
+                        <span class="badge bg-primary">
+
+                            <i class="bi bi-calendar-check me-1"></i>
+
+                            Agendado
+
+                        </span>
+
+
+                        {% elif pos.status_retorno == "REALIZADO" %}
+
+                        <span class="badge bg-success">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Realizado
+
+                        </span>
+
+                        {% endif %}
 
                     </div>
 
                 </div>
 
-                {% empty %}
+            </div>
 
-                <!-- =========================================
+            {% empty %}
+
+            <!-- =========================================
                  VAZIO
             ========================================== -->
 
-                <div class="text-center text-muted py-5">
+            <div class="text-center text-muted py-5">
 
-                    <i class="bi bi-check-circle fs-1 d-block mb-3"></i>
+                <i class="bi bi-check-circle fs-1 d-block mb-3"></i>
 
-                    Nenhum paciente em pós-tratamento.
-
-                </div>
-
-                {% endfor %}
+                Nenhum paciente em pós-tratamento.
 
             </div>
+
+            {% endfor %}
 
         </div>
 
     </div>
 
-    {% endblock %}
+</div>
+
+{% endblock %}
