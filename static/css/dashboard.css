@@ -866,3 +866,13 @@ RESPONSIVO MENU CLÍNICO
 
 }
 
+/* =========================================
+   SCROLL DAS TABELAS DOS RELATÓRIOS
+   ========================================= */
+
+.relatorio-tabela-scroll {
+    height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+

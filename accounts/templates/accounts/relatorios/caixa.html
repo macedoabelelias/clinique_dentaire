@@ -14,9 +14,9 @@ Relatório de Caixa
 
         <div class="card-header bg-primary text-white">
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-                <div>
+                <div class="relatorio-header-content">
 
                     <h4 class="mb-1">
 
@@ -34,7 +34,7 @@ Relatório de Caixa
 
                 </div>
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="relatorio-header-actions">
 
                     <a href="{% url 'relatorio_caixa_pdf' %}?{{ request.GET.urlencode }}"
                     target="_blank"
@@ -425,7 +425,7 @@ Relatório de Caixa
 
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive relatorio-tabela-scroll">
 
         <table class="table table-hover align-middle mb-0">
 

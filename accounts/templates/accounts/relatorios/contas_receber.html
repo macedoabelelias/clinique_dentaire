@@ -14,9 +14,9 @@ Relatório de Atendimentos
 
         <div class="card-header bg-primary text-white">
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-                <div>
+                <div class="relatorio-header-content">
 
                     <h4 class="mb-1">
 
@@ -34,7 +34,7 @@ Relatório de Atendimentos
 
                 </div>
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="relatorio-header-actions">
 
                     <a href="{% url 'relatorio_contas_receber_pdf' %}?{{ request.GET.urlencode }}"
                     target="_blank"
@@ -45,22 +45,7 @@ Relatório de Atendimentos
                         PDF
 
                     </a>
-
-                    <a href="#" class="btn btn-light btn-sm border disabled">
-
-                        <i class="bi bi-file-earmark-excel text-success me-1"></i>
-
-                        Excel
-
-                    </a>
-
-                    <button type="button" onclick="window.print();" class="btn btn-light btn-sm border">
-
-                        <i class="bi bi-printer text-secondary me-1"></i>
-
-                        Imprimir
-
-                    </button>
+                                       
 
                 </div>
 
@@ -432,7 +417,7 @@ Relatório de Atendimentos
 
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive relatorio-tabela-scroll">
 
                     <table class="table table-hover align-middle mb-0">
 

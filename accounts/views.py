@@ -8839,18 +8839,35 @@ def imprimir_receita(request, id):
             )
         )
 
-    if config and config.endereco:
+        if config and config.endereco:
 
-        elementos.append(
-            Paragraph(
-                f'''
-                <para align="center">
-                {config.endereco}
-                </para>
-                ''',
-                styles['BodyText']
+            endereco_completo = config.endereco
+
+            if config.numero:
+                endereco_completo += f", {config.numero}"
+
+            if config.bairro:
+                endereco_completo += f" - {config.bairro}"
+
+            if config.cidade:
+                endereco_completo += f" - {config.cidade}"
+
+            if config.estado:
+                endereco_completo += f"/{config.estado}"
+
+            if config.cep:
+                endereco_completo += f" - CEP: {config.cep}"
+
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    {endereco_completo}
+                    </para>
+                    ''',
+                    styles['BodyText']
+                )
             )
-        )
 
     if config and config.email:
 
@@ -8865,9 +8882,9 @@ def imprimir_receita(request, id):
             )
         )
 
-    doc.build(elementos)
+        doc.build(elementos)
 
-    return response
+        return response
 
 # =========================================
 # MODELO DE RECEITA AJAX
@@ -9594,23 +9611,35 @@ def imprimir_solicitacao_exame(request, id):
 
         )
 
-    if config and config.endereco:
+        if config and config.endereco:
 
-        elementos.append(
+            endereco_completo = config.endereco
 
-            Paragraph(
+            if config.numero:
+                endereco_completo += f", {config.numero}"
 
-                f'''
-                <para align="center">
-                {config.endereco}
-                </para>
-                ''',
+            if config.bairro:
+                endereco_completo += f" - {config.bairro}"
 
-                styles['BodyText']
+            if config.cidade:
+                endereco_completo += f" - {config.cidade}"
 
+            if config.estado:
+                endereco_completo += f"/{config.estado}"
+
+            if config.cep:
+                endereco_completo += f" - CEP: {config.cep}"
+
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    {endereco_completo}
+                    </para>
+                    ''',
+                    styles['BodyText']
+                )
             )
-
-        )
 
     if config and config.email:
 

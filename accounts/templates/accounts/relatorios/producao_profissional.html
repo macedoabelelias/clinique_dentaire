@@ -12,14 +12,21 @@ Produção por Profissional
 
         <div class="card-header bg-primary text-white">
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-                <h4 class="mb-0">
-                    <i class="bi bi-person-badge"></i>
-                    Produção por Profissional
-                </h4>
+                <div class="relatorio-header-content">
 
-                <div>
+                    <h4 class="mb-0">
+
+                        <i class="bi bi-person-badge"></i>
+
+                        Produção por Profissional
+
+                    </h4>
+
+                </div>
+
+               <div class="relatorio-header-actions">
 
                     <a href="{% url 'pdf_producao_profissional' %}?profissional={{ profissional_id|default_if_none:'' }}&data_inicio={{ data_inicio|default_if_none:'' }}&data_final={{ data_final|default_if_none:'' }}"
                        target="_blank"
@@ -231,7 +238,7 @@ Produção por Profissional
 
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive relatorio-tabela-scroll">
 
                     <table class="table table-hover mb-0">
 

@@ -6,23 +6,34 @@ Faturamento
 
 {% block content %}
 
+<style>
+    .relatorio-faturamento-scroll {
+        max-height: 280px;
+        overflow-y: auto;
+    }
+</style>
+
 <div class="container-fluid mt-4">
 
     <div class="card shadow-sm">
 
         <div class="card-header bg-success text-white">
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-                <h4 class="mb-0">
+                <div class="relatorio-header-content">
 
-                    <i class="bi bi-cash-stack"></i>
+                    <h4 class="mb-0">
 
-                    Faturamento
+                        <i class="bi bi-cash-stack"></i>
 
-                </h4>
+                        Faturamento
 
-                <div>
+                    </h4>
+
+                </div>
+
+                <div class="relatorio-header-actions">
 
                     <a href="{% url 'pdf_faturamento' %}"
                        target="_blank"
@@ -318,7 +329,7 @@ Faturamento
 
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive relatorio-faturamento-scroll">
 
         <table class="table table-hover mb-0">
 

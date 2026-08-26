@@ -264,32 +264,30 @@ Auditoria do Sistema
 
                     </div>
 
-                    <div class="col-md-1 d-flex align-items-end">
+                    <div class="col-md-2 d-flex align-items-end gap-2">
 
-                        <a
-                            href="{% url 'pdf_auditoria' %}?{{ request.GET.urlencode }}"
-                            target="_blank"
-                            class="btn btn-danger btn-sm me-2">
+    <a
+        href="{% url 'pdf_auditoria' %}?{{ request.GET.urlencode }}"
+        target="_blank"
+        class="btn btn-light btn-sm border">
 
-                            <i class="bi bi-file-earmark-pdf"></i>
+        <i class="bi bi-file-earmark-pdf text-danger me-1"></i>
 
-                            PDF
+        PDF
 
-                        </a>
+    </a>
 
-                    </div>
+    <a
+        href="{% url 'excel_auditoria' %}?{{ request.GET.urlencode }}"
+        class="btn btn-success btn-sm">
 
-                    <div class="col-md-1 d-flex align-items-end">
+        <i class="bi bi-file-earmark-excel me-1"></i>
 
-                        <a
-                            href="{% url 'excel_auditoria' %}?{{ request.GET.urlencode }}"
-                            class="btn btn-success btn-sm me-2">
+        Excel
 
-                            <i class="bi bi-file-earmark-excel"></i>
+    </a>
 
-                            Excel
-
-                        </a>
+</div>
 
                     </div>
 

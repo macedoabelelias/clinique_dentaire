@@ -1,34 +1,59 @@
 <div class="rodape-pdf">
 
     <div>
-
         <strong>
-
             {{ config.nome_clinica }}
-
         </strong>
-
     </div>
 
-    <div>
+    {% if config.endereco %}
+        <div>
+            {{ config.endereco }}
 
-        {% if config.email %}
+            {% if config.numero %}
+                , {{ config.numero }}
+            {% endif %}
 
+            {% if config.bairro %}
+                - {{ config.bairro }}
+            {% endif %}
+
+            {% if config.cidade %}
+                - {{ config.cidade }}
+            {% endif %}
+
+            {% if config.estado %}
+                /{{ config.estado }}
+            {% endif %}
+
+            {% if config.cep %}
+                - CEP: {{ config.cep }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if config.telefone or config.whatsapp %}
+        <div>
+
+            {% if config.telefone %}
+                Tel: {{ config.telefone }}
+            {% endif %}
+
+            {% if config.telefone and config.whatsapp %}
+                &nbsp;&nbsp;&nbsp;
+            {% endif %}
+
+            {% if config.whatsapp %}
+                WhatsApp: {{ config.whatsapp }}
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    {% if config.email %}
+        <div>
             {{ config.email }}
-
-        {% endif %}
-
-    </div>
-
-    <div>
-
-        {% if config.whatsapp %}
-
-            WhatsApp:
-            {{ config.whatsapp }}
-
-        {% endif %}
-
-    </div>
+        </div>
+    {% endif %}
 
 </div>

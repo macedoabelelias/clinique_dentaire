@@ -14,53 +14,55 @@ Relatório de Pacientes
 
         <div class="card-header bg-primary text-white">
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-                <div>
+        <div class="relatorio-header-content">
 
-                    <h4 class="mb-1">
+            <h4 class="mb-1">
 
-                        <i class="bi bi-people-fill me-2"></i>
+                <i class="bi bi-people-fill me-2"></i>
 
-                        Relatório de Pacientes
+                Relatório de Pacientes
 
-                    </h4>
+            </h4>
 
-                    <p class="mb-0 text-white-50">
+            <p class="mb-0 text-white-50">
 
-                        Visualização completa dos pacientes cadastrados no sistema.
+                Visualização completa dos pacientes cadastrados no sistema.
 
-                    </p>
-
-                </div>
-
-                <div class="d-flex align-items-center gap-2">
-
-                    <!-- PDF -->
-
-                    <a href="{% url 'pdf_relatorio_pacientes' %}" class="btn btn-light btn-sm border">
-
-                        <i class="bi bi-file-earmark-pdf text-danger me-1"></i>
-
-                        PDF
-
-                    </a>
-
-                    <!-- Excel -->
-
-                    <a href="{% url 'exportar_excel_relatorio_pacientes' %}?{{ request.GET.urlencode }}"
-                    class="btn btn-success">
-
-                        <i class="bi bi-file-earmark-excel"></i>
-                        Excel
-
-                    </a>
-
-                </div>
-
-            </div>
+            </p>
 
         </div>
+
+        <div class="relatorio-header-actions">
+
+            <!-- PDF -->
+
+            <a href="{% url 'pdf_relatorio_pacientes' %}"
+               class="btn btn-light btn-sm border">
+
+                <i class="bi bi-file-earmark-pdf text-danger me-1"></i>
+
+                PDF
+
+            </a>
+
+            <!-- Excel -->
+
+            <a href="{% url 'exportar_excel_relatorio_pacientes' %}?{{ request.GET.urlencode }}"
+               class="btn btn-success btn-sm">
+
+                <i class="bi bi-file-earmark-excel"></i>
+
+                Excel
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 
         <div class="card-body">
 
@@ -305,7 +307,7 @@ Relatório de Pacientes
 
             <div class="card-header bg-light">
 
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
                     <div>
 
@@ -343,7 +345,7 @@ Relatório de Pacientes
 
             <div class="card-body p-0">
 
-                <div class="table-responsive">
+                <div class="table-responsive relatorio-tabela-scroll">
 
                     <table class="table table-hover align-middle">
 
@@ -450,13 +452,7 @@ Relatório de Pacientes
 
                                     <div class="btn-group btn-group-sm">
 
-                                        <a href="{% url 'odontograma' paciente.id %}" class="btn btn-outline-primary"
-                                            title="Odontograma">
-
-                                            <i class="bi bi-grid-3x3-gap-fill"></i>
-
-                                        </a>
-
+                                        
                                         <a href="{% url 'editar_paciente' paciente.id %}"
                                             class="btn btn-outline-warning" title="Editar">
 
@@ -499,7 +495,7 @@ Relatório de Pacientes
 
                 <div class="card-footer bg-white">
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
                         <!-- Paginação -->
 

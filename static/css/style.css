@@ -884,3 +884,24 @@ RESPONSIVO
         0 0 0 0.18rem rgba(37,99,235,.15) !important;
 
 }
+
+/* =========================================================
+   CABEÇALHO DOS RELATÓRIOS
+   ========================================================= */
+
+.relatorio-header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.relatorio-header-content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.card-header .relatorio-header-actions {
+    margin-left: auto !important;
+}

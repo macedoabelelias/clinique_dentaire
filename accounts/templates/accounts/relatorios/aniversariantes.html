@@ -98,68 +98,70 @@
 
         <div class="card-body">
 
-            <table class="table table-hover align-middle">
+            <div class="table-responsive relatorio-tabela-scroll">
 
-                <thead>
+    <table class="table table-hover align-middle">
 
-                    <tr>
+        <thead>
 
-                        <th>Data</th>
-                        <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>Status</th>
+            <tr>
 
-                    </tr>
+                <th>Data</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Status</th>
 
-                </thead>
+            </tr>
 
-                <tbody>
+        </thead>
 
-                    {% for paciente in pacientes %}
+        <tbody>
 
-                    <tr>
+            {% for paciente in pacientes %}
 
-                        <td>{{ paciente.nascimento|date:"d/m" }}</td>
+            <tr>
 
-                        <td>{{ paciente.nome }}</td>
+                <td>{{ paciente.nascimento|date:"d/m" }}</td>
 
-                        <td>{{ paciente.telefone }}</td>
+                <td>{{ paciente.nome }}</td>
 
-                        <td>
+                <td>{{ paciente.telefone }}</td>
 
-                            {% if paciente.ativo %}
+                <td>
 
-                                <span class="badge bg-success">Ativo</span>
+                    {% if paciente.ativo %}
 
-                            {% else %}
+                        <span class="badge bg-success">Ativo</span>
 
-                                <span class="badge bg-danger">Inativo</span>
+                    {% else %}
 
-                            {% endif %}
+                        <span class="badge bg-danger">Inativo</span>
 
-                        </td>
+                    {% endif %}
 
-                    </tr>
+                </td>
 
-                    {% empty %}
+            </tr>
 
-                    <tr>
+            {% empty %}
 
-                        <td colspan="4" class="text-center">
+            <tr>
 
-                            Nenhum aniversariante encontrado.
+                <td colspan="4" class="text-center">
 
-                        </td>
+                    Nenhum aniversariante encontrado.
 
-                    </tr>
+                </td>
 
-                    {% endfor %}
+            </tr>
 
-                </tbody>
+            {% endfor %}
 
-            </table>
+        </tbody>
 
-        </div>
+    </table>
+
+</div>
 
     </div>
 

@@ -12,17 +12,25 @@ Produção por Procedimento
 
         <div class="card-header bg-success text-white">
 
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center flex-wrap gap-3 w-100">
 
-        <h4 class="mb-0">
+        <div class="relatorio-header-content">
 
-            <i class="bi bi-clipboard2-pulse"></i>
+            <div class="relatorio-header-content">
 
-            Produção por Procedimento
+                <h4 class="mb-0">
 
-        </h4>
+                    <i class="bi bi-clipboard2-pulse"></i>
 
-        <div>
+                    Produção por Procedimento
+
+                </h4>
+
+            </div>
+
+        </div>
+
+        <div class="relatorio-header-actions">
 
    <a href="{% url 'pdf_producao_procedimento' %}?procedimento={{ procedimento_id|default_if_none:'' }}&data_inicio={{ data_inicio|default_if_none:'' }}&data_final={{ data_final|default_if_none:'' }}"
    target="_blank"
@@ -249,7 +257,7 @@ Produção por Procedimento
 
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive relatorio-tabela-scroll">
 
         <table class="table table-hover align-middle mb-0">
 
@@ -340,7 +348,7 @@ Produção por Procedimento
 
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive relatorio-tabela-scroll">
 
         <table class="table table-hover align-middle mb-0">
 
