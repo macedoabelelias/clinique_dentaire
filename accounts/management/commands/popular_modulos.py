@@ -66,8 +66,17 @@ class Command(BaseCommand):
         # =====================================================
 
         ("relatorios", "Central de Relatórios", "Relatórios", "bi-bar-chart-line-fill", 50),
+
         ("minha_producao", "Minha Produção", "Relatórios", "fa-user-doctor", 51),
 
+        ("aniversariantes", "Aniversariantes", "Relatórios", "bi-cake2-fill", 52),
+
+        ("relatorio_atendimentos", "Relatório de Atendimentos", "Relatórios", "bi-clipboard2-pulse-fill", 53),
+
+        ("relatorio_producao", "Relatório de Produção", "Relatórios", "bi-bar-chart-fill", 54),
+
+        ("relatorio_faturamento", "Relatório de Faturamento", "Relatórios", "bi-currency-dollar", 55),
+        
         # =====================================================
         # EQUIPE
         # =====================================================

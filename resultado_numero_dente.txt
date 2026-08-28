@@ -1,0 +1,1823 @@
+﻿
+  accounts\templates\accounts\components\menu_paciente.html:25:
+  accounts\templates\accounts\components\menu_paciente.html:26:        display: flex !important;
+  accounts\templates\accounts\components\menu_paciente.html:27:
+  accounts\templates\accounts\components\menu_paciente.html:28:        align-items: center;
+> accounts\templates\accounts\components\menu_paciente.html:29:        justify-content: center;
+  accounts\templates\accounts\components\menu_paciente.html:30:
+  accounts\templates\accounts\components\menu_paciente.html:31:        gap: 6px;
+  accounts\templates\accounts\components\menu_paciente.html:32:
+  accounts\templates\accounts\components\menu_paciente.html:33:        padding: 8px 12px !important;
+  accounts\templates\accounts\components\menu_paciente.html:34:
+  accounts\templates\accounts\components\menu_paciente.html:35:        font-size: 13px !important;
+  accounts\templates\accounts\components\menu_paciente.html:36:
+  accounts\templates\accounts\components\menu_paciente.html:37:        min-height: 42px !important;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:34:}
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:35:
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:36:.material-item{
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:37:    display:flex;
+> accounts\templates\accounts\dashboard\acd\_content_bottom.html:38:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:39:    align-items:center;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:40:    padding:10px 0;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:41:    border-bottom:1px solid #ececec;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:42:}
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:43:
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:44:.material-critico{
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:45:    color:#dc3545;
+  accounts\templates\accounts\dashboard\acd\_content_bottom.html:46:    font-weight:600;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:88:        display: flex;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:89:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:90:        align-items: center;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:91:
+> accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:92:        justify-content: center;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:93:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:94:        flex-direction: column;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:95:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:96:        height: 260px;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:97:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:98:        color: #6c757d;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:99:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:100:    }
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:200:    display:flex;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:201:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:202:    align-items:center;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:203:
+> accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:204:    justify-content:center;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:205:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:206:    color:#fff;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:207:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:208:    font-size:18px;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:209:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:210:    flex-shrink:0;
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:211:
+  accounts\templates\accounts\dashboard\contabilidade\_content_grid.html:212:}
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:43:.appointment-item{
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:44:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:45:    display:flex;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:46:    align-items:center;
+> accounts\templates\accounts\dashboard\dentista\_content_grid.html:47:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:48:    gap:18px;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:49:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:50:    padding:16px 0;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:51:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:52:    border-bottom:1px solid #edf2f7;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:53:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:54:}
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:55:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:119:.badge-pending{
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:120:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:121:    display:inline-flex;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:122:    align-items:center;
+> accounts\templates\accounts\dashboard\dentista\_content_grid.html:123:    justify-content:center;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:124:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:125:    padding:8px 16px;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:126:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:127:    border-radius:999px;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:128:
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:129:    font-size:.80rem;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:130:    font-weight:600;
+  accounts\templates\accounts\dashboard\dentista\_content_grid.html:131:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:22:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:23:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:24:/* Barra superior */
+  accounts\templates\accounts\dashboard\gestor\_cards.html:25:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:26:.stats-card::before{
+  accounts\templates\accounts\dashboard\gestor\_cards.html:27:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:28:    content:"";
+  accounts\templates\accounts\dashboard\gestor\_cards.html:29:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:30:    position:absolute;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:31:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:32:    left:0;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:33:    top:0;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:34:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:35:    width:100%;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:36:    height:4px;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:72:    display:flex;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:73:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:74:    align-items:center;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:75:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:76:    justify-content:center;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:77:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:78:    font-size:24px;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:79:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:80:    color:#fff;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:81:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:82:    margin-bottom:16px;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:83:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:84:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:160:/* =========================================
+  accounts\templates\accounts\dashboard\gestor\_cards.html:161:BARRAS SUPERIORES
+  accounts\templates\accounts\dashboard\gestor\_cards.html:162:========================================= */
+  accounts\templates\accounts\dashboard\gestor\_cards.html:163:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:164:.stats-card.border-green::before{
+  accounts\templates\accounts\dashboard\gestor\_cards.html:165:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:166:    background:#10b981;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:167:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:168:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:169:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:170:.stats-card.border-blue::before{
+  accounts\templates\accounts\dashboard\gestor\_cards.html:171:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:172:    background:#2563eb;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:173:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:174:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:175:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:176:.stats-card.border-orange::before{
+  accounts\templates\accounts\dashboard\gestor\_cards.html:177:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:178:    background:#ea580c;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:179:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:180:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:181:
+> accounts\templates\accounts\dashboard\gestor\_cards.html:182:.stats-card.border-purple::before{
+  accounts\templates\accounts\dashboard\gestor\_cards.html:183:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:184:    background:#7c3aed;
+  accounts\templates\accounts\dashboard\gestor\_cards.html:185:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:186:}
+  accounts\templates\accounts\dashboard\gestor\_cards.html:187:</style>
+  accounts\templates\accounts\dashboard\gestor\_cards.html:188:
+  accounts\templates\accounts\dashboard\gestor\_cards.html:189:<!-- =========================================
+  accounts\templates\accounts\dashboard\gestor\_cards.html:190:CARDS SUPERIORES
+  accounts\templates\accounts\dashboard\gestor\_metas.html:27:
+  accounts\templates\accounts\dashboard\gestor\_metas.html:28:.meta-item{
+  accounts\templates\accounts\dashboard\gestor\_metas.html:29:
+  accounts\templates\accounts\dashboard\gestor\_metas.html:30:    display:flex;
+> accounts\templates\accounts\dashboard\gestor\_metas.html:31:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\gestor\_metas.html:32:    align-items:center;
+  accounts\templates\accounts\dashboard\gestor\_metas.html:33:
+  accounts\templates\accounts\dashboard\gestor\_metas.html:34:    margin-bottom:10px;
+  accounts\templates\accounts\dashboard\gestor\_metas.html:35:
+  accounts\templates\accounts\dashboard\gestor\_metas.html:36:}
+  accounts\templates\accounts\dashboard\gestor\_metas.html:37:
+  accounts\templates\accounts\dashboard\gestor\_metas.html:38:.meta-label{
+  accounts\templates\accounts\dashboard\gestor\_metas.html:39:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:60:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:61:.ranking-top{
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:62:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:63:    display:flex;
+> accounts\templates\accounts\dashboard\gestor\_ranking.html:64:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:65:    align-items:flex-start;
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:66:    margin-bottom:5px;
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:67:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:68:}
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:69:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:70:.ranking-left{
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:71:
+  accounts\templates\accounts\dashboard\gestor\_ranking.html:72:    display:flex;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:20:    background:#fff;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:21:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:22:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:23:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:24:.stats-card::before{
+  accounts\templates\accounts\dashboard\marketing\_cards.html:25:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:26:    content:"";
+  accounts\templates\accounts\dashboard\marketing\_cards.html:27:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:28:    position:absolute;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:29:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:30:    left:0;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:31:    top:0;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:32:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:33:    width:100%;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:34:    height:4px;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:57:    display:flex;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:58:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:59:    align-items:center;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:60:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:61:    justify-content:center;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:62:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:63:    font-size:24px;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:64:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:65:    color:#fff;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:66:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:67:    margin-bottom:16px;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:68:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:69:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:95:/* =========================================
+  accounts\templates\accounts\dashboard\marketing\_cards.html:96:BARRAS SUPERIORES
+  accounts\templates\accounts\dashboard\marketing\_cards.html:97:========================================= */
+  accounts\templates\accounts\dashboard\marketing\_cards.html:98:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:99:.stats-card.border-blue::before{
+  accounts\templates\accounts\dashboard\marketing\_cards.html:100:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:101:    background:#2563eb;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:102:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:103:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:104:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:105:.stats-card.border-green::before{
+  accounts\templates\accounts\dashboard\marketing\_cards.html:106:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:107:    background:#10b981;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:108:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:109:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:110:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:111:.stats-card.border-orange::before{
+  accounts\templates\accounts\dashboard\marketing\_cards.html:112:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:113:    background:#ea580c;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:114:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:115:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:116:
+> accounts\templates\accounts\dashboard\marketing\_cards.html:117:.stats-card.border-purple::before{
+  accounts\templates\accounts\dashboard\marketing\_cards.html:118:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:119:    background:#7c3aed;
+  accounts\templates\accounts\dashboard\marketing\_cards.html:120:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:121:}
+  accounts\templates\accounts\dashboard\marketing\_cards.html:122:
+  accounts\templates\accounts\dashboard\marketing\_cards.html:123:/* =========================================
+  accounts\templates\accounts\dashboard\marketing\_cards.html:124:TEXTOS
+  accounts\templates\accounts\dashboard\marketing\_cards.html:125:========================================= */
+  accounts\templates\accounts\dashboard\marketing\_charts.html:94:.origem-top {
+  accounts\templates\accounts\dashboard\marketing\_charts.html:95:
+  accounts\templates\accounts\dashboard\marketing\_charts.html:96:    display: flex;
+  accounts\templates\accounts\dashboard\marketing\_charts.html:97:
+> accounts\templates\accounts\dashboard\marketing\_charts.html:98:    justify-content: space-between;
+  accounts\templates\accounts\dashboard\marketing\_charts.html:99:
+  accounts\templates\accounts\dashboard\marketing\_charts.html:100:    align-items: center;
+  accounts\templates\accounts\dashboard\marketing\_charts.html:101:
+  accounts\templates\accounts\dashboard\marketing\_charts.html:102:    margin-bottom: 8px;
+  accounts\templates\accounts\dashboard\marketing\_charts.html:103:
+  accounts\templates\accounts\dashboard\marketing\_charts.html:104:}
+  accounts\templates\accounts\dashboard\marketing\_charts.html:105:
+  accounts\templates\accounts\dashboard\marketing\_charts.html:106:.origem-nome {
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:36:    height:28px;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:37:
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:38:    display:flex;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:39:    align-items:center;
+> accounts\templates\accounts\dashboard\marketing\_content_bottom.html:40:    justify-content:center;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:41:
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:42:    border-radius:50%;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:43:
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:44:    color:#fff;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:45:
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:46:    font-size:12px;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:47:    font-weight:600;
+  accounts\templates\accounts\dashboard\marketing\_content_bottom.html:48:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:54:.campaign-item{
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:55:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:56:    display:flex;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:57:
+> accounts\templates\accounts\dashboard\marketing\_content_grid.html:58:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:59:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:60:    align-items:center;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:61:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:62:    padding:10px 0;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:63:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:64:    border-bottom:1px solid #edf2f7;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:65:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:66:}
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:226:    display:flex;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:227:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:228:    align-items:center;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:229:
+> accounts\templates\accounts\dashboard\marketing\_content_grid.html:230:    justify-content:space-between;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:231:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:232:}
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:233:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:234:.summary-item span{
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:235:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:236:    flex:1;
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:237:
+  accounts\templates\accounts\dashboard\marketing\_content_grid.html:238:    margin-left:8px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:15:}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:16:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:17:.arcada-row{
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:18:    display:flex;
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:19:    justify-content:center;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:20:    align-items:flex-end;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:21:    gap:2px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:22:    margin:6px 0;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:23:}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:24:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:25:.dente-pdf{
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:26:    text-align:center;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:27:}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:28:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:29:.numero-dente{
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:30:    font-size:9px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:31:    font-weight:600;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:32:    color:#475569;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:33:    margin-bottom:2px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:34:}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:35:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:36:.numero-dente-inferior{
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:37:    font-size:9px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:38:    font-weight:600;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:39:    color:#475569;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:40:    margin-top:2px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:41:}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:42:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:43:.dente-img-pdf{
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:44:    width:28px;
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:83:    <!-- SUPERIOR -->
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:84:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:85:    <div class="arcada-row">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:86:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:87:        {% for numero in superiores_permanentes %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:88:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:89:        <div class="dente-pdf">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:90:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:91:    <div class="numero-dente">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:92:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:93:        {{ numero }}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:94:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:95:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:96:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:97:    <div
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:98:        {% if numero in dentes_com_procedimento %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:99:            class="dente-selecionado"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:100:        {% endif %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:101:    >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:102:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:103:        <img
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:104:            src="{% static 'img/dentes/' %}{{ numero }}.png"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:105:            class="dente-img-pdf"
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:106:            alt="{{ numero }}"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:107:        >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:108:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:109:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:110:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:111:</div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:112:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:113:        {% endfor %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:114:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:117:    <!-- INFERIOR -->
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:118:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:119:    <div class="arcada-row">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:120:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:121:        {% for numero in inferiores_permanentes %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:122:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:123:        <div class="dente-pdf">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:124:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:125:    <div
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:126:        {% if numero in dentes_com_procedimento %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:127:            class="dente-selecionado"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:128:        {% endif %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:129:    >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:130:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:131:        <img
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:132:            src="{% static 'img/dentes/' %}{{ numero }}.png"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:133:            class="dente-img-pdf"
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:134:            alt="{{ numero }}"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:135:        >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:136:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:137:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:138:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:139:    <div class="numero-dente-inferior">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:140:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:141:        {{ numero }}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:142:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:143:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:144:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:145:</div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:146:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:147:        {% endfor %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:148:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:149:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:169:    <!-- SUPERIOR -->
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:170:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:171:    <div class="arcada-row">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:172:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:173:        {% for numero in superiores_deciduos %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:174:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:175:        <div
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:176:    {% if numero in dentes_com_procedimento %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:177:        class="dente-selecionado"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:178:    {% endif %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:179:>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:180:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:181:    <img
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:182:        src="{% static 'img/dentes/' %}{{ numero }}.png"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:183:        class="dente-img-pdf"
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:184:        alt="{{ numero }}"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:185:    >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:186:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:187:</div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:188:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:189:        {% endfor %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:190:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:191:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:192:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:193:    <!-- INFERIOR -->
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:194:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:195:    <div class="arcada-row">
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:196:
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:197:        {% for numero in inferiores_deciduos %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:198:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:199:        <div
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:200:    {% if numero in dentes_com_procedimento %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:201:        class="dente-selecionado"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:202:    {% endif %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:203:>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:204:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:205:    <img
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:206:        src="{% static 'img/dentes/' %}{{ numero }}.png"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:207:        class="dente-img-pdf"
+> accounts\templates\accounts\includes\odontograma_pdf_visual.html:208:        alt="{{ numero }}"
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:209:    >
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:210:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:211:</div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:212:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:213:        {% endfor %}
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:214:
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:215:    </div>
+  accounts\templates\accounts\includes\odontograma_pdf_visual.html:216:
+  accounts\templates\accounts\marketing\detalhe_lead.html:45:    display: flex;
+  accounts\templates\accounts\marketing\detalhe_lead.html:46:
+  accounts\templates\accounts\marketing\detalhe_lead.html:47:    align-items: center;
+  accounts\templates\accounts\marketing\detalhe_lead.html:48:
+> accounts\templates\accounts\marketing\detalhe_lead.html:49:    justify-content: center;
+  accounts\templates\accounts\marketing\detalhe_lead.html:50:
+  accounts\templates\accounts\marketing\detalhe_lead.html:51:    flex-shrink: 0;
+  accounts\templates\accounts\marketing\detalhe_lead.html:52:
+  accounts\templates\accounts\marketing\detalhe_lead.html:53:}
+  accounts\templates\accounts\marketing\detalhe_lead.html:54:
+  accounts\templates\accounts\marketing\detalhe_lead.html:55:.timeline-content {
+  accounts\templates\accounts\marketing\detalhe_lead.html:56:
+  accounts\templates\accounts\marketing\detalhe_lead.html:57:    flex: 1;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:92:            display: inline-flex;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:93:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:94:            align-items: center;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:95:
+> accounts\templates\accounts\marketing\pesquisa_satisfacao.html:96:            justify-content: center;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:97:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:98:            background: #ffc107;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:99:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:100:            color: #ffffff;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:101:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:102:            font-size: 32px;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:103:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:104:            box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:128:            display: flex;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:129:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:130:            align-items: center;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:131:
+> accounts\templates\accounts\marketing\pesquisa_satisfacao.html:132:            justify-content: center;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:133:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:134:            border-radius: 12px !important;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:135:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:136:            font-weight: 600;
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:137:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:138:        }
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:139:
+  accounts\templates\accounts\marketing\pesquisa_satisfacao.html:140:
+  accounts\templates\accounts\pdf\footer_pdf.html:9:    {% if config.endereco %}
+  accounts\templates\accounts\pdf\footer_pdf.html:10:        <div>
+  accounts\templates\accounts\pdf\footer_pdf.html:11:            {{ config.endereco }}
+  accounts\templates\accounts\pdf\footer_pdf.html:12:
+> accounts\templates\accounts\pdf\footer_pdf.html:13:            {% if config.numero %}
+> accounts\templates\accounts\pdf\footer_pdf.html:14:                , {{ config.numero }}
+  accounts\templates\accounts\pdf\footer_pdf.html:15:            {% endif %}
+  accounts\templates\accounts\pdf\footer_pdf.html:16:
+  accounts\templates\accounts\pdf\footer_pdf.html:17:            {% if config.bairro %}
+  accounts\templates\accounts\pdf\footer_pdf.html:18:                - {{ config.bairro }}
+  accounts\templates\accounts\pdf\footer_pdf.html:19:            {% endif %}
+  accounts\templates\accounts\pdf\footer_pdf.html:20:
+  accounts\templates\accounts\pdf\footer_pdf.html:21:            {% if config.cidade %}
+  accounts\templates\accounts\pdf\footer_pdf.html:22:                - {{ config.cidade }}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:69:            <td>
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:70:
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:71:                {% if mes_selecionado %}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:72:
+> accounts\templates\accounts\pdf\producao_mensal_pdf.html:73:                    {% for numero, nome in meses_lista %}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:74:
+> accounts\templates\accounts\pdf\producao_mensal_pdf.html:75:                        {% if numero|stringformat:"s" == 
+mes_selecionado|stringformat:"s" %}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:76:
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:77:                            {{ nome }}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:78:
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:79:                        {% endif %}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:80:
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:81:                    {% endfor %}
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:82:
+  accounts\templates\accounts\pdf\producao_mensal_pdf.html:83:                {% else %}
+  accounts\templates\accounts\relatorios\aniversariantes.html:474:
+  accounts\templates\accounts\relatorios\aniversariantes.html:475:    }
+  accounts\templates\accounts\relatorios\aniversariantes.html:476:
+  accounts\templates\accounts\relatorios\aniversariantes.html:477:
+> accounts\templates\accounts\relatorios\aniversariantes.html:478:    const numero = whatsappAtual.replace(
+  accounts\templates\accounts\relatorios\aniversariantes.html:479:        /\D/g,
+  accounts\templates\accounts\relatorios\aniversariantes.html:480:        ''
+  accounts\templates\accounts\relatorios\aniversariantes.html:481:    );
+  accounts\templates\accounts\relatorios\aniversariantes.html:482:
+  accounts\templates\accounts\relatorios\aniversariantes.html:483:
+> accounts\templates\accounts\relatorios\aniversariantes.html:484:    if (!numero) {
+  accounts\templates\accounts\relatorios\aniversariantes.html:485:
+  accounts\templates\accounts\relatorios\aniversariantes.html:486:        alert(
+  accounts\templates\accounts\relatorios\aniversariantes.html:487:            'O número de WhatsApp cadastrado não é válido.'
+  accounts\templates\accounts\relatorios\aniversariantes.html:488:        );
+  accounts\templates\accounts\relatorios\aniversariantes.html:489:
+  accounts\templates\accounts\relatorios\aniversariantes.html:490:        return;
+  accounts\templates\accounts\relatorios\aniversariantes.html:491:
+  accounts\templates\accounts\relatorios\aniversariantes.html:492:    }
+  accounts\templates\accounts\relatorios\aniversariantes.html:499:
+  accounts\templates\accounts\relatorios\aniversariantes.html:500:
+  accounts\templates\accounts\relatorios\aniversariantes.html:501:    const url =
+  accounts\templates\accounts\relatorios\aniversariantes.html:502:        'https://wa.me/' +
+> accounts\templates\accounts\relatorios\aniversariantes.html:503:        numero +
+  accounts\templates\accounts\relatorios\aniversariantes.html:504:        '?text=' +
+  accounts\templates\accounts\relatorios\aniversariantes.html:505:        encodeURIComponent(mensagem);
+  accounts\templates\accounts\relatorios\aniversariantes.html:506:
+  accounts\templates\accounts\relatorios\aniversariantes.html:507:
+  accounts\templates\accounts\relatorios\aniversariantes.html:508:    window.open(
+  accounts\templates\accounts\relatorios\aniversariantes.html:509:        url,
+  accounts\templates\accounts\relatorios\aniversariantes.html:510:        '_blank'
+  accounts\templates\accounts\relatorios\aniversariantes.html:511:    );
+  accounts\templates\accounts\relatorios\producao_mensal.html:104:                            <option value="">
+  accounts\templates\accounts\relatorios\producao_mensal.html:105:                                Todos
+  accounts\templates\accounts\relatorios\producao_mensal.html:106:                            </option>
+  accounts\templates\accounts\relatorios\producao_mensal.html:107:
+> accounts\templates\accounts\relatorios\producao_mensal.html:108:                            {% for numero, nome in meses_lista %}
+  accounts\templates\accounts\relatorios\producao_mensal.html:109:
+  accounts\templates\accounts\relatorios\producao_mensal.html:110:                                <option
+> accounts\templates\accounts\relatorios\producao_mensal.html:111:                                    value="{{ numero }}"
+> accounts\templates\accounts\relatorios\producao_mensal.html:112:                                    {% if numero|stringformat:"s" == 
+mes_selecionado|stringformat:"s" %}selected{% endif %}>
+  accounts\templates\accounts\relatorios\producao_mensal.html:113:
+  accounts\templates\accounts\relatorios\producao_mensal.html:114:                                    {{ nome }}
+  accounts\templates\accounts\relatorios\producao_mensal.html:115:
+  accounts\templates\accounts\relatorios\producao_mensal.html:116:                                </option>
+  accounts\templates\accounts\relatorios\producao_mensal.html:117:
+  accounts\templates\accounts\relatorios\producao_mensal.html:118:                            {% endfor %}
+  accounts\templates\accounts\relatorios\producao_mensal.html:119:
+  accounts\templates\accounts\relatorios\producao_mensal.html:120:                        </select>
+  accounts\templates\accounts\anamnese_pdf.html:176:    margin-top:50px;
+  accounts\templates\accounts\anamnese_pdf.html:177:
+  accounts\templates\accounts\anamnese_pdf.html:178:    display:flex;
+  accounts\templates\accounts\anamnese_pdf.html:179:
+> accounts\templates\accounts\anamnese_pdf.html:180:    justify-content:space-between;
+  accounts\templates\accounts\anamnese_pdf.html:181:
+  accounts\templates\accounts\anamnese_pdf.html:182:    gap:40px;
+  accounts\templates\accounts\anamnese_pdf.html:183:
+  accounts\templates\accounts\anamnese_pdf.html:184:}
+  accounts\templates\accounts\anamnese_pdf.html:185:
+  accounts\templates\accounts\anamnese_pdf.html:186:.assinatura{
+  accounts\templates\accounts\anamnese_pdf.html:187:
+  accounts\templates\accounts\anamnese_pdf.html:188:    width:45%;
+  accounts\templates\accounts\anamnese_pdf.html:469:
+  accounts\templates\accounts\anamnese_pdf.html:470:<br>
+  accounts\templates\accounts\anamnese_pdf.html:471:
+  accounts\templates\accounts\anamnese_pdf.html:472:{{ config.endereco }},
+> accounts\templates\accounts\anamnese_pdf.html:473:{{ config.numero }}
+  accounts\templates\accounts\anamnese_pdf.html:474:
+  accounts\templates\accounts\anamnese_pdf.html:475:{% if config.bairro %}
+  accounts\templates\accounts\anamnese_pdf.html:476:    - {{ config.bairro }}
+  accounts\templates\accounts\anamnese_pdf.html:477:{% endif %}
+  accounts\templates\accounts\anamnese_pdf.html:478:
+  accounts\templates\accounts\anamnese_pdf.html:479:<br>
+  accounts\templates\accounts\anamnese_pdf.html:480:
+  accounts\templates\accounts\anamnese_pdf.html:481:{{ config.cidade }}/{{ config.estado }}
+  accounts\templates\accounts\caixa.html:564:        <small class="text-muted">
+  accounts\templates\accounts\caixa.html:565:
+  accounts\templates\accounts\caixa.html:566:            {{ item.conta_receber.descricao }}
+  accounts\templates\accounts\caixa.html:567:
+> accounts\templates\accounts\caixa.html:568:            {% if item.conta_receber.numero_parcela %}
+  accounts\templates\accounts\caixa.html:569:
+  accounts\templates\accounts\caixa.html:570:                • Parcela
+> accounts\templates\accounts\caixa.html:571:                {{ item.conta_receber.numero_parcela }}
+  accounts\templates\accounts\caixa.html:572:
+  accounts\templates\accounts\caixa.html:573:            {% endif %}
+  accounts\templates\accounts\caixa.html:574:
+  accounts\templates\accounts\caixa.html:575:        </small>
+  accounts\templates\accounts\caixa.html:576:
+  accounts\templates\accounts\caixa.html:577:    {% elif item.conta_pagar %}
+  accounts\templates\accounts\caixa.html:578:
+  accounts\templates\accounts\caixa.html:579:        {% if item.conta_pagar.profissional %}
+  accounts\templates\accounts\compras.html:51:                            {{ compra.data_compra|date:"d \d\e F \d\e Y" }}
+  accounts\templates\accounts\compras.html:52:                        </td>
+  accounts\templates\accounts\compras.html:53:
+  accounts\templates\accounts\compras.html:54:                        <td>
+> accounts\templates\accounts\compras.html:55:                            {{ compra.numero_nf }}
+  accounts\templates\accounts\compras.html:56:                        </td>
+  accounts\templates\accounts\compras.html:57:
+  accounts\templates\accounts\compras.html:58:                        <td>
+  accounts\templates\accounts\compras.html:59:                            R$ {{ compra.valor_total }}
+  accounts\templates\accounts\compras.html:60:                        </td>
+  accounts\templates\accounts\compras.html:61:
+  accounts\templates\accounts\compras.html:62:                        <td>
+  accounts\templates\accounts\compras.html:63:
+  accounts\templates\accounts\compra_editar.html:93:                        </label>
+  accounts\templates\accounts\compra_editar.html:94:
+  accounts\templates\accounts\compra_editar.html:95:                        <input
+  accounts\templates\accounts\compra_editar.html:96:                            type="text"
+> accounts\templates\accounts\compra_editar.html:97:                            name="numero_nf"
+  accounts\templates\accounts\compra_editar.html:98:                            class="form-control"
+> accounts\templates\accounts\compra_editar.html:99:                            value="{{ compra.numero_nf }}">
+  accounts\templates\accounts\compra_editar.html:100:
+  accounts\templates\accounts\compra_editar.html:101:                    </div>
+  accounts\templates\accounts\compra_editar.html:102:
+  accounts\templates\accounts\compra_editar.html:103:                </div>
+  accounts\templates\accounts\compra_editar.html:104:
+  accounts\templates\accounts\compra_editar.html:105:                <div class="row">
+  accounts\templates\accounts\compra_editar.html:106:
+  accounts\templates\accounts\compra_editar.html:107:                    <div class="col-md-6 mb-3">
+  accounts\templates\accounts\compra_form.html:96:                        </label>
+  accounts\templates\accounts\compra_form.html:97:
+  accounts\templates\accounts\compra_form.html:98:                        <input
+  accounts\templates\accounts\compra_form.html:99:                            type="text"
+> accounts\templates\accounts\compra_form.html:100:                            name="numero_nf"
+  accounts\templates\accounts\compra_form.html:101:                            class="form-control"
+  accounts\templates\accounts\compra_form.html:102:                        >
+  accounts\templates\accounts\compra_form.html:103:
+  accounts\templates\accounts\compra_form.html:104:                    </div>
+  accounts\templates\accounts\compra_form.html:105:
+  accounts\templates\accounts\compra_form.html:106:
+  accounts\templates\accounts\compra_form.html:107:                    <div class="col-md-3 mb-3">
+  accounts\templates\accounts\compra_form.html:108:
+  accounts\templates\accounts\compra_form.html:746:
+  accounts\templates\accounts\compra_form.html:747:
+  accounts\templates\accounts\compra_form.html:748:    document.getElementById(
+  accounts\templates\accounts\compra_form.html:749:        'resumo-total'
+> accounts\templates\accounts\compra_form.html:750:    ).textContent =
+  accounts\templates\accounts\compra_form.html:751:        'R$ ' +
+  accounts\templates\accounts\compra_form.html:752:        total.toFixed(2)
+  accounts\templates\accounts\compra_form.html:753:            .replace('.', ',');
+  accounts\templates\accounts\compra_form.html:754:
+  accounts\templates\accounts\compra_form.html:755:
+  accounts\templates\accounts\compra_form.html:756:    document.getElementById(
+  accounts\templates\accounts\compra_form.html:757:        'resumo-entrada'
+> accounts\templates\accounts\compra_form.html:758:    ).textContent =
+  accounts\templates\accounts\compra_form.html:759:        'R$ ' +
+  accounts\templates\accounts\compra_form.html:760:        entrada.toFixed(2)
+  accounts\templates\accounts\compra_form.html:761:            .replace('.', ',');
+  accounts\templates\accounts\compra_form.html:762:
+  accounts\templates\accounts\compra_form.html:763:
+  accounts\templates\accounts\compra_form.html:764:    document.getElementById(
+  accounts\templates\accounts\compra_form.html:765:        'resumo-saldo'
+> accounts\templates\accounts\compra_form.html:766:    ).textContent =
+  accounts\templates\accounts\compra_form.html:767:        'R$ ' +
+  accounts\templates\accounts\compra_form.html:768:        saldo.toFixed(2)
+  accounts\templates\accounts\compra_form.html:769:            .replace('.', ',');
+  accounts\templates\accounts\compra_form.html:770:
+  accounts\templates\accounts\compra_form.html:771:}
+  accounts\templates\accounts\compra_form.html:772:
+  accounts\templates\accounts\compra_form.html:773:
+  accounts\templates\accounts\compra_form.html:774:/* =========================================
+  accounts\templates\accounts\compra_visualizar.html:6:
+  accounts\templates\accounts\compra_visualizar.html:7:    <div class="d-flex justify-content-between align-items-center mb-4">
+  accounts\templates\accounts\compra_visualizar.html:8:
+  accounts\templates\accounts\compra_visualizar.html:9:        <h3>
+> accounts\templates\accounts\compra_visualizar.html:10:             Detalhes da Compra - NF {{ compra.numero_nf }}
+  accounts\templates\accounts\compra_visualizar.html:11:        </h3>
+  accounts\templates\accounts\compra_visualizar.html:12:
+  accounts\templates\accounts\compra_visualizar.html:13:        <a href="{% url 'compras' %}"
+  accounts\templates\accounts\compra_visualizar.html:14:           class="btn btn-secondary">
+  accounts\templates\accounts\compra_visualizar.html:15:
+  accounts\templates\accounts\compra_visualizar.html:16:            <i class="fa-solid fa-arrow-left"></i>
+  accounts\templates\accounts\compra_visualizar.html:17:
+  accounts\templates\accounts\compra_visualizar.html:18:            Voltar
+  accounts\templates\accounts\compra_visualizar.html:56:                    <strong>NF</strong>
+  accounts\templates\accounts\compra_visualizar.html:57:
+  accounts\templates\accounts\compra_visualizar.html:58:                    <p class="mb-0">
+  accounts\templates\accounts\compra_visualizar.html:59:
+> accounts\templates\accounts\compra_visualizar.html:60:                        {{ compra.numero_nf|default:"-" }}
+  accounts\templates\accounts\compra_visualizar.html:61:
+  accounts\templates\accounts\compra_visualizar.html:62:                    </p>
+  accounts\templates\accounts\compra_visualizar.html:63:
+  accounts\templates\accounts\compra_visualizar.html:64:                </div>
+  accounts\templates\accounts\compra_visualizar.html:65:
+  accounts\templates\accounts\compra_visualizar.html:66:                <div class="col-md-4">
+  accounts\templates\accounts\compra_visualizar.html:67:
+  accounts\templates\accounts\compra_visualizar.html:68:                    <strong>Total</strong>
+  accounts\templates\accounts\configuracao_clinica.html:202:                    <div class="col-md-2">
+  accounts\templates\accounts\configuracao_clinica.html:203:
+  accounts\templates\accounts\configuracao_clinica.html:204:                        <input
+  accounts\templates\accounts\configuracao_clinica.html:205:                            type="text"
+> accounts\templates\accounts\configuracao_clinica.html:206:                            name="numero"
+  accounts\templates\accounts\configuracao_clinica.html:207:                            class="form-control"
+  accounts\templates\accounts\configuracao_clinica.html:208:                            placeholder="Número"
+> accounts\templates\accounts\configuracao_clinica.html:209:                            value="{{ config.numero }}"
+  accounts\templates\accounts\configuracao_clinica.html:210:                        >
+  accounts\templates\accounts\configuracao_clinica.html:211:
+  accounts\templates\accounts\configuracao_clinica.html:212:                    </div>
+  accounts\templates\accounts\configuracao_clinica.html:213:
+  accounts\templates\accounts\configuracao_clinica.html:214:                    <div class="col-md-4">
+  accounts\templates\accounts\configuracao_clinica.html:215:
+  accounts\templates\accounts\configuracao_clinica.html:216:                        <input
+  accounts\templates\accounts\configuracao_clinica.html:217:                            type="text"
+  accounts\templates\accounts\dashboard.html:213:    display: flex;
+  accounts\templates\accounts\dashboard.html:214:
+  accounts\templates\accounts\dashboard.html:215:    align-items: center;
+  accounts\templates\accounts\dashboard.html:216:
+> accounts\templates\accounts\dashboard.html:217:    justify-content: center;
+  accounts\templates\accounts\dashboard.html:218:
+  accounts\templates\accounts\dashboard.html:219:    min-height: 120px;
+  accounts\templates\accounts\dashboard.html:220:
+  accounts\templates\accounts\dashboard.html:221:    color: #6c757d;
+  accounts\templates\accounts\dashboard.html:222:
+  accounts\templates\accounts\dashboard.html:223:    font-size: 14px;
+  accounts\templates\accounts\dashboard.html:224:
+  accounts\templates\accounts\dashboard.html:225:    text-align: center;
+  accounts\templates\accounts\dashboard.html:246:    display: flex;
+  accounts\templates\accounts\dashboard.html:247:
+  accounts\templates\accounts\dashboard.html:248:    align-items: center;
+  accounts\templates\accounts\dashboard.html:249:
+> accounts\templates\accounts\dashboard.html:250:    justify-content: space-between;
+  accounts\templates\accounts\dashboard.html:251:
+  accounts\templates\accounts\dashboard.html:252:    padding: 10px 0;
+  accounts\templates\accounts\dashboard.html:253:
+  accounts\templates\accounts\dashboard.html:254:    border-bottom: 1px solid #edf2f7;
+  accounts\templates\accounts\dashboard.html:255:
+  accounts\templates\accounts\dashboard.html:256:}
+  accounts\templates\accounts\dashboard.html:257:
+  accounts\templates\accounts\dashboard.html:258:.birthday-item:last-child {
+  accounts\templates\accounts\fechamento_mensal.html:80:                            name="mes"
+  accounts\templates\accounts\fechamento_mensal.html:81:                            class="form-select"
+  accounts\templates\accounts\fechamento_mensal.html:82:                        >
+  accounts\templates\accounts\fechamento_mensal.html:83:
+> accounts\templates\accounts\fechamento_mensal.html:84:                            {% for numero, nome in meses %}
+  accounts\templates\accounts\fechamento_mensal.html:85:
+  accounts\templates\accounts\fechamento_mensal.html:86:                                <option
+> accounts\templates\accounts\fechamento_mensal.html:87:                                    value="{{ numero }}"
+> accounts\templates\accounts\fechamento_mensal.html:88:                                    {% if numero == mes %}
+  accounts\templates\accounts\fechamento_mensal.html:89:                                        selected
+  accounts\templates\accounts\fechamento_mensal.html:90:                                    {% endif %}
+  accounts\templates\accounts\fechamento_mensal.html:91:                                >
+  accounts\templates\accounts\fechamento_mensal.html:92:                                    {{ nome }}
+  accounts\templates\accounts\fechamento_mensal.html:93:                                </option>
+  accounts\templates\accounts\fechamento_mensal.html:94:
+  accounts\templates\accounts\fechamento_mensal.html:95:                            {% endfor %}
+  accounts\templates\accounts\fechamento_mensal.html:96:
+  accounts\templates\accounts\fechamento_mensal.html:150:        <strong>
+  accounts\templates\accounts\fechamento_mensal.html:151:            Período:
+  accounts\templates\accounts\fechamento_mensal.html:152:        </strong>
+  accounts\templates\accounts\fechamento_mensal.html:153:
+> accounts\templates\accounts\fechamento_mensal.html:154:        {% for numero, nome in meses %}
+  accounts\templates\accounts\fechamento_mensal.html:155:
+> accounts\templates\accounts\fechamento_mensal.html:156:            {% if numero == mes %}
+  accounts\templates\accounts\fechamento_mensal.html:157:
+  accounts\templates\accounts\fechamento_mensal.html:158:                {{ nome }}
+  accounts\templates\accounts\fechamento_mensal.html:159:
+  accounts\templates\accounts\fechamento_mensal.html:160:            {% endif %}
+  accounts\templates\accounts\fechamento_mensal.html:161:
+  accounts\templates\accounts\fechamento_mensal.html:162:        {% endfor %}
+  accounts\templates\accounts\fechamento_mensal.html:163:
+  accounts\templates\accounts\fechamento_mensal.html:164:        / {{ ano }}
+  accounts\templates\accounts\fornecedor_form.html:384:                </label>
+  accounts\templates\accounts\fornecedor_form.html:385:
+  accounts\templates\accounts\fornecedor_form.html:386:                <input
+  accounts\templates\accounts\fornecedor_form.html:387:                    type="text"
+> accounts\templates\accounts\fornecedor_form.html:388:                    name="numero"
+  accounts\templates\accounts\fornecedor_form.html:389:                    class="form-control"
+> accounts\templates\accounts\fornecedor_form.html:390:                    value="{{ fornecedor.numero|default:'' }}"
+  accounts\templates\accounts\fornecedor_form.html:391:                >
+  accounts\templates\accounts\fornecedor_form.html:392:
+  accounts\templates\accounts\fornecedor_form.html:393:            </div>
+  accounts\templates\accounts\fornecedor_form.html:394:
+  accounts\templates\accounts\fornecedor_form.html:395:        </div>
+  accounts\templates\accounts\fornecedor_form.html:396:
+  accounts\templates\accounts\fornecedor_form.html:397:        <div class="row">
+  accounts\templates\accounts\fornecedor_form.html:398:
+  accounts\templates\accounts\meu_perfil.html:190:                                <label class="form-label">
+  accounts\templates\accounts\meu_perfil.html:191:                                    Número
+  accounts\templates\accounts\meu_perfil.html:192:                                </label>
+  accounts\templates\accounts\meu_perfil.html:193:
+> accounts\templates\accounts\meu_perfil.html:194:                                <input type="text" name="numero" class="form-control"
+> accounts\templates\accounts\meu_perfil.html:195:                                    value="{{ perfil.numero|default:'' }}">
+  accounts\templates\accounts\meu_perfil.html:196:
+  accounts\templates\accounts\meu_perfil.html:197:                            </div>
+  accounts\templates\accounts\meu_perfil.html:198:
+  accounts\templates\accounts\meu_perfil.html:199:                            <div class="col-md-4 mb-3">
+  accounts\templates\accounts\meu_perfil.html:200:
+  accounts\templates\accounts\meu_perfil.html:201:                                <label class="form-label">
+  accounts\templates\accounts\meu_perfil.html:202:                                    Complemento
+  accounts\templates\accounts\meu_perfil.html:203:                                </label>
+  accounts\templates\accounts\odontograma.html:1067:    flex-wrap: nowrap;
+  accounts\templates\accounts\odontograma.html:1068:
+  accounts\templates\accounts\odontograma.html:1069:    align-items: center;
+  accounts\templates\accounts\odontograma.html:1070:
+> accounts\templates\accounts\odontograma.html:1071:    justify-content: center;
+  accounts\templates\accounts\odontograma.html:1072:
+  accounts\templates\accounts\odontograma.html:1073:    gap: 3px;
+  accounts\templates\accounts\odontograma.html:1074:
+  accounts\templates\accounts\odontograma.html:1075:    width: 100%;
+  accounts\templates\accounts\odontograma.html:1076:
+  accounts\templates\accounts\odontograma.html:1077:    overflow-x: auto;
+  accounts\templates\accounts\odontograma.html:1078:
+  accounts\templates\accounts\odontograma.html:1079:    padding: 2px 0 3px;
+  accounts\templates\accounts\odontograma.html:1113:    flex-direction: column;
+  accounts\templates\accounts\odontograma.html:1114:
+  accounts\templates\accounts\odontograma.html:1115:    align-items: center;
+  accounts\templates\accounts\odontograma.html:1116:
+> accounts\templates\accounts\odontograma.html:1117:    justify-content: flex-start;
+  accounts\templates\accounts\odontograma.html:1118:
+  accounts\templates\accounts\odontograma.html:1119:    box-sizing: border-box;
+  accounts\templates\accounts\odontograma.html:1120:
+  accounts\templates\accounts\odontograma.html:1121:    transition:
+  accounts\templates\accounts\odontograma.html:1122:        background 0.2s ease,
+  accounts\templates\accounts\odontograma.html:1123:        border-color 0.2s ease,
+  accounts\templates\accounts\odontograma.html:1124:        transform 0.2s ease;
+  accounts\templates\accounts\odontograma.html:1125:}
+  accounts\templates\accounts\odontograma.html:1162:    display: flex;
+  accounts\templates\accounts\odontograma.html:1163:
+  accounts\templates\accounts\odontograma.html:1164:    align-items: center;
+  accounts\templates\accounts\odontograma.html:1165:
+> accounts\templates\accounts\odontograma.html:1166:    justify-content: center;
+  accounts\templates\accounts\odontograma.html:1167:
+  accounts\templates\accounts\odontograma.html:1168:    overflow: visible;
+  accounts\templates\accounts\odontograma.html:1169:
+  accounts\templates\accounts\odontograma.html:1170:    flex-shrink: 0;
+  accounts\templates\accounts\odontograma.html:1171:}
+  accounts\templates\accounts\odontograma.html:1172:
+  accounts\templates\accounts\odontograma.html:1173:
+  accounts\templates\accounts\odontograma.html:1174:.desenho-posicao img {
+  accounts\templates\accounts\odontograma.html:1523:    display: flex;
+  accounts\templates\accounts\odontograma.html:1524:
+  accounts\templates\accounts\odontograma.html:1525:    flex-direction: column;
+  accounts\templates\accounts\odontograma.html:1526:
+> accounts\templates\accounts\odontograma.html:1527:    justify-content: center;
+  accounts\templates\accounts\odontograma.html:1528:
+  accounts\templates\accounts\odontograma.html:1529:    gap: 4px;
+  accounts\templates\accounts\odontograma.html:1530:
+  accounts\templates\accounts\odontograma.html:1531:}
+  accounts\templates\accounts\odontograma.html:1532:
+  accounts\templates\accounts\odontograma.html:1533:
+  accounts\templates\accounts\odontograma.html:1534:.anexo-odontograma-info strong {
+  accounts\templates\accounts\odontograma.html:1535:
+  accounts\templates\accounts\odontograma.html:1564:
+  accounts\templates\accounts\odontograma.html:1565:
+  accounts\templates\accounts\odontograma.html:1566:    .posicoes-dentes {
+  accounts\templates\accounts\odontograma.html:1567:
+> accounts\templates\accounts\odontograma.html:1568:        justify-content:
+  accounts\templates\accounts\odontograma.html:1569:            flex-start;
+  accounts\templates\accounts\odontograma.html:1570:
+  accounts\templates\accounts\odontograma.html:1571:        gap:
+  accounts\templates\accounts\odontograma.html:1572:            2px;
+  accounts\templates\accounts\odontograma.html:1573:    }
+  accounts\templates\accounts\odontograma.html:1574:
+  accounts\templates\accounts\odontograma.html:1575:
+  accounts\templates\accounts\odontograma.html:1576:    .opcao-posicao {
+  accounts\templates\accounts\odontograma.html:1718:<div class="arcada">
+  accounts\templates\accounts\odontograma.html:1719:
+  accounts\templates\accounts\odontograma.html:1720:{% for dente in superiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1721:
+> accounts\templates\accounts\odontograma.html:1722:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1723:
+> accounts\templates\accounts\odontograma.html:1724:        {% if dente.numero not in dentes_ausentes %}
+  accounts\templates\accounts\odontograma.html:1725:
+  accounts\templates\accounts\odontograma.html:1726:            <img
+> accounts\templates\accounts\odontograma.html:1727:                src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1728:                class="
+  accounts\templates\accounts\odontograma.html:1729:                    dente-img
+> accounts\templates\accounts\odontograma.html:1730:                    posicao-dente-{{ dente.numero }}
+  accounts\templates\accounts\odontograma.html:1731:                    {% if dente.posicao_css != 'normal' %}
+  accounts\templates\accounts\odontograma.html:1732:                        posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1733:                    {% endif %}
+  accounts\templates\accounts\odontograma.html:1734:                "
+> accounts\templates\accounts\odontograma.html:1735:                data-dente="{{ dente.numero }}"
+> accounts\templates\accounts\odontograma.html:1736:                alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1737:            >
+  accounts\templates\accounts\odontograma.html:1738:
+  accounts\templates\accounts\odontograma.html:1739:            <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1740:
+  accounts\templates\accounts\odontograma.html:1741:                {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1742:
+> accounts\templates\accounts\odontograma.html:1743:                    {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1744:
+  accounts\templates\accounts\odontograma.html:1745:                        {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1746:
+  accounts\templates\accounts\odontograma.html:1747:                            <img
+  accounts\templates\accounts\odontograma.html:1748:                                src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1749:                                class="
+  accounts\templates\accounts\odontograma.html:1750:                                    icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1751:                                    status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1792:<div class="arcada inferior">
+  accounts\templates\accounts\odontograma.html:1793:
+  accounts\templates\accounts\odontograma.html:1794:    {% for dente in inferiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1795:
+> accounts\templates\accounts\odontograma.html:1796:     {% if dente.numero not in dentes_ausentes %}
+  accounts\templates\accounts\odontograma.html:1797:
+> accounts\templates\accounts\odontograma.html:1798:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1799:
+  accounts\templates\accounts\odontograma.html:1800:        <img
+> accounts\templates\accounts\odontograma.html:1801:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1802:            class="
+  accounts\templates\accounts\odontograma.html:1803:                dente-img
+  accounts\templates\accounts\odontograma.html:1804:                inferior
+> accounts\templates\accounts\odontograma.html:1805:                posicao-dente-{{ dente.numero }}
+  accounts\templates\accounts\odontograma.html:1806:                {% if dente.posicao_css != 'normal' %}
+  accounts\templates\accounts\odontograma.html:1807:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1808:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1809:            "
+> accounts\templates\accounts\odontograma.html:1810:            data-dente="{{ dente.numero }}"
+> accounts\templates\accounts\odontograma.html:1811:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1812:        >
+  accounts\templates\accounts\odontograma.html:1813:
+  accounts\templates\accounts\odontograma.html:1814:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1815:
+  accounts\templates\accounts\odontograma.html:1816:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1817:
+> accounts\templates\accounts\odontograma.html:1818:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1819:
+  accounts\templates\accounts\odontograma.html:1820:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1821:
+  accounts\templates\accounts\odontograma.html:1822:                        <img
+  accounts\templates\accounts\odontograma.html:1823:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1824:                            class="
+  accounts\templates\accounts\odontograma.html:1825:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1826:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1879:<div class="arcada">
+  accounts\templates\accounts\odontograma.html:1880:
+  accounts\templates\accounts\odontograma.html:1881:    {% for dente in dec_superiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1882:
+> accounts\templates\accounts\odontograma.html:1883:     {% if dente.numero not in dentes_ausentes %}
+  accounts\templates\accounts\odontograma.html:1884:
+> accounts\templates\accounts\odontograma.html:1885:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1886:
+  accounts\templates\accounts\odontograma.html:1887:        <img
+> accounts\templates\accounts\odontograma.html:1888:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1889:            class="
+  accounts\templates\accounts\odontograma.html:1890:                dente-img
+> accounts\templates\accounts\odontograma.html:1891:                posicao-dente-{{ dente.numero }}
+  accounts\templates\accounts\odontograma.html:1892:                {% if dente.posicao_css != 'normal' %}
+  accounts\templates\accounts\odontograma.html:1893:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1894:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1895:            "
+> accounts\templates\accounts\odontograma.html:1896:            data-dente="{{ dente.numero }}"
+> accounts\templates\accounts\odontograma.html:1897:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1898:        >
+  accounts\templates\accounts\odontograma.html:1899:
+  accounts\templates\accounts\odontograma.html:1900:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1901:
+  accounts\templates\accounts\odontograma.html:1902:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1903:
+> accounts\templates\accounts\odontograma.html:1904:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1905:
+  accounts\templates\accounts\odontograma.html:1906:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1907:
+  accounts\templates\accounts\odontograma.html:1908:                        <img
+  accounts\templates\accounts\odontograma.html:1909:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1910:                            class="
+  accounts\templates\accounts\odontograma.html:1911:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1912:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1954:<div class="arcada inferior">
+  accounts\templates\accounts\odontograma.html:1955:
+  accounts\templates\accounts\odontograma.html:1956:    {% for dente in dec_inferiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1957:
+> accounts\templates\accounts\odontograma.html:1958:     {% if dente.numero not in dentes_ausentes %}
+  accounts\templates\accounts\odontograma.html:1959:
+  accounts\templates\accounts\odontograma.html:1960:
+> accounts\templates\accounts\odontograma.html:1961:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1962:
+  accounts\templates\accounts\odontograma.html:1963:        <img
+> accounts\templates\accounts\odontograma.html:1964:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1965:            class="
+  accounts\templates\accounts\odontograma.html:1966:                dente-img
+  accounts\templates\accounts\odontograma.html:1967:                inferior
+> accounts\templates\accounts\odontograma.html:1968:                posicao-dente-{{ dente.numero }}
+  accounts\templates\accounts\odontograma.html:1969:                {% if dente.posicao_css != 'normal' %}
+  accounts\templates\accounts\odontograma.html:1970:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1971:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1972:            "
+> accounts\templates\accounts\odontograma.html:1973:            data-dente="{{ dente.numero }}"
+> accounts\templates\accounts\odontograma.html:1974:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1975:        >
+  accounts\templates\accounts\odontograma.html:1976:
+  accounts\templates\accounts\odontograma.html:1977:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1978:
+  accounts\templates\accounts\odontograma.html:1979:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1980:
+> accounts\templates\accounts\odontograma.html:1981:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1982:
+  accounts\templates\accounts\odontograma.html:1983:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1984:
+  accounts\templates\accounts\odontograma.html:1985:                        <img
+  accounts\templates\accounts\odontograma.html:1986:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1987:                            class="
+  accounts\templates\accounts\odontograma.html:1988:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1989:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:3715:    /* =====================================================
+  accounts\templates\accounts\odontograma.html:3716:       FUNÇÃO PARA LOCALIZAR DENTE
+  accounts\templates\accounts\odontograma.html:3717:       ===================================================== */
+  accounts\templates\accounts\odontograma.html:3718:
+> accounts\templates\accounts\odontograma.html:3719:    function localizarDente(numero) {
+  accounts\templates\accounts\odontograma.html:3720:
+  accounts\templates\accounts\odontograma.html:3721:        return document.querySelector(
+> accounts\templates\accounts\odontograma.html:3722:            '.dente-img[data-dente="' + numero + '"]'
+  accounts\templates\accounts\odontograma.html:3723:        );
+  accounts\templates\accounts\odontograma.html:3724:
+  accounts\templates\accounts\odontograma.html:3725:    }
+  accounts\templates\accounts\odontograma.html:3726:
+  accounts\templates\accounts\odontograma.html:3727:
+  accounts\templates\accounts\odontograma.html:3728:    /* =====================================================
+  accounts\templates\accounts\odontograma.html:3729:       SELECIONAR DENTE
+  accounts\templates\accounts\odontograma.html:3730:       ===================================================== */
+  accounts\templates\accounts\odontograma.html:3758:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3759:
+  accounts\templates\accounts\odontograma.html:3760:                if (campoDente) {
+  accounts\templates\accounts\odontograma.html:3761:
+> accounts\templates\accounts\odontograma.html:3762:                    campoDente.textContent =
+  accounts\templates\accounts\odontograma.html:3763:                        denteSelecionado;
+  accounts\templates\accounts\odontograma.html:3764:
+  accounts\templates\accounts\odontograma.html:3765:                }
+  accounts\templates\accounts\odontograma.html:3766:
+  accounts\templates\accounts\odontograma.html:3767:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3768:   ABRIR PROCEDIMENTO DO DENTE
+  accounts\templates\accounts\odontograma.html:3769:   ========================================= */
+  accounts\templates\accounts\odontograma.html:3770:
+  accounts\templates\accounts\orcamento_pdf.html:160:
+  accounts\templates\accounts\orcamento_pdf.html:161:.assinaturas{
+  accounts\templates\accounts\orcamento_pdf.html:162:    margin-top:5px;
+  accounts\templates\accounts\orcamento_pdf.html:163:    display:flex;
+> accounts\templates\accounts\orcamento_pdf.html:164:    justify-content:space-between;
+  accounts\templates\accounts\orcamento_pdf.html:165:    gap:30px;
+  accounts\templates\accounts\orcamento_pdf.html:166:    margin-bottom:20px;
+  accounts\templates\accounts\orcamento_pdf.html:167:}
+  accounts\templates\accounts\orcamento_pdf.html:168:
+  accounts\templates\accounts\orcamento_pdf.html:169:.assinatura{
+  accounts\templates\accounts\orcamento_pdf.html:170:    width:45%;
+  accounts\templates\accounts\orcamento_pdf.html:171:    text-align:center;
+  accounts\templates\accounts\orcamento_pdf.html:172:}
+  accounts\templates\accounts\orcamento_pdf.html:237:.dados-paciente-secundario{
+  accounts\templates\accounts\orcamento_pdf.html:238:
+  accounts\templates\accounts\orcamento_pdf.html:239:    display:flex;
+  accounts\templates\accounts\orcamento_pdf.html:240:
+> accounts\templates\accounts\orcamento_pdf.html:241:    justify-content:space-between;
+  accounts\templates\accounts\orcamento_pdf.html:242:
+  accounts\templates\accounts\orcamento_pdf.html:243:    margin-top:18px;
+  accounts\templates\accounts\orcamento_pdf.html:244:
+  accounts\templates\accounts\orcamento_pdf.html:245:    padding-top:10px;
+  accounts\templates\accounts\orcamento_pdf.html:246:
+  accounts\templates\accounts\orcamento_pdf.html:247:    border-top:1px solid #ececec;
+  accounts\templates\accounts\orcamento_pdf.html:248:
+  accounts\templates\accounts\orcamento_pdf.html:249:}
+  accounts\templates\accounts\orcamento_pdf.html:313:.arcada{
+  accounts\templates\accounts\orcamento_pdf.html:314:
+  accounts\templates\accounts\orcamento_pdf.html:315:    display:flex;
+  accounts\templates\accounts\orcamento_pdf.html:316:
+> accounts\templates\accounts\orcamento_pdf.html:317:    justify-content:center;
+  accounts\templates\accounts\orcamento_pdf.html:318:
+  accounts\templates\accounts\orcamento_pdf.html:319:    align-items:flex-end;
+  accounts\templates\accounts\orcamento_pdf.html:320:
+  accounts\templates\accounts\orcamento_pdf.html:321:    gap:2px;
+  accounts\templates\accounts\orcamento_pdf.html:322:
+  accounts\templates\accounts\orcamento_pdf.html:323:    margin:10px 0;
+  accounts\templates\accounts\orcamento_pdf.html:324:
+  accounts\templates\accounts\orcamento_pdf.html:325:}
+  accounts\templates\accounts\orcamento_pdf.html:332:    display:flex;
+  accounts\templates\accounts\orcamento_pdf.html:333:
+  accounts\templates\accounts\orcamento_pdf.html:334:    align-items:center;
+  accounts\templates\accounts\orcamento_pdf.html:335:
+> accounts\templates\accounts\orcamento_pdf.html:336:    justify-content:center;
+  accounts\templates\accounts\orcamento_pdf.html:337:}
+  accounts\templates\accounts\orcamento_pdf.html:338:
+  accounts\templates\accounts\orcamento_pdf.html:339:.dente-img{
+  accounts\templates\accounts\orcamento_pdf.html:340:
+  accounts\templates\accounts\orcamento_pdf.html:341:    width:30px;
+  accounts\templates\accounts\orcamento_pdf.html:342:
+  accounts\templates\accounts\orcamento_pdf.html:343:    height:80px;
+  accounts\templates\accounts\orcamento_pdf.html:344:
+  accounts\templates\accounts\orcamento_pdf.html:396:    break-inside: avoid;
+  accounts\templates\accounts\orcamento_pdf.html:397:
+  accounts\templates\accounts\orcamento_pdf.html:398:}
+  accounts\templates\accounts\orcamento_pdf.html:399:
+> accounts\templates\accounts\orcamento_pdf.html:400:.numero-orcamento{
+  accounts\templates\accounts\orcamento_pdf.html:401:
+  accounts\templates\accounts\orcamento_pdf.html:402:    font-size:13px;
+  accounts\templates\accounts\orcamento_pdf.html:403:
+  accounts\templates\accounts\orcamento_pdf.html:404:    font-weight:600;
+  accounts\templates\accounts\orcamento_pdf.html:405:
+  accounts\templates\accounts\orcamento_pdf.html:406:    color:#64748b;
+  accounts\templates\accounts\orcamento_pdf.html:407:
+  accounts\templates\accounts\orcamento_pdf.html:408:    margin-top:4px;
+  accounts\templates\accounts\orcamento_pdf.html:478:        <h4>
+  accounts\templates\accounts\orcamento_pdf.html:479:    ORÇAMENTO ODONTOLÓGICO
+  accounts\templates\accounts\orcamento_pdf.html:480:</h4>
+  accounts\templates\accounts\orcamento_pdf.html:481:
+> accounts\templates\accounts\orcamento_pdf.html:482:<div class="numero-orcamento">
+  accounts\templates\accounts\orcamento_pdf.html:483:
+  accounts\templates\accounts\orcamento_pdf.html:484:    Orçamento Nº {{ orcamento.id|stringformat:"05d" }}
+  accounts\templates\accounts\orcamento_pdf.html:485:
+  accounts\templates\accounts\orcamento_pdf.html:486:    <br>
+  accounts\templates\accounts\orcamento_pdf.html:487:
+  accounts\templates\accounts\orcamento_pdf.html:488:    <small>
+  accounts\templates\accounts\orcamento_pdf.html:489:
+  accounts\templates\accounts\orcamento_pdf.html:490:        Emitido em:
+  accounts\templates\accounts\orcamento_pdf.html:957:    <div class="rodape-linha">
+  accounts\templates\accounts\orcamento_pdf.html:958:
+  accounts\templates\accounts\orcamento_pdf.html:959:        {{ config.endereco }}
+  accounts\templates\accounts\orcamento_pdf.html:960:
+> accounts\templates\accounts\orcamento_pdf.html:961:        {% if config.numero %}
+> accounts\templates\accounts\orcamento_pdf.html:962:            , {{ config.numero }}
+  accounts\templates\accounts\orcamento_pdf.html:963:        {% endif %}
+  accounts\templates\accounts\orcamento_pdf.html:964:
+  accounts\templates\accounts\orcamento_pdf.html:965:        {% if config.bairro %}
+  accounts\templates\accounts\orcamento_pdf.html:966:            - {{ config.bairro }}
+  accounts\templates\accounts\orcamento_pdf.html:967:        {% endif %}
+  accounts\templates\accounts\orcamento_pdf.html:968:
+  accounts\templates\accounts\orcamento_pdf.html:969:        {% if config.cidade %}
+  accounts\templates\accounts\orcamento_pdf.html:970:            - {{ config.cidade }}/{{ config.estado }}
+  accounts\templates\accounts\paciente_form.html:378:                    <div>
+  accounts\templates\accounts\paciente_form.html:379:
+  accounts\templates\accounts\paciente_form.html:380:                        <label>Número</label>
+  accounts\templates\accounts\paciente_form.html:381:
+> accounts\templates\accounts\paciente_form.html:382:                        <input type="text" name="numero" class="form-control" value="{{ 
+paciente.numero|default:'' }}">
+  accounts\templates\accounts\paciente_form.html:383:
+  accounts\templates\accounts\paciente_form.html:384:                    </div>
+  accounts\templates\accounts\paciente_form.html:385:
+  accounts\templates\accounts\paciente_form.html:386:                    <div>
+  accounts\templates\accounts\paciente_form.html:387:
+  accounts\templates\accounts\paciente_form.html:388:                        <label>Complemento</label>
+  accounts\templates\accounts\paciente_form.html:389:
+  accounts\templates\accounts\paciente_form.html:390:                        <input type="text" name="complemento" class="form-control"
+  accounts\templates\accounts\perfil.html:35:                    overflow:hidden;
+  accounts\templates\accounts\perfil.html:36:                    background:#2563eb;
+  accounts\templates\accounts\perfil.html:37:                    display:flex;
+  accounts\templates\accounts\perfil.html:38:                    align-items:center;
+> accounts\templates\accounts\perfil.html:39:                    justify-content:center;
+  accounts\templates\accounts\perfil.html:40:                ">
+  accounts\templates\accounts\perfil.html:41:
+  accounts\templates\accounts\perfil.html:42:                    {% if paciente.foto %}
+  accounts\templates\accounts\perfil.html:43:
+  accounts\templates\accounts\perfil.html:44:                    <img
+  accounts\templates\accounts\perfil.html:45:                        src="{{ paciente.foto.url }}"
+  accounts\templates\accounts\perfil.html:46:                        alt="{{ paciente.nome }}"
+  accounts\templates\accounts\perfil.html:47:                        style="
+  accounts\templates\accounts\perfil_usuario.html:33:                        overflow:hidden;
+  accounts\templates\accounts\perfil_usuario.html:34:                        background:#2563eb;
+  accounts\templates\accounts\perfil_usuario.html:35:                        display:flex;
+  accounts\templates\accounts\perfil_usuario.html:36:                        align-items:center;
+> accounts\templates\accounts\perfil_usuario.html:37:                        justify-content:center;">
+  accounts\templates\accounts\perfil_usuario.html:38:
+  accounts\templates\accounts\perfil_usuario.html:39:                        {% if perfil.foto %}
+  accounts\templates\accounts\perfil_usuario.html:40:
+  accounts\templates\accounts\perfil_usuario.html:41:                        <img src="{{ perfil.foto.url }}" style="
+  accounts\templates\accounts\perfil_usuario.html:42:                                    width:100%;
+  accounts\templates\accounts\perfil_usuario.html:43:                                    height:100%;
+  accounts\templates\accounts\perfil_usuario.html:44:                                    object-fit:cover;
+  accounts\templates\accounts\perfil_usuario.html:45:                                    border-radius:50%;">
+  accounts\templates\accounts\perfil_usuario.html:482:                <tr>
+  accounts\templates\accounts\perfil_usuario.html:483:
+  accounts\templates\accounts\perfil_usuario.html:484:                    <th>Número</th>
+  accounts\templates\accounts\perfil_usuario.html:485:
+> accounts\templates\accounts\perfil_usuario.html:486:                    <td>{{ perfil.numero|default_if_none:"-"|default:"-" }}</td>
+  accounts\templates\accounts\perfil_usuario.html:487:
+  accounts\templates\accounts\perfil_usuario.html:488:                </tr>
+  accounts\templates\accounts\perfil_usuario.html:489:
+  accounts\templates\accounts\perfil_usuario.html:490:                <tr>
+  accounts\templates\accounts\perfil_usuario.html:491:
+  accounts\templates\accounts\perfil_usuario.html:492:                    <th>Complemento</th>
+  accounts\templates\accounts\perfil_usuario.html:493:
+  accounts\templates\accounts\perfil_usuario.html:494:                    <td>{{ perfil.complemento|default_if_none:"-"|default:"-" }}</td>
+  accounts\templates\accounts\permissoes_perfil.html:309:        .forEach(function (grupo) {
+  accounts\templates\accounts\permissoes_perfil.html:310:
+  accounts\templates\accounts\permissoes_perfil.html:311:            grupo.addEventListener("change", function () {
+  accounts\templates\accounts\permissoes_perfil.html:312:
+> accounts\templates\accounts\permissoes_perfil.html:313:                const numero = this.dataset.grupo;
+  accounts\templates\accounts\permissoes_perfil.html:314:
+  accounts\templates\accounts\permissoes_perfil.html:315:                document
+> accounts\templates\accounts\permissoes_perfil.html:316:                    .querySelectorAll(".grupo-" + numero)
+  accounts\templates\accounts\permissoes_perfil.html:317:                    .forEach(function (checkbox) {
+  accounts\templates\accounts\permissoes_perfil.html:318:
+  accounts\templates\accounts\permissoes_perfil.html:319:                        checkbox.checked = grupo.checked;
+  accounts\templates\accounts\permissoes_perfil.html:320:
+  accounts\templates\accounts\permissoes_perfil.html:321:                    });
+  accounts\templates\accounts\permissoes_perfil.html:322:
+  accounts\templates\accounts\permissoes_perfil.html:323:            });
+  accounts\templates\accounts\permissoes_perfil.html:324:
+  accounts\templates\accounts\usuario_form.html:216:                        <label class="form-label">
+  accounts\templates\accounts\usuario_form.html:217:                            Número
+  accounts\templates\accounts\usuario_form.html:218:                        </label>
+  accounts\templates\accounts\usuario_form.html:219:
+> accounts\templates\accounts\usuario_form.html:220:                        <input type="text" name="numero" class="form-control" value="{{ 
+perfil.numero|default:'' }}">
+  accounts\templates\accounts\usuario_form.html:221:
+  accounts\templates\accounts\usuario_form.html:222:                    </div>
+  accounts\templates\accounts\usuario_form.html:223:
+  accounts\templates\accounts\usuario_form.html:224:                    <div class="col-md-2 mb-3">
+  accounts\templates\accounts\usuario_form.html:225:
+  accounts\templates\accounts\usuario_form.html:226:                        <label class="form-label">
+  accounts\templates\accounts\usuario_form.html:227:                            Complemento
+  accounts\templates\accounts\usuario_form.html:228:                        </label>
+  accounts\templates\agenda\calendario.html:286:                info.jsEvent.preventDefault();
+  accounts\templates\agenda\calendario.html:287:
+  accounts\templates\agenda\calendario.html:288:                document.getElementById(
+  accounts\templates\agenda\calendario.html:289:                    'modalPaciente'
+> accounts\templates\agenda\calendario.html:290:                ).innerText =
+  accounts\templates\agenda\calendario.html:291:                    info.event.extendedProps.paciente;
+  accounts\templates\agenda\calendario.html:292:
+  accounts\templates\agenda\calendario.html:293:                const statusEl = document.getElementById(
+  accounts\templates\agenda\calendario.html:294:                    'modalStatus'
+  accounts\templates\agenda\calendario.html:295:                );
+  accounts\templates\agenda\calendario.html:296:
+> accounts\templates\agenda\calendario.html:297:                statusEl.innerText =
+  accounts\templates\agenda\calendario.html:298:                    info.event.extendedProps.status;
+  accounts\templates\agenda\calendario.html:299:
+  accounts\templates\agenda\calendario.html:300:                statusEl.className =
+  accounts\templates\agenda\calendario.html:301:                    'badge fs-6';
+  accounts\templates\agenda\calendario.html:302:
+  accounts\templates\agenda\calendario.html:303:                if (
+  accounts\templates\agenda\calendario.html:304:                    info.event.extendedProps.status ===
+  accounts\templates\agenda\calendario.html:305:                    'Confirmado'
+  accounts\templates\agenda\calendario.html:340:                }
+  accounts\templates\agenda\calendario.html:341:
+  accounts\templates\agenda\calendario.html:342:                document.getElementById(
+  accounts\templates\agenda\calendario.html:343:                    'modalProcedimento'
+> accounts\templates\agenda\calendario.html:344:                ).innerText =
+  accounts\templates\agenda\calendario.html:345:                    info.event.extendedProps.procedimento;
+  accounts\templates\agenda\calendario.html:346:
+  accounts\templates\agenda\calendario.html:347:                document.getElementById(
+  accounts\templates\agenda\calendario.html:348:                    'modalProfissional'
+> accounts\templates\agenda\calendario.html:349:                ).innerText =
+  accounts\templates\agenda\calendario.html:350:                    info.event.extendedProps.profissional;
+  accounts\templates\agenda\calendario.html:351:
+  accounts\templates\agenda\calendario.html:352:                document.getElementById(
+  accounts\templates\agenda\calendario.html:353:                    'btnPerfil'
+  accounts\templates\agenda\calendario.html:354:                ).href =
+  accounts\templates\agenda\calendario.html:355:                    info.event.extendedProps.perfil_url;
+  accounts\templates\agenda\calendario.html:356:
+  accounts\templates\agenda\calendario.html:357:                document.getElementById(
+  static\css\anamnese.css:350:    display:flex;
+  static\css\anamnese.css:351:
+  static\css\anamnese.css:352:    align-items:center;
+  static\css\anamnese.css:353:
+> static\css\anamnese.css:354:    justify-content:center;
+  static\css\anamnese.css:355:
+  static\css\anamnese.css:356:    background:#eff6ff;
+  static\css\anamnese.css:357:
+  static\css\anamnese.css:358:    color:#2563eb;
+  static\css\anamnese.css:359:
+  static\css\anamnese.css:360:    font-size:22px;
+  static\css\anamnese.css:361:
+  static\css\anamnese.css:362:    flex-shrink:0;
+  static\css\dashboard.css:39:
+  static\css\dashboard.css:40:.page-header{
+  static\css\dashboard.css:41:
+  static\css\dashboard.css:42:    display:flex;
+> static\css\dashboard.css:43:    justify-content:space-between;
+  static\css\dashboard.css:44:    align-items:center;
+  static\css\dashboard.css:45:
+  static\css\dashboard.css:46:    margin-bottom:28px;
+  static\css\dashboard.css:47:
+  static\css\dashboard.css:48:}
+  static\css\dashboard.css:49:
+  static\css\dashboard.css:50:.page-header h5{
+  static\css\dashboard.css:51:
+  static\css\dashboard.css:152:    border-radius:18px;
+  static\css\dashboard.css:153:
+  static\css\dashboard.css:154:    display:flex;
+  static\css\dashboard.css:155:
+> static\css\dashboard.css:156:    justify-content:center;
+  static\css\dashboard.css:157:
+  static\css\dashboard.css:158:    align-items:center;
+  static\css\dashboard.css:159:
+  static\css\dashboard.css:160:    color:#fff;
+  static\css\dashboard.css:161:
+  static\css\dashboard.css:162:    font-size:24px;
+  static\css\dashboard.css:163:
+  static\css\dashboard.css:164:    flex-shrink:0;
+  static\css\dashboard.css:277:.card-header{
+  static\css\dashboard.css:278:
+  static\css\dashboard.css:279:    display:flex;
+  static\css\dashboard.css:280:
+> static\css\dashboard.css:281:    justify-content:space-between;
+  static\css\dashboard.css:282:
+  static\css\dashboard.css:283:    align-items:center;
+  static\css\dashboard.css:284:
+  static\css\dashboard.css:285:    margin-bottom:25px;
+  static\css\dashboard.css:286:
+  static\css\dashboard.css:287:    padding:0;
+  static\css\dashboard.css:288:
+  static\css\dashboard.css:289:    background:none;
+  static\css\dashboard.css:587:    );
+  static\css\dashboard.css:588:
+  static\css\dashboard.css:589:    display:flex;
+  static\css\dashboard.css:590:    align-items:center;
+> static\css\dashboard.css:591:    justify-content:center;
+  static\css\dashboard.css:592:
+  static\css\dashboard.css:593:    color:#fff;
+  static\css\dashboard.css:594:
+  static\css\dashboard.css:595:    font-size:34px;
+  static\css\dashboard.css:596:    font-weight:700;
+  static\css\dashboard.css:597:
+  static\css\dashboard.css:598:    flex-shrink:0;
+  static\css\dashboard.css:599:
+  static\css\dashboard.css:694:    min-height:220px;
+  static\css\dashboard.css:695:
+  static\css\dashboard.css:696:    display:flex;
+  static\css\dashboard.css:697:    flex-direction:column;
+> static\css\dashboard.css:698:    justify-content:center;
+  static\css\dashboard.css:699:    align-items:center;
+  static\css\dashboard.css:700:
+  static\css\dashboard.css:701:    text-align:center;
+  static\css\dashboard.css:702:
+  static\css\dashboard.css:703:    color:#94a3b8;
+  static\css\dashboard.css:704:
+  static\css\dashboard.css:705:}
+  static\css\dashboard.css:706:
+  static\css\ficha_clinica.css:55:    display:flex;
+  static\css\ficha_clinica.css:56:
+  static\css\ficha_clinica.css:57:    align-items:center;
+  static\css\ficha_clinica.css:58:
+> static\css\ficha_clinica.css:59:    justify-content:center;
+  static\css\ficha_clinica.css:60:
+  static\css\ficha_clinica.css:61:    gap:5px;
+  static\css\ficha_clinica.css:62:
+  static\css\ficha_clinica.css:63:    height:32px;
+  static\css\ficha_clinica.css:64:
+  static\css\ficha_clinica.css:65:    padding:0 10px;
+  static\css\ficha_clinica.css:66:
+  static\css\ficha_clinica.css:67:    border:none;
+  static\css\ficha_clinica.css:410:
+  static\css\ficha_clinica.css:411:
+  static\css\ficha_clinica.css:412:display:flex;
+  static\css\ficha_clinica.css:413:
+> static\css\ficha_clinica.css:414:justify-content:space-between;
+  static\css\ficha_clinica.css:415:
+  static\css\ficha_clinica.css:416:align-items:center;
+  static\css\ficha_clinica.css:417:
+  static\css\ficha_clinica.css:418:gap:12px;
+  static\css\ficha_clinica.css:419:
+  static\css\ficha_clinica.css:420:margin-bottom:10px;
+  static\css\ficha_clinica.css:421:
+  static\css\ficha_clinica.css:422:
+  static\css\ficha_clinica.css:652:.documento-rodape{
+  static\css\ficha_clinica.css:653:
+  static\css\ficha_clinica.css:654:    display:flex;
+  static\css\ficha_clinica.css:655:
+> static\css\ficha_clinica.css:656:    justify-content:space-between;
+  static\css\ficha_clinica.css:657:
+  static\css\ficha_clinica.css:658:    align-items:center;
+  static\css\ficha_clinica.css:659:
+  static\css\ficha_clinica.css:660:    margin-top:10px;
+  static\css\ficha_clinica.css:661:
+  static\css\ficha_clinica.css:662:    font-size:14px;
+  static\css\ficha_clinica.css:663:
+  static\css\ficha_clinica.css:664:    color:#64748b;
+  static\css\login.css:12:
+  static\css\login.css:13:    background:#edf2f8;
+  static\css\login.css:14:
+  static\css\login.css:15:    display:flex;
+> static\css\login.css:16:    justify-content:center;
+  static\css\login.css:17:    align-items:center;
+  static\css\login.css:18:
+  static\css\login.css:19:    overflow:hidden;
+  static\css\login.css:20:
+  static\css\login.css:21:}
+  static\css\login.css:22:
+  static\css\login.css:23:/* =========================================
+  static\css\login.css:24:   CONTAINER
+  static\css\login.css:179:
+  static\css\login.css:180:    background:rgba(255,255,255,.08);
+  static\css\login.css:181:
+  static\css\login.css:182:    display:flex;
+> static\css\login.css:183:    justify-content:center;
+  static\css\login.css:184:    align-items:center;
+  static\css\login.css:185:
+  static\css\login.css:186:    font-size:18px;
+  static\css\login.css:187:
+  static\css\login.css:188:    color:#16e9f8;
+  static\css\login.css:189:
+  static\css\login.css:190:}
+  static\css\login.css:191:
+  static\css\login.css:217:
+  static\css\login.css:218:    background:#f7f9fc;
+  static\css\login.css:219:
+  static\css\login.css:220:    display:flex;
+> static\css\login.css:221:    justify-content:center;
+  static\css\login.css:222:    align-items:center;
+  static\css\login.css:223:
+  static\css\login.css:224:    padding:40px;
+  static\css\login.css:225:
+  static\css\login.css:226:}
+  static\css\login.css:227:
+  static\css\login.css:228:/* CARD */
+  static\css\login.css:229:
+  static\css\login.css:351:
+  static\css\login.css:352:.login-options{
+  static\css\login.css:353:
+  static\css\login.css:354:    display:flex;
+> static\css\login.css:355:    justify-content:space-between;
+  static\css\login.css:356:    align-items:center;
+  static\css\login.css:357:
+  static\css\login.css:358:    margin-bottom:28px;
+  static\css\login.css:359:
+  static\css\login.css:360:}
+  static\css\login.css:361:
+  static\css\login.css:362:.login-options a{
+  static\css\login.css:363:
+  static\css\odontograma.css:109:
+  static\css\odontograma.css:110:
+  static\css\odontograma.css:111:/* Barra Azul */
+  static\css\odontograma.css:112:
+> static\css\odontograma.css:113:.tratamento-card::before,
+> static\css\odontograma.css:114:.timeline-card::before,
+> static\css\odontograma.css:115:.historico-card::before{
+  static\css\odontograma.css:116:
+> static\css\odontograma.css:117:    content:"";
+  static\css\odontograma.css:118:
+  static\css\odontograma.css:119:    position:absolute;
+  static\css\odontograma.css:120:
+  static\css\odontograma.css:121:    left:0;
+  static\css\odontograma.css:122:
+  static\css\odontograma.css:123:    top:0;
+  static\css\odontograma.css:124:
+  static\css\odontograma.css:125:    width:100%;
+  static\css\odontograma.css:391:.timeline-top{
+  static\css\odontograma.css:392:
+  static\css\odontograma.css:393:    display:flex;
+  static\css\odontograma.css:394:
+> static\css\odontograma.css:395:    justify-content:space-between;
+  static\css\odontograma.css:396:
+  static\css\odontograma.css:397:    align-items:center;
+  static\css\odontograma.css:398:
+  static\css\odontograma.css:399:    gap:10px;
+  static\css\odontograma.css:400:
+  static\css\odontograma.css:401:    margin-bottom:8px;
+  static\css\odontograma.css:402:
+  static\css\odontograma.css:403:}
+  static\css\odontograma.css:423:    display:inline-flex;
+  static\css\odontograma.css:424:
+  static\css\odontograma.css:425:    align-items:center;
+  static\css\odontograma.css:426:
+> static\css\odontograma.css:427:    justify-content:center;
+  static\css\odontograma.css:428:
+  static\css\odontograma.css:429:    padding:4px 10px;
+  static\css\odontograma.css:430:
+  static\css\odontograma.css:431:    border-radius:999px;
+  static\css\odontograma.css:432:
+  static\css\odontograma.css:433:    background:#eff6ff;
+  static\css\odontograma.css:434:
+  static\css\odontograma.css:435:    color:#2563eb;
+  static\css\odontograma.css:483:}
+  static\css\odontograma.css:484:
+  static\css\odontograma.css:485:/* Barra Superior */
+  static\css\odontograma.css:486:
+> static\css\odontograma.css:487:.odontograma-card::before{
+  static\css\odontograma.css:488:
+> static\css\odontograma.css:489:    content:"";
+  static\css\odontograma.css:490:
+  static\css\odontograma.css:491:    position:absolute;
+  static\css\odontograma.css:492:
+  static\css\odontograma.css:493:    top:0;
+  static\css\odontograma.css:494:
+  static\css\odontograma.css:495:    left:0;
+  static\css\odontograma.css:496:
+  static\css\odontograma.css:497:    width:100%;
+  static\css\odontograma.css:591:.arcada{
+  static\css\odontograma.css:592:
+  static\css\odontograma.css:593:    display:flex;
+  static\css\odontograma.css:594:
+> static\css\odontograma.css:595:    justify-content:center;
+  static\css\odontograma.css:596:
+  static\css\odontograma.css:597:    align-items:flex-start;
+  static\css\odontograma.css:598:
+  static\css\odontograma.css:599:    flex-wrap:nowrap;
+  static\css\odontograma.css:600:
+  static\css\odontograma.css:601:    gap:6px;
+  static\css\odontograma.css:602:
+  static\css\odontograma.css:603:}
+  static\css\odontograma.css:645:    display:flex;
+  static\css\odontograma.css:646:
+  static\css\odontograma.css:647:    align-items:center;
+  static\css\odontograma.css:648:
+> static\css\odontograma.css:649:    justify-content:center;
+  static\css\odontograma.css:650:
+  static\css\odontograma.css:651:}
+  static\css\odontograma.css:652:
+  static\css\odontograma.css:653:.dente-img{
+  static\css\odontograma.css:654:
+  static\css\odontograma.css:655:    width:34px;
+  static\css\odontograma.css:656:
+  static\css\odontograma.css:657:    position:relative;
+  static\css\odontograma.css:1606:CORES DOS STATUS
+  static\css\odontograma.css:1607:========================================= */
+  static\css\odontograma.css:1608:
+  static\css\odontograma.css:1609:.status-existente .status-dot,
+> static\css\odontograma.css:1610:.status-existente::before{
+  static\css\odontograma.css:1611:
+  static\css\odontograma.css:1612:    background:#6b7280;
+  static\css\odontograma.css:1613:
+  static\css\odontograma.css:1614:}
+  static\css\odontograma.css:1615:
+  static\css\odontograma.css:1616:.status-planejado .status-dot,
+> static\css\odontograma.css:1617:.status-planejado::before{
+  static\css\odontograma.css:1618:
+  static\css\odontograma.css:1619:    background:#ef4444;
+  static\css\odontograma.css:1620:
+  static\css\odontograma.css:1621:}
+  static\css\odontograma.css:1622:
+  static\css\odontograma.css:1623:.status-andamento .status-dot,
+> static\css\odontograma.css:1624:.status-andamento::before{
+  static\css\odontograma.css:1625:
+  static\css\odontograma.css:1626:    background:#10b981;
+  static\css\odontograma.css:1627:
+  static\css\odontograma.css:1628:}
+  static\css\odontograma.css:1629:
+  static\css\odontograma.css:1630:.status-realizado .status-dot,
+> static\css\odontograma.css:1631:.status-realizado::before{
+  static\css\odontograma.css:1632:
+  static\css\odontograma.css:1633:    background:#2563eb;
+  static\css\odontograma.css:1634:
+  static\css\odontograma.css:1635:}
+  static\css\odontograma.css:1636:
+  static\css\odontograma.css:1637:.status-cancelado .status-dot,
+> static\css\odontograma.css:1638:.status-cancelado::before{
+  static\css\odontograma.css:1639:
+  static\css\odontograma.css:1640:    background:#9333ea;
+  static\css\odontograma.css:1641:
+  static\css\odontograma.css:1642:}
+  static\css\odontograma.css:1643:
+  static\css\odontograma.css:1644:
+  static\css\odontograma.css:1645:/* =========================================
+  static\css\odontograma.css:1646:BADGE
+  static\css\odontograma.css:1647:========================================= */
+  static\css\odontograma.css:1648:
+> static\css\odontograma.css:1649:.status-item::before{
+  static\css\odontograma.css:1650:
+> static\css\odontograma.css:1651:    content:"";
+  static\css\odontograma.css:1652:
+  static\css\odontograma.css:1653:    display:block;
+  static\css\odontograma.css:1654:
+  static\css\odontograma.css:1655:    width:12px;
+  static\css\odontograma.css:1656:
+  static\css\odontograma.css:1657:    height:12px;
+  static\css\odontograma.css:1658:
+  static\css\odontograma.css:1659:    border-radius:4px;
+  static\css\odontograma.css:1733:    flex-direction:column;
+  static\css\odontograma.css:1734:
+  static\css\odontograma.css:1735:    align-items:center;
+  static\css\odontograma.css:1736:
+> static\css\odontograma.css:1737:    justify-content:center;
+  static\css\odontograma.css:1738:
+  static\css\odontograma.css:1739:    gap:4px;
+  static\css\odontograma.css:1740:
+  static\css\odontograma.css:1741:    padding:8px 8px;
+  static\css\odontograma.css:1742:
+  static\css\odontograma.css:1743:    width:72px;
+  static\css\odontograma.css:1744:
+  static\css\odontograma.css:1745:    min-width:72px;
+  static\css\odontograma.css:1868:    display:flex;
+  static\css\odontograma.css:1869:
+  static\css\odontograma.css:1870:    flex-direction:column;
+  static\css\odontograma.css:1871:
+> static\css\odontograma.css:1872:    justify-content:center;
+  static\css\odontograma.css:1873:
+  static\css\odontograma.css:1874:    align-items:center;
+  static\css\odontograma.css:1875:
+  static\css\odontograma.css:1876:}
+  static\css\odontograma.css:1877:
+  static\css\odontograma.css:1878:
+  static\css\odontograma.css:1879:/* =========================================
+  static\css\odontograma.css:1880:   ÍCONE
+  static\css\odontograma.css:2068:.procedimentos-header{
+  static\css\odontograma.css:2069:
+  static\css\odontograma.css:2070:    display:flex;
+  static\css\odontograma.css:2071:
+> static\css\odontograma.css:2072:    justify-content:space-between;
+  static\css\odontograma.css:2073:
+  static\css\odontograma.css:2074:    align-items:center;
+  static\css\odontograma.css:2075:
+  static\css\odontograma.css:2076:    margin-bottom:18px;
+  static\css\odontograma.css:2077:
+  static\css\odontograma.css:2078:}
+  static\css\odontograma.css:2079:
+  static\css\odontograma.css:2080:.procedimentos-header h6{
+  static\css\odontograma.css:2137:@media(max-width:768px){
+  static\css\odontograma.css:2138:
+  static\css\odontograma.css:2139:    .procedimentos-gerais-wrapper{
+  static\css\odontograma.css:2140:
+> static\css\odontograma.css:2141:        justify-content:center;
+  static\css\odontograma.css:2142:    }
+  static\css\odontograma.css:2143:
+  static\css\odontograma.css:2144:    .procedimento-geral-chip{
+  static\css\odontograma.css:2145:
+  static\css\odontograma.css:2146:        padding:7px 12px;
+  static\css\odontograma.css:2147:    }
+  static\css\odontograma.css:2148:
+  static\css\odontograma.css:2149:    .icone-geral{
+  static\css\pacientes.css:66:.page-header{
+  static\css\pacientes.css:67:
+  static\css\pacientes.css:68:    display:flex;
+  static\css\pacientes.css:69:
+> static\css\pacientes.css:70:    justify-content:space-between;
+  static\css\pacientes.css:71:
+  static\css\pacientes.css:72:    align-items:center;
+  static\css\pacientes.css:73:
+  static\css\pacientes.css:74:    gap:20px;
+  static\css\pacientes.css:75:
+  static\css\pacientes.css:76:    margin-bottom:30px;
+  static\css\pacientes.css:77:
+  static\css\pacientes.css:78:}
+  static\css\pacientes.css:316:    display:inline-flex;
+  static\css\pacientes.css:317:
+  static\css\pacientes.css:318:    align-items:center;
+  static\css\pacientes.css:319:
+> static\css\pacientes.css:320:    justify-content:center;
+  static\css\pacientes.css:321:
+  static\css\pacientes.css:322:    padding:6px 12px;
+  static\css\pacientes.css:323:
+  static\css\pacientes.css:324:    border-radius:999px;
+  static\css\pacientes.css:325:
+  static\css\pacientes.css:326:    font-size:11px;
+  static\css\pacientes.css:327:
+  static\css\pacientes.css:328:    font-weight:600;
+  static\css\pacientes.css:374:    display:flex;
+  static\css\pacientes.css:375:
+  static\css\pacientes.css:376:    align-items:center;
+  static\css\pacientes.css:377:
+> static\css\pacientes.css:378:    justify-content:center;
+  static\css\pacientes.css:379:
+  static\css\pacientes.css:380:    text-decoration:none;
+  static\css\pacientes.css:381:
+  static\css\pacientes.css:382:    transition:.2s;
+  static\css\pacientes.css:383:
+  static\css\pacientes.css:384:}
+  static\css\pacientes.css:385:
+  static\css\pacientes.css:386:.action-btn:hover{
+  static\css\pacientes.css:466:    display:flex;
+  static\css\pacientes.css:467:
+  static\css\pacientes.css:468:    align-items:center;
+  static\css\pacientes.css:469:
+> static\css\pacientes.css:470:    justify-content:center;
+  static\css\pacientes.css:471:
+  static\css\pacientes.css:472:    font-size:22px;
+  static\css\pacientes.css:473:
+  static\css\pacientes.css:474:    font-weight:700;
+  static\css\pacientes.css:475:
+  static\css\pacientes.css:476:}
+  static\css\pacientes.css:477:
+  static\css\pacientes.css:478:.patient-photo img{
+  static\css\pacientes.css:588:    display:flex;
+  static\css\pacientes.css:589:
+  static\css\pacientes.css:590:    align-items:center;
+  static\css\pacientes.css:591:
+> static\css\pacientes.css:592:    justify-content:flex-end;
+  static\css\pacientes.css:593:
+  static\css\pacientes.css:594:    gap:10px;
+  static\css\pacientes.css:595:
+  static\css\pacientes.css:596:    flex-wrap:nowrap;
+  static\css\pacientes.css:597:
+  static\css\pacientes.css:598:}
+  static\css\pacientes.css:599:
+  static\css\pacientes.css:600:.dentista-badge{
+  static\css\pacientes.css:657:    display:flex;
+  static\css\pacientes.css:658:
+  static\css\pacientes.css:659:    align-items:center;
+  static\css\pacientes.css:660:
+> static\css\pacientes.css:661:    justify-content:center;
+  static\css\pacientes.css:662:
+  static\css\pacientes.css:663:    font-weight:700;
+  static\css\pacientes.css:664:
+  static\css\pacientes.css:665:}
+  static\css\pacientes.css:666:
+  static\css\pacientes.css:667:.patient-thumb img{
+  static\css\pacientes.css:668:
+  static\css\pacientes.css:669:    width:100%;
+  static\css\paciente_form.css:18:.page-header{
+  static\css\paciente_form.css:19:
+  static\css\paciente_form.css:20:    display:flex;
+  static\css\paciente_form.css:21:
+> static\css\paciente_form.css:22:    justify-content:space-between;
+  static\css\paciente_form.css:23:
+  static\css\paciente_form.css:24:    align-items:center;
+  static\css\paciente_form.css:25:
+  static\css\paciente_form.css:26:    margin-bottom:30px;
+  static\css\paciente_form.css:27:
+  static\css\paciente_form.css:28:}
+  static\css\paciente_form.css:29:
+  static\css\paciente_form.css:30:.page-title{
+  static\css\paciente_form.css:272:    display:flex;
+  static\css\paciente_form.css:273:
+  static\css\paciente_form.css:274:    align-items:center;
+  static\css\paciente_form.css:275:
+> static\css\paciente_form.css:276:    justify-content:center;
+  static\css\paciente_form.css:277:
+  static\css\paciente_form.css:278:    background:#eff6ff;
+  static\css\paciente_form.css:279:
+  static\css\paciente_form.css:280:    border:2px dashed #93c5fd;
+  static\css\paciente_form.css:281:
+  static\css\paciente_form.css:282:    border-radius:20px;
+  static\css\paciente_form.css:283:
+  static\css\paciente_form.css:284:    font-size:42px;
+  static\css\paciente_form.css:294:.form-actions{
+  static\css\paciente_form.css:295:
+  static\css\paciente_form.css:296:    display:flex;
+  static\css\paciente_form.css:297:
+> static\css\paciente_form.css:298:    justify-content:flex-end;
+  static\css\paciente_form.css:299:
+  static\css\paciente_form.css:300:    align-items:center;
+  static\css\paciente_form.css:301:
+  static\css\paciente_form.css:302:    gap:10px;
+  static\css\paciente_form.css:303:
+  static\css\paciente_form.css:304:    margin-top:28px;
+  static\css\paciente_form.css:305:
+  static\css\paciente_form.css:306:}
+  static\css\paciente_form.css:310:    display:flex;
+  static\css\paciente_form.css:311:
+  static\css\paciente_form.css:312:    align-items:center;
+  static\css\paciente_form.css:313:
+> static\css\paciente_form.css:314:    justify-content:center;
+  static\css\paciente_form.css:315:
+  static\css\paciente_form.css:316:    height:42px;
+  static\css\paciente_form.css:317:
+  static\css\paciente_form.css:318:    padding:0 18px;
+  static\css\paciente_form.css:319:
+  static\css\paciente_form.css:320:    border-radius:10px;
+  static\css\paciente_form.css:321:
+  static\css\paciente_form.css:322:    background:#f8fafc;
+  static\css\paciente_form.css:346:    display:flex;
+  static\css\paciente_form.css:347:
+  static\css\paciente_form.css:348:    align-items:center;
+  static\css\paciente_form.css:349:
+> static\css\paciente_form.css:350:    justify-content:center;
+  static\css\paciente_form.css:351:
+  static\css\paciente_form.css:352:    gap:8px;
+  static\css\paciente_form.css:353:
+  static\css\paciente_form.css:354:    height:42px;
+  static\css\paciente_form.css:355:
+  static\css\paciente_form.css:356:    padding:0 22px;
+  static\css\paciente_form.css:357:
+  static\css\paciente_form.css:358:    border:none;
+  static\css\paciente_form.css:450:    display:flex;
+  static\css\paciente_form.css:451:
+  static\css\paciente_form.css:452:    flex-direction:column;
+  static\css\paciente_form.css:453:
+> static\css\paciente_form.css:454:    justify-content:center;
+  static\css\paciente_form.css:455:
+  static\css\paciente_form.css:456:    gap:12px;
+  static\css\paciente_form.css:457:
+  static\css\paciente_form.css:458:    flex:1;
+  static\css\paciente_form.css:459:
+  static\css\paciente_form.css:460:}
+  static\css\paciente_form.css:461:
+  static\css\paciente_form.css:462:.btn-upload-foto{
+  static\css\paciente_form.css:601:    .btn-upload-foto{
+  static\css\paciente_form.css:602:
+  static\css\paciente_form.css:603:        width:100%;
+  static\css\paciente_form.css:604:
+> static\css\paciente_form.css:605:        justify-content:center;
+  static\css\paciente_form.css:606:
+  static\css\paciente_form.css:607:    }
+  static\css\paciente_form.css:608:
+  static\css\paciente_form.css:609:}
+  static\css\paciente_form.css:610:
+  static\css\paciente_form.css:611:
+  static\css\paciente_form.css:612:
+  static\css\paciente_form.css:613:
+  static\css\secretaria.css:47:.agenda-header{
+  static\css\secretaria.css:48:
+  static\css\secretaria.css:49:    display:flex;
+  static\css\secretaria.css:50:
+> static\css\secretaria.css:51:    justify-content:space-between;
+  static\css\secretaria.css:52:
+  static\css\secretaria.css:53:    align-items:center;
+  static\css\secretaria.css:54:
+  static\css\secretaria.css:55:    margin-bottom:16px;
+  static\css\secretaria.css:56:
+  static\css\secretaria.css:57:}
+  static\css\secretaria.css:58:
+  static\css\secretaria.css:59:.agenda-header h5{
+  static\css\secretaria.css:174:    color:#fff;
+  static\css\secretaria.css:175:
+  static\css\secretaria.css:176:    display:flex;
+  static\css\secretaria.css:177:
+> static\css\secretaria.css:178:    justify-content:center;
+  static\css\secretaria.css:179:
+  static\css\secretaria.css:180:    align-items:center;
+  static\css\secretaria.css:181:
+  static\css\secretaria.css:182:    font-size:14px;
+  static\css\secretaria.css:183:
+  static\css\secretaria.css:184:    font-weight:700;
+  static\css\secretaria.css:185:
+  static\css\secretaria.css:186:    flex-shrink:0;
+  static\css\secretaria.css:500:    display:flex;
+  static\css\secretaria.css:501:
+  static\css\secretaria.css:502:    align-items:center;
+  static\css\secretaria.css:503:
+> static\css\secretaria.css:504:    justify-content:center;
+  static\css\secretaria.css:505:
+  static\css\secretaria.css:506:    font-size:28px;
+  static\css\secretaria.css:507:
+  static\css\secretaria.css:508:    color:#fff;
+  static\css\secretaria.css:509:
+  static\css\secretaria.css:510:    flex-shrink:0;
+  static\css\secretaria.css:511:
+  static\css\secretaria.css:512:}
+  static\css\style.css:316:    width:100%;
+  static\css\style.css:317:
+  static\css\style.css:318:    display:flex;
+  static\css\style.css:319:
+> static\css\style.css:320:    justify-content:space-between;
+  static\css\style.css:321:
+  static\css\style.css:322:    align-items:center;
+  static\css\style.css:323:
+  static\css\style.css:324:    padding:12px 14px;
+  static\css\style.css:325:
+  static\css\style.css:326:    border:none;
+  static\css\style.css:327:
+  static\css\style.css:328:    background:none;
+  static\css\style.css:550:.arcada{
+  static\css\style.css:551:
+  static\css\style.css:552:    display:flex;
+  static\css\style.css:553:
+> static\css\style.css:554:    justify-content:center;
+  static\css\style.css:555:
+  static\css\style.css:556:    align-items:flex-end;
+  static\css\style.css:557:
+  static\css\style.css:558:    gap:2px;
+  static\css\style.css:559:
+  static\css\style.css:560:    margin-bottom:5px;
+  static\css\style.css:561:
+  static\css\style.css:562:}
+
+

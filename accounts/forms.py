@@ -252,7 +252,8 @@ class ItemOrcamentoForm(forms.ModelForm):
         fields = [
 
             'procedimento',
-            'quantidade'
+            'quantidade',
+            'valor_unitario'
 
         ]
 
@@ -274,6 +275,18 @@ class ItemOrcamentoForm(forms.ModelForm):
 
                     'class': 'form-control rounded-3 shadow-sm',
                     'min': 1
+
+                }
+
+            ),
+
+            'valor_unitario': forms.NumberInput(
+
+                attrs={
+
+                    'class': 'form-control rounded-3 shadow-sm',
+                    'step': '0.01',
+                    'min': '0'
 
                 }
 

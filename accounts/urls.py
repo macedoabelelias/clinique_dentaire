@@ -151,6 +151,16 @@ path(
 ),
 
 # =========================================
+# LEAD - CADASTRAR COMO PACIENTE
+# =========================================
+
+path(
+    "marketing/leads/<int:pk>/cadastrar-paciente/",
+    views.converter_lead_paciente,
+    name="converter_lead_paciente",
+),
+
+# =========================================
 # LEAD - EDITAR
 # =========================================
 

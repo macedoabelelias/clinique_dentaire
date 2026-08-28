@@ -1,0 +1,1630 @@
+﻿
+  accounts\templates\accounts\odontograma.html:41:
+  accounts\templates\accounts\odontograma.html:42:/* =========================================================
+  accounts\templates\accounts\odontograma.html:43:   POSIÇÃO NORMAL
+  accounts\templates\accounts\odontograma.html:44:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:45:
+> accounts\templates\accounts\odontograma.html:46:.dente-box .dente-img.posicao-normal {
+  accounts\templates\accounts\odontograma.html:47:
+  accounts\templates\accounts\odontograma.html:48:    transform: none;
+  accounts\templates\accounts\odontograma.html:49:}
+  accounts\templates\accounts\odontograma.html:50:
+  accounts\templates\accounts\odontograma.html:51:
+  accounts\templates\accounts\odontograma.html:52:/* =========================================================
+  accounts\templates\accounts\odontograma.html:53:   =========================================================
+  accounts\templates\accounts\odontograma.html:54:   ARCADA INFERIOR
+  accounts\templates\accounts\odontograma.html:55:   =========================================================
+  accounts\templates\accounts\odontograma.html:56:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:58:
+  accounts\templates\accounts\odontograma.html:59:/* =========================================================
+  accounts\templates\accounts\odontograma.html:60:   INCLUSO VERTICAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:61:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:62:
+> accounts\templates\accounts\odontograma.html:63:.arcada.inferior .dente-img.posicao-incluso_vertical,
+> accounts\templates\accounts\odontograma.html:64:.arcada.inferior .dente-img.posicao-incluso-vertical {
+  accounts\templates\accounts\odontograma.html:65:
+  accounts\templates\accounts\odontograma.html:66:    transform:
+  accounts\templates\accounts\odontograma.html:67:        translateY(28px);
+  accounts\templates\accounts\odontograma.html:68:}
+  accounts\templates\accounts\odontograma.html:69:
+  accounts\templates\accounts\odontograma.html:70:
+  accounts\templates\accounts\odontograma.html:71:/* =========================================================
+  accounts\templates\accounts\odontograma.html:72:   INCLUSO HORIZONTAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:73:   =========================================================
+  accounts\templates\accounts\odontograma.html:74:
+  accounts\templates\accounts\odontograma.html:91:    .dente-34,
+  accounts\templates\accounts\odontograma.html:92:    .dente-35,
+  accounts\templates\accounts\odontograma.html:93:    .dente-36,
+  accounts\templates\accounts\odontograma.html:94:    .dente-37,
+  accounts\templates\accounts\odontograma.html:95:    .dente-38
+> accounts\templates\accounts\odontograma.html:96:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:97:
+  accounts\templates\accounts\odontograma.html:98:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:99:    .dente-31,
+  accounts\templates\accounts\odontograma.html:100:    .dente-32,
+  accounts\templates\accounts\odontograma.html:101:    .dente-33,
+  accounts\templates\accounts\odontograma.html:102:    .dente-34,
+  accounts\templates\accounts\odontograma.html:103:    .dente-35,
+  accounts\templates\accounts\odontograma.html:104:    .dente-36,
+  accounts\templates\accounts\odontograma.html:105:    .dente-37,
+  accounts\templates\accounts\odontograma.html:106:    .dente-38
+> accounts\templates\accounts\odontograma.html:107:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:108:
+  accounts\templates\accounts\odontograma.html:109:    transform:
+  accounts\templates\accounts\odontograma.html:110:        rotate(-90deg)
+  accounts\templates\accounts\odontograma.html:111:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:112:
+  accounts\templates\accounts\odontograma.html:113:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:114:}
+  accounts\templates\accounts\odontograma.html:115:
+  accounts\templates\accounts\odontograma.html:116:
+  accounts\templates\accounts\odontograma.html:117:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:126:    .dente-44,
+  accounts\templates\accounts\odontograma.html:127:    .dente-45,
+  accounts\templates\accounts\odontograma.html:128:    .dente-46,
+  accounts\templates\accounts\odontograma.html:129:    .dente-47,
+  accounts\templates\accounts\odontograma.html:130:    .dente-48
+> accounts\templates\accounts\odontograma.html:131:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:132:
+  accounts\templates\accounts\odontograma.html:133:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:134:    .dente-41,
+  accounts\templates\accounts\odontograma.html:135:    .dente-42,
+  accounts\templates\accounts\odontograma.html:136:    .dente-43,
+  accounts\templates\accounts\odontograma.html:137:    .dente-44,
+  accounts\templates\accounts\odontograma.html:138:    .dente-45,
+  accounts\templates\accounts\odontograma.html:139:    .dente-46,
+  accounts\templates\accounts\odontograma.html:140:    .dente-47,
+  accounts\templates\accounts\odontograma.html:141:    .dente-48
+> accounts\templates\accounts\odontograma.html:142:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:143:
+  accounts\templates\accounts\odontograma.html:144:    transform:
+  accounts\templates\accounts\odontograma.html:145:        rotate(90deg)
+  accounts\templates\accounts\odontograma.html:146:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:147:
+  accounts\templates\accounts\odontograma.html:148:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:149:}
+  accounts\templates\accounts\odontograma.html:150:
+  accounts\templates\accounts\odontograma.html:151:
+  accounts\templates\accounts\odontograma.html:152:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:158:    .dente-71,
+  accounts\templates\accounts\odontograma.html:159:    .dente-72,
+  accounts\templates\accounts\odontograma.html:160:    .dente-73,
+  accounts\templates\accounts\odontograma.html:161:    .dente-74,
+  accounts\templates\accounts\odontograma.html:162:    .dente-75
+> accounts\templates\accounts\odontograma.html:163:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:164:
+  accounts\templates\accounts\odontograma.html:165:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:166:    .dente-71,
+  accounts\templates\accounts\odontograma.html:167:    .dente-72,
+  accounts\templates\accounts\odontograma.html:168:    .dente-73,
+  accounts\templates\accounts\odontograma.html:169:    .dente-74,
+  accounts\templates\accounts\odontograma.html:170:    .dente-75
+> accounts\templates\accounts\odontograma.html:171:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:172:
+  accounts\templates\accounts\odontograma.html:173:    transform:
+  accounts\templates\accounts\odontograma.html:174:        rotate(-90deg)
+  accounts\templates\accounts\odontograma.html:175:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:176:
+  accounts\templates\accounts\odontograma.html:177:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:178:}
+  accounts\templates\accounts\odontograma.html:179:
+  accounts\templates\accounts\odontograma.html:180:
+  accounts\templates\accounts\odontograma.html:181:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:187:    .dente-81,
+  accounts\templates\accounts\odontograma.html:188:    .dente-82,
+  accounts\templates\accounts\odontograma.html:189:    .dente-83,
+  accounts\templates\accounts\odontograma.html:190:    .dente-84,
+  accounts\templates\accounts\odontograma.html:191:    .dente-85
+> accounts\templates\accounts\odontograma.html:192:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:193:
+  accounts\templates\accounts\odontograma.html:194:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:195:    .dente-81,
+  accounts\templates\accounts\odontograma.html:196:    .dente-82,
+  accounts\templates\accounts\odontograma.html:197:    .dente-83,
+  accounts\templates\accounts\odontograma.html:198:    .dente-84,
+  accounts\templates\accounts\odontograma.html:199:    .dente-85
+> accounts\templates\accounts\odontograma.html:200:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:201:
+  accounts\templates\accounts\odontograma.html:202:    transform:
+  accounts\templates\accounts\odontograma.html:203:        rotate(90deg)
+  accounts\templates\accounts\odontograma.html:204:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:205:
+  accounts\templates\accounts\odontograma.html:206:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:207:}
+  accounts\templates\accounts\odontograma.html:208:
+  accounts\templates\accounts\odontograma.html:209:
+  accounts\templates\accounts\odontograma.html:210:/* =========================================================
+  accounts\templates\accounts\odontograma.html:211:   INCLUSO MESIAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:212:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:213:
+> accounts\templates\accounts\odontograma.html:214:.arcada.inferior .dente-img.posicao-incluso_mesial,
+> accounts\templates\accounts\odontograma.html:215:.arcada.inferior .dente-img.posicao-incluso-mesial {
+  accounts\templates\accounts\odontograma.html:216:
+  accounts\templates\accounts\odontograma.html:217:    transform:
+  accounts\templates\accounts\odontograma.html:218:        rotate(-35deg)
+  accounts\templates\accounts\odontograma.html:219:        translateY(15px);
+  accounts\templates\accounts\odontograma.html:220:}
+  accounts\templates\accounts\odontograma.html:221:
+  accounts\templates\accounts\odontograma.html:222:
+  accounts\templates\accounts\odontograma.html:223:/* =========================================================
+  accounts\templates\accounts\odontograma.html:224:   INCLUSO DISTAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:225:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:226:
+> accounts\templates\accounts\odontograma.html:227:.arcada.inferior .dente-img.posicao-incluso_distal,
+> accounts\templates\accounts\odontograma.html:228:.arcada.inferior .dente-img.posicao-incluso-distal {
+  accounts\templates\accounts\odontograma.html:229:
+  accounts\templates\accounts\odontograma.html:230:    transform:
+  accounts\templates\accounts\odontograma.html:231:        rotate(35deg)
+  accounts\templates\accounts\odontograma.html:232:        translateY(15px);
+  accounts\templates\accounts\odontograma.html:233:}
+  accounts\templates\accounts\odontograma.html:234:
+  accounts\templates\accounts\odontograma.html:235:
+  accounts\templates\accounts\odontograma.html:236:/* =========================================================
+  accounts\templates\accounts\odontograma.html:237:   MESIAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:238:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:239:
+> accounts\templates\accounts\odontograma.html:240:.arcada.inferior .dente-img.posicao-inclinado_mesial,
+> accounts\templates\accounts\odontograma.html:241:.arcada.inferior .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:242:
+  accounts\templates\accounts\odontograma.html:243:    transform:
+  accounts\templates\accounts\odontograma.html:244:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:245:}
+  accounts\templates\accounts\odontograma.html:246:
+  accounts\templates\accounts\odontograma.html:247:
+  accounts\templates\accounts\odontograma.html:248:/* =========================================================
+  accounts\templates\accounts\odontograma.html:249:   DISTAL — INFERIOR
+  accounts\templates\accounts\odontograma.html:250:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:251:
+> accounts\templates\accounts\odontograma.html:252:.arcada.inferior .dente-img.posicao-inclinado_distal,
+> accounts\templates\accounts\odontograma.html:253:.arcada.inferior .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:254:
+  accounts\templates\accounts\odontograma.html:255:    transform:
+  accounts\templates\accounts\odontograma.html:256:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:257:}
+  accounts\templates\accounts\odontograma.html:258:
+  accounts\templates\accounts\odontograma.html:259:
+  accounts\templates\accounts\odontograma.html:260:/* =========================================================
+  accounts\templates\accounts\odontograma.html:261:   ROTAÇÃO — INFERIOR
+  accounts\templates\accounts\odontograma.html:262:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:263:
+> accounts\templates\accounts\odontograma.html:264:.arcada.inferior .dente-img.posicao-rotacao {
+  accounts\templates\accounts\odontograma.html:265:
+  accounts\templates\accounts\odontograma.html:266:    transform:
+  accounts\templates\accounts\odontograma.html:267:        rotate(180deg);
+  accounts\templates\accounts\odontograma.html:268:}
+  accounts\templates\accounts\odontograma.html:269:
+  accounts\templates\accounts\odontograma.html:270:
+  accounts\templates\accounts\odontograma.html:271:/* =========================================================
+  accounts\templates\accounts\odontograma.html:272:   EXTRUSÃO — INFERIOR
+  accounts\templates\accounts\odontograma.html:273:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:274:
+> accounts\templates\accounts\odontograma.html:275:.arcada.inferior .dente-img.posicao-extrusao {
+  accounts\templates\accounts\odontograma.html:276:
+  accounts\templates\accounts\odontograma.html:277:    transform:
+  accounts\templates\accounts\odontograma.html:278:        translateY(-20px);
+  accounts\templates\accounts\odontograma.html:279:}
+  accounts\templates\accounts\odontograma.html:280:
+  accounts\templates\accounts\odontograma.html:281:
+  accounts\templates\accounts\odontograma.html:282:/* =========================================================
+  accounts\templates\accounts\odontograma.html:283:   =========================================================
+  accounts\templates\accounts\odontograma.html:284:   ARCADA SUPERIOR
+  accounts\templates\accounts\odontograma.html:285:   =========================================================
+  accounts\templates\accounts\odontograma.html:288:
+  accounts\templates\accounts\odontograma.html:289:/* =========================================================
+  accounts\templates\accounts\odontograma.html:290:   INCLUSO VERTICAL — SUPERIOR
+  accounts\templates\accounts\odontograma.html:291:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:292:
+> accounts\templates\accounts\odontograma.html:293:.arcada:not(.inferior) .dente-img.posicao-incluso_vertical,
+> accounts\templates\accounts\odontograma.html:294:.arcada:not(.inferior) .dente-img.posicao-incluso-vertical {
+  accounts\templates\accounts\odontograma.html:295:
+  accounts\templates\accounts\odontograma.html:296:    transform:
+  accounts\templates\accounts\odontograma.html:297:        translateY(-28px);
+  accounts\templates\accounts\odontograma.html:298:}
+  accounts\templates\accounts\odontograma.html:299:
+  accounts\templates\accounts\odontograma.html:300:
+  accounts\templates\accounts\odontograma.html:301:/* =========================================================
+  accounts\templates\accounts\odontograma.html:302:   INCLUSO HORIZONTAL — SUPERIOR
+  accounts\templates\accounts\odontograma.html:303:   =========================================================
+  accounts\templates\accounts\odontograma.html:304:
+  accounts\templates\accounts\odontograma.html:319:    .dente-14,
+  accounts\templates\accounts\odontograma.html:320:    .dente-15,
+  accounts\templates\accounts\odontograma.html:321:    .dente-16,
+  accounts\templates\accounts\odontograma.html:322:    .dente-17,
+  accounts\templates\accounts\odontograma.html:323:    .dente-18
+> accounts\templates\accounts\odontograma.html:324:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:325:
+  accounts\templates\accounts\odontograma.html:326:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:327:    .dente-11,
+  accounts\templates\accounts\odontograma.html:328:    .dente-12,
+  accounts\templates\accounts\odontograma.html:329:    .dente-13,
+  accounts\templates\accounts\odontograma.html:330:    .dente-14,
+  accounts\templates\accounts\odontograma.html:331:    .dente-15,
+  accounts\templates\accounts\odontograma.html:332:    .dente-16,
+  accounts\templates\accounts\odontograma.html:333:    .dente-17,
+  accounts\templates\accounts\odontograma.html:334:    .dente-18
+> accounts\templates\accounts\odontograma.html:335:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:336:
+  accounts\templates\accounts\odontograma.html:337:    transform:
+  accounts\templates\accounts\odontograma.html:338:        rotate(-90deg)
+  accounts\templates\accounts\odontograma.html:339:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:340:
+  accounts\templates\accounts\odontograma.html:341:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:342:}
+  accounts\templates\accounts\odontograma.html:343:
+  accounts\templates\accounts\odontograma.html:344:
+  accounts\templates\accounts\odontograma.html:345:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:354:    .dente-24,
+  accounts\templates\accounts\odontograma.html:355:    .dente-25,
+  accounts\templates\accounts\odontograma.html:356:    .dente-26,
+  accounts\templates\accounts\odontograma.html:357:    .dente-27,
+  accounts\templates\accounts\odontograma.html:358:    .dente-28
+> accounts\templates\accounts\odontograma.html:359:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:360:
+  accounts\templates\accounts\odontograma.html:361:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:362:    .dente-21,
+  accounts\templates\accounts\odontograma.html:363:    .dente-22,
+  accounts\templates\accounts\odontograma.html:364:    .dente-23,
+  accounts\templates\accounts\odontograma.html:365:    .dente-24,
+  accounts\templates\accounts\odontograma.html:366:    .dente-25,
+  accounts\templates\accounts\odontograma.html:367:    .dente-26,
+  accounts\templates\accounts\odontograma.html:368:    .dente-27,
+  accounts\templates\accounts\odontograma.html:369:    .dente-28
+> accounts\templates\accounts\odontograma.html:370:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:371:
+  accounts\templates\accounts\odontograma.html:372:    transform:
+  accounts\templates\accounts\odontograma.html:373:        rotate(90deg)
+  accounts\templates\accounts\odontograma.html:374:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:375:
+  accounts\templates\accounts\odontograma.html:376:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:377:}
+  accounts\templates\accounts\odontograma.html:378:
+  accounts\templates\accounts\odontograma.html:379:
+  accounts\templates\accounts\odontograma.html:380:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:386:    .dente-51,
+  accounts\templates\accounts\odontograma.html:387:    .dente-52,
+  accounts\templates\accounts\odontograma.html:388:    .dente-53,
+  accounts\templates\accounts\odontograma.html:389:    .dente-54,
+  accounts\templates\accounts\odontograma.html:390:    .dente-55
+> accounts\templates\accounts\odontograma.html:391:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:392:
+  accounts\templates\accounts\odontograma.html:393:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:394:    .dente-51,
+  accounts\templates\accounts\odontograma.html:395:    .dente-52,
+  accounts\templates\accounts\odontograma.html:396:    .dente-53,
+  accounts\templates\accounts\odontograma.html:397:    .dente-54,
+  accounts\templates\accounts\odontograma.html:398:    .dente-55
+> accounts\templates\accounts\odontograma.html:399:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:400:
+  accounts\templates\accounts\odontograma.html:401:    transform:
+  accounts\templates\accounts\odontograma.html:402:        rotate(-90deg)
+  accounts\templates\accounts\odontograma.html:403:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:404:
+  accounts\templates\accounts\odontograma.html:405:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:406:}
+  accounts\templates\accounts\odontograma.html:407:
+  accounts\templates\accounts\odontograma.html:408:
+  accounts\templates\accounts\odontograma.html:409:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:415:    .dente-61,
+  accounts\templates\accounts\odontograma.html:416:    .dente-62,
+  accounts\templates\accounts\odontograma.html:417:    .dente-63,
+  accounts\templates\accounts\odontograma.html:418:    .dente-64,
+  accounts\templates\accounts\odontograma.html:419:    .dente-65
+> accounts\templates\accounts\odontograma.html:420:) .dente-img.posicao-incluso_horizontal,
+  accounts\templates\accounts\odontograma.html:421:
+  accounts\templates\accounts\odontograma.html:422:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:423:    .dente-61,
+  accounts\templates\accounts\odontograma.html:424:    .dente-62,
+  accounts\templates\accounts\odontograma.html:425:    .dente-63,
+  accounts\templates\accounts\odontograma.html:426:    .dente-64,
+  accounts\templates\accounts\odontograma.html:427:    .dente-65
+> accounts\templates\accounts\odontograma.html:428:) .dente-img.posicao-incluso-horizontal {
+  accounts\templates\accounts\odontograma.html:429:
+  accounts\templates\accounts\odontograma.html:430:    transform:
+  accounts\templates\accounts\odontograma.html:431:        rotate(90deg)
+  accounts\templates\accounts\odontograma.html:432:        translateY(5px);
+  accounts\templates\accounts\odontograma.html:433:
+  accounts\templates\accounts\odontograma.html:434:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:435:}
+  accounts\templates\accounts\odontograma.html:436:
+  accounts\templates\accounts\odontograma.html:437:
+  accounts\templates\accounts\odontograma.html:438:/* =========================================================
+  accounts\templates\accounts\odontograma.html:439:   INCLUSO MESIAL — SUPERIOR
+  accounts\templates\accounts\odontograma.html:440:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:441:
+> accounts\templates\accounts\odontograma.html:442:.arcada:not(.inferior) .dente-img.posicao-incluso_mesial,
+> accounts\templates\accounts\odontograma.html:443:.arcada:not(.inferior) .dente-img.posicao-incluso-mesial {
+  accounts\templates\accounts\odontograma.html:444:
+  accounts\templates\accounts\odontograma.html:445:    transform:
+  accounts\templates\accounts\odontograma.html:446:        rotate(35deg)
+  accounts\templates\accounts\odontograma.html:447:        translateY(-15px);
+  accounts\templates\accounts\odontograma.html:448:}
+  accounts\templates\accounts\odontograma.html:449:
+  accounts\templates\accounts\odontograma.html:450:
+  accounts\templates\accounts\odontograma.html:451:/* =========================================================
+  accounts\templates\accounts\odontograma.html:452:   INCLUSO DISTAL — SUPERIOR
+  accounts\templates\accounts\odontograma.html:453:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:454:
+> accounts\templates\accounts\odontograma.html:455:.arcada:not(.inferior) .dente-img.posicao-incluso_distal,
+> accounts\templates\accounts\odontograma.html:456:.arcada:not(.inferior) .dente-img.posicao-incluso-distal {
+  accounts\templates\accounts\odontograma.html:457:
+  accounts\templates\accounts\odontograma.html:458:    transform:
+  accounts\templates\accounts\odontograma.html:459:        rotate(-35deg)
+  accounts\templates\accounts\odontograma.html:460:        translateY(-15px);
+  accounts\templates\accounts\odontograma.html:461:}
+  accounts\templates\accounts\odontograma.html:462:
+  accounts\templates\accounts\odontograma.html:463:
+  accounts\templates\accounts\odontograma.html:464:/* =========================================================
+  accounts\templates\accounts\odontograma.html:465:   MESIAL — ARCADA SUPERIOR
+  accounts\templates\accounts\odontograma.html:466:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:478:    .dente-14,
+  accounts\templates\accounts\odontograma.html:479:    .dente-15,
+  accounts\templates\accounts\odontograma.html:480:    .dente-16,
+  accounts\templates\accounts\odontograma.html:481:    .dente-17,
+  accounts\templates\accounts\odontograma.html:482:    .dente-18
+> accounts\templates\accounts\odontograma.html:483:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:484:
+  accounts\templates\accounts\odontograma.html:485:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:486:    .dente-11,
+  accounts\templates\accounts\odontograma.html:487:    .dente-12,
+  accounts\templates\accounts\odontograma.html:488:    .dente-13,
+  accounts\templates\accounts\odontograma.html:489:    .dente-14,
+  accounts\templates\accounts\odontograma.html:490:    .dente-15,
+  accounts\templates\accounts\odontograma.html:491:    .dente-16,
+  accounts\templates\accounts\odontograma.html:492:    .dente-17,
+  accounts\templates\accounts\odontograma.html:493:    .dente-18
+> accounts\templates\accounts\odontograma.html:494:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:495:
+  accounts\templates\accounts\odontograma.html:496:    transform:
+  accounts\templates\accounts\odontograma.html:497:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:498:}
+  accounts\templates\accounts\odontograma.html:499:
+  accounts\templates\accounts\odontograma.html:500:
+  accounts\templates\accounts\odontograma.html:501:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:502:   21 A 28
+  accounts\templates\accounts\odontograma.html:503:   COROA → ESQUERDA
+  accounts\templates\accounts\odontograma.html:504:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:510:    .dente-24,
+  accounts\templates\accounts\odontograma.html:511:    .dente-25,
+  accounts\templates\accounts\odontograma.html:512:    .dente-26,
+  accounts\templates\accounts\odontograma.html:513:    .dente-27,
+  accounts\templates\accounts\odontograma.html:514:    .dente-28
+> accounts\templates\accounts\odontograma.html:515:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:516:
+  accounts\templates\accounts\odontograma.html:517:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:518:    .dente-21,
+  accounts\templates\accounts\odontograma.html:519:    .dente-22,
+  accounts\templates\accounts\odontograma.html:520:    .dente-23,
+  accounts\templates\accounts\odontograma.html:521:    .dente-24,
+  accounts\templates\accounts\odontograma.html:522:    .dente-25,
+  accounts\templates\accounts\odontograma.html:523:    .dente-26,
+  accounts\templates\accounts\odontograma.html:524:    .dente-27,
+  accounts\templates\accounts\odontograma.html:525:    .dente-28
+> accounts\templates\accounts\odontograma.html:526:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:527:
+  accounts\templates\accounts\odontograma.html:528:    transform:
+  accounts\templates\accounts\odontograma.html:529:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:530:}
+  accounts\templates\accounts\odontograma.html:531:
+  accounts\templates\accounts\odontograma.html:532:
+  accounts\templates\accounts\odontograma.html:533:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:534:   51 A 55
+  accounts\templates\accounts\odontograma.html:535:   COROA → DIREITA
+  accounts\templates\accounts\odontograma.html:536:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:539:    .dente-51,
+  accounts\templates\accounts\odontograma.html:540:    .dente-52,
+  accounts\templates\accounts\odontograma.html:541:    .dente-53,
+  accounts\templates\accounts\odontograma.html:542:    .dente-54,
+  accounts\templates\accounts\odontograma.html:543:    .dente-55
+> accounts\templates\accounts\odontograma.html:544:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:545:
+  accounts\templates\accounts\odontograma.html:546:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:547:    .dente-51,
+  accounts\templates\accounts\odontograma.html:548:    .dente-52,
+  accounts\templates\accounts\odontograma.html:549:    .dente-53,
+  accounts\templates\accounts\odontograma.html:550:    .dente-54,
+  accounts\templates\accounts\odontograma.html:551:    .dente-55
+> accounts\templates\accounts\odontograma.html:552:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:553:
+  accounts\templates\accounts\odontograma.html:554:    transform:
+  accounts\templates\accounts\odontograma.html:555:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:556:}
+  accounts\templates\accounts\odontograma.html:557:
+  accounts\templates\accounts\odontograma.html:558:
+  accounts\templates\accounts\odontograma.html:559:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:560:   61 A 65
+  accounts\templates\accounts\odontograma.html:561:   COROA → ESQUERDA
+  accounts\templates\accounts\odontograma.html:562:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:565:    .dente-61,
+  accounts\templates\accounts\odontograma.html:566:    .dente-62,
+  accounts\templates\accounts\odontograma.html:567:    .dente-63,
+  accounts\templates\accounts\odontograma.html:568:    .dente-64,
+  accounts\templates\accounts\odontograma.html:569:    .dente-65
+> accounts\templates\accounts\odontograma.html:570:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:571:
+  accounts\templates\accounts\odontograma.html:572:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:573:    .dente-61,
+  accounts\templates\accounts\odontograma.html:574:    .dente-62,
+  accounts\templates\accounts\odontograma.html:575:    .dente-63,
+  accounts\templates\accounts\odontograma.html:576:    .dente-64,
+  accounts\templates\accounts\odontograma.html:577:    .dente-65
+> accounts\templates\accounts\odontograma.html:578:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:579:
+  accounts\templates\accounts\odontograma.html:580:    transform:
+  accounts\templates\accounts\odontograma.html:581:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:582:}
+  accounts\templates\accounts\odontograma.html:583:
+  accounts\templates\accounts\odontograma.html:584:
+  accounts\templates\accounts\odontograma.html:585:/* =========================================================
+  accounts\templates\accounts\odontograma.html:586:   DISTAL — ARCADA SUPERIOR
+  accounts\templates\accounts\odontograma.html:587:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:588:
+  accounts\templates\accounts\odontograma.html:599:    .dente-14,
+  accounts\templates\accounts\odontograma.html:600:    .dente-15,
+  accounts\templates\accounts\odontograma.html:601:    .dente-16,
+  accounts\templates\accounts\odontograma.html:602:    .dente-17,
+  accounts\templates\accounts\odontograma.html:603:    .dente-18
+> accounts\templates\accounts\odontograma.html:604:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:605:
+  accounts\templates\accounts\odontograma.html:606:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:607:    .dente-11,
+  accounts\templates\accounts\odontograma.html:608:    .dente-12,
+  accounts\templates\accounts\odontograma.html:609:    .dente-13,
+  accounts\templates\accounts\odontograma.html:610:    .dente-14,
+  accounts\templates\accounts\odontograma.html:611:    .dente-15,
+  accounts\templates\accounts\odontograma.html:612:    .dente-16,
+  accounts\templates\accounts\odontograma.html:613:    .dente-17,
+  accounts\templates\accounts\odontograma.html:614:    .dente-18
+> accounts\templates\accounts\odontograma.html:615:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:616:
+  accounts\templates\accounts\odontograma.html:617:    transform:
+  accounts\templates\accounts\odontograma.html:618:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:619:}
+  accounts\templates\accounts\odontograma.html:620:
+  accounts\templates\accounts\odontograma.html:621:
+  accounts\templates\accounts\odontograma.html:622:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:623:   21 A 28
+  accounts\templates\accounts\odontograma.html:624:   COROA → DIREITA
+  accounts\templates\accounts\odontograma.html:625:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:631:    .dente-24,
+  accounts\templates\accounts\odontograma.html:632:    .dente-25,
+  accounts\templates\accounts\odontograma.html:633:    .dente-26,
+  accounts\templates\accounts\odontograma.html:634:    .dente-27,
+  accounts\templates\accounts\odontograma.html:635:    .dente-28
+> accounts\templates\accounts\odontograma.html:636:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:637:
+  accounts\templates\accounts\odontograma.html:638:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:639:    .dente-21,
+  accounts\templates\accounts\odontograma.html:640:    .dente-22,
+  accounts\templates\accounts\odontograma.html:641:    .dente-23,
+  accounts\templates\accounts\odontograma.html:642:    .dente-24,
+  accounts\templates\accounts\odontograma.html:643:    .dente-25,
+  accounts\templates\accounts\odontograma.html:644:    .dente-26,
+  accounts\templates\accounts\odontograma.html:645:    .dente-27,
+  accounts\templates\accounts\odontograma.html:646:    .dente-28
+> accounts\templates\accounts\odontograma.html:647:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:648:
+  accounts\templates\accounts\odontograma.html:649:    transform:
+  accounts\templates\accounts\odontograma.html:650:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:651:}
+  accounts\templates\accounts\odontograma.html:652:
+  accounts\templates\accounts\odontograma.html:653:
+  accounts\templates\accounts\odontograma.html:654:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:655:   51 A 55
+  accounts\templates\accounts\odontograma.html:656:   COROA → ESQUERDA
+  accounts\templates\accounts\odontograma.html:657:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:660:    .dente-51,
+  accounts\templates\accounts\odontograma.html:661:    .dente-52,
+  accounts\templates\accounts\odontograma.html:662:    .dente-53,
+  accounts\templates\accounts\odontograma.html:663:    .dente-54,
+  accounts\templates\accounts\odontograma.html:664:    .dente-55
+> accounts\templates\accounts\odontograma.html:665:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:666:
+  accounts\templates\accounts\odontograma.html:667:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:668:    .dente-51,
+  accounts\templates\accounts\odontograma.html:669:    .dente-52,
+  accounts\templates\accounts\odontograma.html:670:    .dente-53,
+  accounts\templates\accounts\odontograma.html:671:    .dente-54,
+  accounts\templates\accounts\odontograma.html:672:    .dente-55
+> accounts\templates\accounts\odontograma.html:673:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:674:
+  accounts\templates\accounts\odontograma.html:675:    transform:
+  accounts\templates\accounts\odontograma.html:676:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:677:}
+  accounts\templates\accounts\odontograma.html:678:
+  accounts\templates\accounts\odontograma.html:679:
+  accounts\templates\accounts\odontograma.html:680:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:681:   61 A 65
+  accounts\templates\accounts\odontograma.html:682:   COROA → DIREITA
+  accounts\templates\accounts\odontograma.html:683:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:686:    .dente-61,
+  accounts\templates\accounts\odontograma.html:687:    .dente-62,
+  accounts\templates\accounts\odontograma.html:688:    .dente-63,
+  accounts\templates\accounts\odontograma.html:689:    .dente-64,
+  accounts\templates\accounts\odontograma.html:690:    .dente-65
+> accounts\templates\accounts\odontograma.html:691:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:692:
+  accounts\templates\accounts\odontograma.html:693:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:694:    .dente-61,
+  accounts\templates\accounts\odontograma.html:695:    .dente-62,
+  accounts\templates\accounts\odontograma.html:696:    .dente-63,
+  accounts\templates\accounts\odontograma.html:697:    .dente-64,
+  accounts\templates\accounts\odontograma.html:698:    .dente-65
+> accounts\templates\accounts\odontograma.html:699:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:700:
+  accounts\templates\accounts\odontograma.html:701:    transform:
+  accounts\templates\accounts\odontograma.html:702:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:703:}
+  accounts\templates\accounts\odontograma.html:704:
+  accounts\templates\accounts\odontograma.html:705:/* =========================================================
+  accounts\templates\accounts\odontograma.html:706:   MESIAL — ARCADA INFERIOR
+  accounts\templates\accounts\odontograma.html:707:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:708:
+  accounts\templates\accounts\odontograma.html:709:
+  accounts\templates\accounts\odontograma.html:719:    .dente-34,
+  accounts\templates\accounts\odontograma.html:720:    .dente-35,
+  accounts\templates\accounts\odontograma.html:721:    .dente-36,
+  accounts\templates\accounts\odontograma.html:722:    .dente-37,
+  accounts\templates\accounts\odontograma.html:723:    .dente-38
+> accounts\templates\accounts\odontograma.html:724:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:725:
+  accounts\templates\accounts\odontograma.html:726:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:727:    .dente-31,
+  accounts\templates\accounts\odontograma.html:728:    .dente-32,
+  accounts\templates\accounts\odontograma.html:729:    .dente-33,
+  accounts\templates\accounts\odontograma.html:730:    .dente-34,
+  accounts\templates\accounts\odontograma.html:731:    .dente-35,
+  accounts\templates\accounts\odontograma.html:732:    .dente-36,
+  accounts\templates\accounts\odontograma.html:733:    .dente-37,
+  accounts\templates\accounts\odontograma.html:734:    .dente-38
+> accounts\templates\accounts\odontograma.html:735:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:736:
+  accounts\templates\accounts\odontograma.html:737:    transform:
+  accounts\templates\accounts\odontograma.html:738:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:739:}
+  accounts\templates\accounts\odontograma.html:740:
+  accounts\templates\accounts\odontograma.html:741:
+  accounts\templates\accounts\odontograma.html:742:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:743:   DENTES 41 A 48
+  accounts\templates\accounts\odontograma.html:744:   COROA → DIREITA
+  accounts\templates\accounts\odontograma.html:745:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:751:    .dente-44,
+  accounts\templates\accounts\odontograma.html:752:    .dente-45,
+  accounts\templates\accounts\odontograma.html:753:    .dente-46,
+  accounts\templates\accounts\odontograma.html:754:    .dente-47,
+  accounts\templates\accounts\odontograma.html:755:    .dente-48
+> accounts\templates\accounts\odontograma.html:756:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:757:
+  accounts\templates\accounts\odontograma.html:758:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:759:    .dente-41,
+  accounts\templates\accounts\odontograma.html:760:    .dente-42,
+  accounts\templates\accounts\odontograma.html:761:    .dente-43,
+  accounts\templates\accounts\odontograma.html:762:    .dente-44,
+  accounts\templates\accounts\odontograma.html:763:    .dente-45,
+  accounts\templates\accounts\odontograma.html:764:    .dente-46,
+  accounts\templates\accounts\odontograma.html:765:    .dente-47,
+  accounts\templates\accounts\odontograma.html:766:    .dente-48
+> accounts\templates\accounts\odontograma.html:767:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:768:
+  accounts\templates\accounts\odontograma.html:769:    transform:
+  accounts\templates\accounts\odontograma.html:770:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:771:}
+  accounts\templates\accounts\odontograma.html:772:
+  accounts\templates\accounts\odontograma.html:773:
+  accounts\templates\accounts\odontograma.html:774:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:775:   DENTES 71 A 75
+  accounts\templates\accounts\odontograma.html:776:   COROA → ESQUERDA
+  accounts\templates\accounts\odontograma.html:777:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:780:    .dente-71,
+  accounts\templates\accounts\odontograma.html:781:    .dente-72,
+  accounts\templates\accounts\odontograma.html:782:    .dente-73,
+  accounts\templates\accounts\odontograma.html:783:    .dente-74,
+  accounts\templates\accounts\odontograma.html:784:    .dente-75
+> accounts\templates\accounts\odontograma.html:785:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:786:
+  accounts\templates\accounts\odontograma.html:787:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:788:    .dente-71,
+  accounts\templates\accounts\odontograma.html:789:    .dente-72,
+  accounts\templates\accounts\odontograma.html:790:    .dente-73,
+  accounts\templates\accounts\odontograma.html:791:    .dente-74,
+  accounts\templates\accounts\odontograma.html:792:    .dente-75
+> accounts\templates\accounts\odontograma.html:793:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:794:
+  accounts\templates\accounts\odontograma.html:795:    transform:
+  accounts\templates\accounts\odontograma.html:796:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:797:}
+  accounts\templates\accounts\odontograma.html:798:
+  accounts\templates\accounts\odontograma.html:799:
+  accounts\templates\accounts\odontograma.html:800:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:801:   DENTES 81 A 85
+  accounts\templates\accounts\odontograma.html:802:   COROA → DIREITA
+  accounts\templates\accounts\odontograma.html:803:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:806:    .dente-81,
+  accounts\templates\accounts\odontograma.html:807:    .dente-82,
+  accounts\templates\accounts\odontograma.html:808:    .dente-83,
+  accounts\templates\accounts\odontograma.html:809:    .dente-84,
+  accounts\templates\accounts\odontograma.html:810:    .dente-85
+> accounts\templates\accounts\odontograma.html:811:) .dente-img.posicao-inclinado_mesial,
+  accounts\templates\accounts\odontograma.html:812:
+  accounts\templates\accounts\odontograma.html:813:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:814:    .dente-81,
+  accounts\templates\accounts\odontograma.html:815:    .dente-82,
+  accounts\templates\accounts\odontograma.html:816:    .dente-83,
+  accounts\templates\accounts\odontograma.html:817:    .dente-84,
+  accounts\templates\accounts\odontograma.html:818:    .dente-85
+> accounts\templates\accounts\odontograma.html:819:) .dente-img.posicao-inclinado-mesial {
+  accounts\templates\accounts\odontograma.html:820:
+  accounts\templates\accounts\odontograma.html:821:    transform:
+  accounts\templates\accounts\odontograma.html:822:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:823:}
+  accounts\templates\accounts\odontograma.html:824:
+  accounts\templates\accounts\odontograma.html:825:/* =========================================================
+  accounts\templates\accounts\odontograma.html:826:   DISTAL — ARCADA INFERIOR
+  accounts\templates\accounts\odontograma.html:827:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:828:
+  accounts\templates\accounts\odontograma.html:829:
+  accounts\templates\accounts\odontograma.html:839:    .dente-44,
+  accounts\templates\accounts\odontograma.html:840:    .dente-45,
+  accounts\templates\accounts\odontograma.html:841:    .dente-46,
+  accounts\templates\accounts\odontograma.html:842:    .dente-47,
+  accounts\templates\accounts\odontograma.html:843:    .dente-48
+> accounts\templates\accounts\odontograma.html:844:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:845:
+  accounts\templates\accounts\odontograma.html:846:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:847:    .dente-41,
+  accounts\templates\accounts\odontograma.html:848:    .dente-42,
+  accounts\templates\accounts\odontograma.html:849:    .dente-43,
+  accounts\templates\accounts\odontograma.html:850:    .dente-44,
+  accounts\templates\accounts\odontograma.html:851:    .dente-45,
+  accounts\templates\accounts\odontograma.html:852:    .dente-46,
+  accounts\templates\accounts\odontograma.html:853:    .dente-47,
+  accounts\templates\accounts\odontograma.html:854:    .dente-48
+> accounts\templates\accounts\odontograma.html:855:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:856:
+  accounts\templates\accounts\odontograma.html:857:    transform:
+  accounts\templates\accounts\odontograma.html:858:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:859:}
+  accounts\templates\accounts\odontograma.html:860:
+  accounts\templates\accounts\odontograma.html:861:
+  accounts\templates\accounts\odontograma.html:862:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:863:   DENTES 81 A 85
+  accounts\templates\accounts\odontograma.html:864:   DISTAL → COROA PARA A ESQUERDA
+  accounts\templates\accounts\odontograma.html:865:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:868:    .dente-81,
+  accounts\templates\accounts\odontograma.html:869:    .dente-82,
+  accounts\templates\accounts\odontograma.html:870:    .dente-83,
+  accounts\templates\accounts\odontograma.html:871:    .dente-84,
+  accounts\templates\accounts\odontograma.html:872:    .dente-85
+> accounts\templates\accounts\odontograma.html:873:) .dente-img.posicao-inclinado_distal,
+  accounts\templates\accounts\odontograma.html:874:
+  accounts\templates\accounts\odontograma.html:875:.dente-box:is(
+  accounts\templates\accounts\odontograma.html:876:    .dente-81,
+  accounts\templates\accounts\odontograma.html:877:    .dente-82,
+  accounts\templates\accounts\odontograma.html:878:    .dente-83,
+  accounts\templates\accounts\odontograma.html:879:    .dente-84,
+  accounts\templates\accounts\odontograma.html:880:    .dente-85
+> accounts\templates\accounts\odontograma.html:881:) .dente-img.posicao-inclinado-distal {
+  accounts\templates\accounts\odontograma.html:882:
+  accounts\templates\accounts\odontograma.html:883:    transform:
+  accounts\templates\accounts\odontograma.html:884:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:885:}
+  accounts\templates\accounts\odontograma.html:886:
+  accounts\templates\accounts\odontograma.html:887:
+  accounts\templates\accounts\odontograma.html:888:/* =========================================================
+  accounts\templates\accounts\odontograma.html:889:   ROTAÇÕES
+  accounts\templates\accounts\odontograma.html:890:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:891:
+  accounts\templates\accounts\odontograma.html:892:
+  accounts\templates\accounts\odontograma.html:893:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:894:   +45°
+  accounts\templates\accounts\odontograma.html:895:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:896:
+> accounts\templates\accounts\odontograma.html:897:.dente-img.posicao-rotacao-45 {
+  accounts\templates\accounts\odontograma.html:898:
+  accounts\templates\accounts\odontograma.html:899:    transform:
+  accounts\templates\accounts\odontograma.html:900:        rotate(45deg);
+  accounts\templates\accounts\odontograma.html:901:
+  accounts\templates\accounts\odontograma.html:902:    transform-origin:
+  accounts\templates\accounts\odontograma.html:903:        center center;
+  accounts\templates\accounts\odontograma.html:904:}
+  accounts\templates\accounts\odontograma.html:905:
+  accounts\templates\accounts\odontograma.html:906:
+  accounts\templates\accounts\odontograma.html:907:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:908:   -45°
+  accounts\templates\accounts\odontograma.html:909:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:910:
+> accounts\templates\accounts\odontograma.html:911:.dente-img.posicao-rotacao-menos-45 {
+  accounts\templates\accounts\odontograma.html:912:
+  accounts\templates\accounts\odontograma.html:913:    transform:
+  accounts\templates\accounts\odontograma.html:914:        rotate(-45deg);
+  accounts\templates\accounts\odontograma.html:915:
+  accounts\templates\accounts\odontograma.html:916:    transform-origin:
+  accounts\templates\accounts\odontograma.html:917:        center center;
+  accounts\templates\accounts\odontograma.html:918:}
+  accounts\templates\accounts\odontograma.html:919:
+  accounts\templates\accounts\odontograma.html:920:
+  accounts\templates\accounts\odontograma.html:921:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:922:   +35°
+  accounts\templates\accounts\odontograma.html:923:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:924:
+> accounts\templates\accounts\odontograma.html:925:.dente-img.posicao-rotacao-35 {
+  accounts\templates\accounts\odontograma.html:926:
+  accounts\templates\accounts\odontograma.html:927:    transform:
+  accounts\templates\accounts\odontograma.html:928:        rotate(35deg);
+  accounts\templates\accounts\odontograma.html:929:
+  accounts\templates\accounts\odontograma.html:930:    transform-origin:
+  accounts\templates\accounts\odontograma.html:931:        center center;
+  accounts\templates\accounts\odontograma.html:932:}
+  accounts\templates\accounts\odontograma.html:933:
+  accounts\templates\accounts\odontograma.html:934:
+  accounts\templates\accounts\odontograma.html:935:/* ---------------------------------------------------------
+  accounts\templates\accounts\odontograma.html:936:   -35°
+  accounts\templates\accounts\odontograma.html:937:   --------------------------------------------------------- */
+  accounts\templates\accounts\odontograma.html:938:
+> accounts\templates\accounts\odontograma.html:939:.dente-img.posicao-rotacao-menos-35 {
+  accounts\templates\accounts\odontograma.html:940:
+  accounts\templates\accounts\odontograma.html:941:    transform:
+  accounts\templates\accounts\odontograma.html:942:        rotate(-35deg);
+  accounts\templates\accounts\odontograma.html:943:
+  accounts\templates\accounts\odontograma.html:944:    transform-origin:
+  accounts\templates\accounts\odontograma.html:945:        center center;
+  accounts\templates\accounts\odontograma.html:946:}
+  accounts\templates\accounts\odontograma.html:947:
+  accounts\templates\accounts\odontograma.html:948:
+  accounts\templates\accounts\odontograma.html:949:/* =========================================================
+  accounts\templates\accounts\odontograma.html:950:   EXTRUSÃO — SUPERIOR
+  accounts\templates\accounts\odontograma.html:951:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:952:
+> accounts\templates\accounts\odontograma.html:953:.arcada:not(.inferior) .dente-img.posicao-extrusao {
+  accounts\templates\accounts\odontograma.html:954:
+  accounts\templates\accounts\odontograma.html:955:    transform:
+  accounts\templates\accounts\odontograma.html:956:        translateY(20px);
+  accounts\templates\accounts\odontograma.html:957:}
+  accounts\templates\accounts\odontograma.html:958:
+  accounts\templates\accounts\odontograma.html:959:
+  accounts\templates\accounts\odontograma.html:960:/* =========================================================
+  accounts\templates\accounts\odontograma.html:961:   PAINEL DE POSICIONAMENTO
+  accounts\templates\accounts\odontograma.html:962:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:963:
+  accounts\templates\accounts\odontograma.html:1028:
+  accounts\templates\accounts\odontograma.html:1029:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1030:   DENTE SELECIONADO
+  accounts\templates\accounts\odontograma.html:1031:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1032:
+> accounts\templates\accounts\odontograma.html:1033:.dente-selecionado-posicao {
+  accounts\templates\accounts\odontograma.html:1034:
+  accounts\templates\accounts\odontograma.html:1035:    display: inline-block;
+  accounts\templates\accounts\odontograma.html:1036:
+  accounts\templates\accounts\odontograma.html:1037:    padding: 3px 8px;
+  accounts\templates\accounts\odontograma.html:1038:
+  accounts\templates\accounts\odontograma.html:1039:    margin-bottom: 6px;
+  accounts\templates\accounts\odontograma.html:1040:
+  accounts\templates\accounts\odontograma.html:1041:    background: #f4f7fb;
+  accounts\templates\accounts\odontograma.html:1042:
+  accounts\templates\accounts\odontograma.html:1043:    border-radius: 6px;
+  accounts\templates\accounts\odontograma.html:1048:
+  accounts\templates\accounts\odontograma.html:1049:    color: #667085;
+  accounts\templates\accounts\odontograma.html:1050:}
+  accounts\templates\accounts\odontograma.html:1051:
+  accounts\templates\accounts\odontograma.html:1052:
+> accounts\templates\accounts\odontograma.html:1053:.dente-selecionado-posicao strong {
+  accounts\templates\accounts\odontograma.html:1054:
+  accounts\templates\accounts\odontograma.html:1055:    color: #1769ff;
+  accounts\templates\accounts\odontograma.html:1056:}
+  accounts\templates\accounts\odontograma.html:1057:
+  accounts\templates\accounts\odontograma.html:1058:
+  accounts\templates\accounts\odontograma.html:1059:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1060:   OPÇÕES — UMA ÚNICA LINHA
+  accounts\templates\accounts\odontograma.html:1061:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1062:
+  accounts\templates\accounts\odontograma.html:1063:.posicoes-dentes {
+  accounts\templates\accounts\odontograma.html:1084:
+  accounts\templates\accounts\odontograma.html:1085:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1086:   CADA OPÇÃO
+  accounts\templates\accounts\odontograma.html:1087:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1088:
+> accounts\templates\accounts\odontograma.html:1089:.opcao-posicao {
+  accounts\templates\accounts\odontograma.html:1090:
+  accounts\templates\accounts\odontograma.html:1091:    flex: 0 0 62px;
+  accounts\templates\accounts\odontograma.html:1092:
+  accounts\templates\accounts\odontograma.html:1093:    width: 62px;
+  accounts\templates\accounts\odontograma.html:1094:
+  accounts\templates\accounts\odontograma.html:1095:    height: 72px;
+  accounts\templates\accounts\odontograma.html:1096:
+  accounts\templates\accounts\odontograma.html:1097:    min-height: 72px;
+  accounts\templates\accounts\odontograma.html:1098:
+  accounts\templates\accounts\odontograma.html:1099:    padding: 4px 2px;
+  accounts\templates\accounts\odontograma.html:1123:        border-color 0.2s ease,
+  accounts\templates\accounts\odontograma.html:1124:        transform 0.2s ease;
+  accounts\templates\accounts\odontograma.html:1125:}
+  accounts\templates\accounts\odontograma.html:1126:
+  accounts\templates\accounts\odontograma.html:1127:
+> accounts\templates\accounts\odontograma.html:1128:.opcao-posicao:hover {
+  accounts\templates\accounts\odontograma.html:1129:
+  accounts\templates\accounts\odontograma.html:1130:    background: #f5f8fc;
+  accounts\templates\accounts\odontograma.html:1131:
+  accounts\templates\accounts\odontograma.html:1132:    border-color: #dce5f1;
+  accounts\templates\accounts\odontograma.html:1133:
+  accounts\templates\accounts\odontograma.html:1134:    transform:
+  accounts\templates\accounts\odontograma.html:1135:        translateY(-1px);
+  accounts\templates\accounts\odontograma.html:1136:}
+  accounts\templates\accounts\odontograma.html:1137:
+  accounts\templates\accounts\odontograma.html:1138:
+> accounts\templates\accounts\odontograma.html:1139:.opcao-posicao.selecionada {
+  accounts\templates\accounts\odontograma.html:1140:
+  accounts\templates\accounts\odontograma.html:1141:    background: #eef5ff;
+  accounts\templates\accounts\odontograma.html:1142:
+  accounts\templates\accounts\odontograma.html:1143:    border-color: #2f80ed;
+  accounts\templates\accounts\odontograma.html:1144:
+  accounts\templates\accounts\odontograma.html:1145:    box-shadow:
+  accounts\templates\accounts\odontograma.html:1146:        0 0 0 2px rgba(47, 128, 237, 0.08);
+  accounts\templates\accounts\odontograma.html:1147:}
+  accounts\templates\accounts\odontograma.html:1148:
+  accounts\templates\accounts\odontograma.html:1149:
+  accounts\templates\accounts\odontograma.html:1150:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1151:   ÁREA DO DESENHO
+  accounts\templates\accounts\odontograma.html:1152:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1153:
+> accounts\templates\accounts\odontograma.html:1154:.desenho-posicao {
+  accounts\templates\accounts\odontograma.html:1155:
+  accounts\templates\accounts\odontograma.html:1156:    width: 42px;
+  accounts\templates\accounts\odontograma.html:1157:
+  accounts\templates\accounts\odontograma.html:1158:    height: 45px;
+  accounts\templates\accounts\odontograma.html:1159:
+  accounts\templates\accounts\odontograma.html:1160:    margin: 0 auto 2px;
+  accounts\templates\accounts\odontograma.html:1161:
+  accounts\templates\accounts\odontograma.html:1162:    display: flex;
+  accounts\templates\accounts\odontograma.html:1163:
+  accounts\templates\accounts\odontograma.html:1164:    align-items: center;
+  accounts\templates\accounts\odontograma.html:1169:
+  accounts\templates\accounts\odontograma.html:1170:    flex-shrink: 0;
+  accounts\templates\accounts\odontograma.html:1171:}
+  accounts\templates\accounts\odontograma.html:1172:
+  accounts\templates\accounts\odontograma.html:1173:
+> accounts\templates\accounts\odontograma.html:1174:.desenho-posicao img {
+  accounts\templates\accounts\odontograma.html:1175:
+  accounts\templates\accounts\odontograma.html:1176:    width: 30px;
+  accounts\templates\accounts\odontograma.html:1177:
+  accounts\templates\accounts\odontograma.html:1178:    height: 42px;
+  accounts\templates\accounts\odontograma.html:1179:
+  accounts\templates\accounts\odontograma.html:1180:    object-fit: contain;
+  accounts\templates\accounts\odontograma.html:1181:
+  accounts\templates\accounts\odontograma.html:1182:    transform-origin: center center;
+  accounts\templates\accounts\odontograma.html:1183:
+  accounts\templates\accounts\odontograma.html:1184:    transition:
+  accounts\templates\accounts\odontograma.html:1188:
+  accounts\templates\accounts\odontograma.html:1189:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1190:   TEXTO DA POSIÇÃO
+  accounts\templates\accounts\odontograma.html:1191:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1192:
+> accounts\templates\accounts\odontograma.html:1193:.opcao-posicao span {
+  accounts\templates\accounts\odontograma.html:1194:
+  accounts\templates\accounts\odontograma.html:1195:    display: block;
+  accounts\templates\accounts\odontograma.html:1196:
+  accounts\templates\accounts\odontograma.html:1197:    width: 100%;
+  accounts\templates\accounts\odontograma.html:1198:
+  accounts\templates\accounts\odontograma.html:1199:    font-size: 9px;
+  accounts\templates\accounts\odontograma.html:1200:
+  accounts\templates\accounts\odontograma.html:1201:    line-height: 10px;
+  accounts\templates\accounts\odontograma.html:1202:
+  accounts\templates\accounts\odontograma.html:1203:    text-align: center;
+  accounts\templates\accounts\odontograma.html:1214:
+  accounts\templates\accounts\odontograma.html:1215:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1216:   POSIÇÕES DOS DESENHOS DO PAINEL
+  accounts\templates\accounts\odontograma.html:1217:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1218:
+> accounts\templates\accounts\odontograma.html:1219:.desenho-posicao.normal img {
+  accounts\templates\accounts\odontograma.html:1220:
+  accounts\templates\accounts\odontograma.html:1221:    transform:
+  accounts\templates\accounts\odontograma.html:1222:        rotate(0deg);
+  accounts\templates\accounts\odontograma.html:1223:}
+  accounts\templates\accounts\odontograma.html:1224:
+  accounts\templates\accounts\odontograma.html:1225:
+> accounts\templates\accounts\odontograma.html:1226:.desenho-posicao.incluso-vertical img {
+  accounts\templates\accounts\odontograma.html:1227:
+  accounts\templates\accounts\odontograma.html:1228:    transform:
+  accounts\templates\accounts\odontograma.html:1229:        rotate(90deg);
+  accounts\templates\accounts\odontograma.html:1230:}
+  accounts\templates\accounts\odontograma.html:1231:
+  accounts\templates\accounts\odontograma.html:1232:
+> accounts\templates\accounts\odontograma.html:1233:.desenho-posicao.incluso-horizontal img {
+  accounts\templates\accounts\odontograma.html:1234:
+  accounts\templates\accounts\odontograma.html:1235:    transform:
+  accounts\templates\accounts\odontograma.html:1236:        rotate(90deg)
+  accounts\templates\accounts\odontograma.html:1237:        scale(0.95);
+  accounts\templates\accounts\odontograma.html:1238:}
+  accounts\templates\accounts\odontograma.html:1239:
+  accounts\templates\accounts\odontograma.html:1240:
+> accounts\templates\accounts\odontograma.html:1241:.desenho-posicao.inclinado-mesial img {
+  accounts\templates\accounts\odontograma.html:1242:
+  accounts\templates\accounts\odontograma.html:1243:    transform:
+  accounts\templates\accounts\odontograma.html:1244:        rotate(-25deg);
+  accounts\templates\accounts\odontograma.html:1245:}
+  accounts\templates\accounts\odontograma.html:1246:
+  accounts\templates\accounts\odontograma.html:1247:
+> accounts\templates\accounts\odontograma.html:1248:.desenho-posicao.inclinado-distal img {
+  accounts\templates\accounts\odontograma.html:1249:
+  accounts\templates\accounts\odontograma.html:1250:    transform:
+  accounts\templates\accounts\odontograma.html:1251:        rotate(25deg);
+  accounts\templates\accounts\odontograma.html:1252:}
+  accounts\templates\accounts\odontograma.html:1253:
+  accounts\templates\accounts\odontograma.html:1254:
+  accounts\templates\accounts\odontograma.html:1255:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1256:   ROTAÇÕES DOS ÍCONES DO PAINEL
+  accounts\templates\accounts\odontograma.html:1257:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1258:
+> accounts\templates\accounts\odontograma.html:1259:.desenho-posicao.rotacao-45 img {
+  accounts\templates\accounts\odontograma.html:1260:
+  accounts\templates\accounts\odontograma.html:1261:    transform:
+  accounts\templates\accounts\odontograma.html:1262:        rotate(45deg);
+  accounts\templates\accounts\odontograma.html:1263:}
+  accounts\templates\accounts\odontograma.html:1264:
+  accounts\templates\accounts\odontograma.html:1265:
+> accounts\templates\accounts\odontograma.html:1266:.desenho-posicao.rotacao-menos-45 img {
+  accounts\templates\accounts\odontograma.html:1267:
+  accounts\templates\accounts\odontograma.html:1268:    transform:
+  accounts\templates\accounts\odontograma.html:1269:        rotate(-45deg);
+  accounts\templates\accounts\odontograma.html:1270:}
+  accounts\templates\accounts\odontograma.html:1271:
+  accounts\templates\accounts\odontograma.html:1272:
+> accounts\templates\accounts\odontograma.html:1273:.desenho-posicao.rotacao-35 img {
+  accounts\templates\accounts\odontograma.html:1274:
+  accounts\templates\accounts\odontograma.html:1275:    transform:
+  accounts\templates\accounts\odontograma.html:1276:        rotate(35deg);
+  accounts\templates\accounts\odontograma.html:1277:}
+  accounts\templates\accounts\odontograma.html:1278:
+  accounts\templates\accounts\odontograma.html:1279:
+> accounts\templates\accounts\odontograma.html:1280:.desenho-posicao.rotacao-menos-35 img {
+  accounts\templates\accounts\odontograma.html:1281:
+  accounts\templates\accounts\odontograma.html:1282:    transform:
+  accounts\templates\accounts\odontograma.html:1283:        rotate(-35deg);
+  accounts\templates\accounts\odontograma.html:1284:}
+  accounts\templates\accounts\odontograma.html:1285:
+  accounts\templates\accounts\odontograma.html:1286:
+> accounts\templates\accounts\odontograma.html:1287:.desenho-posicao.rotacao img {
+  accounts\templates\accounts\odontograma.html:1288:
+  accounts\templates\accounts\odontograma.html:1289:    transform:
+  accounts\templates\accounts\odontograma.html:1290:        rotate(180deg);
+  accounts\templates\accounts\odontograma.html:1291:}
+  accounts\templates\accounts\odontograma.html:1292:
+  accounts\templates\accounts\odontograma.html:1293:
+> accounts\templates\accounts\odontograma.html:1294:.desenho-posicao.extrusao img {
+  accounts\templates\accounts\odontograma.html:1295:
+  accounts\templates\accounts\odontograma.html:1296:    transform:
+  accounts\templates\accounts\odontograma.html:1297:        translateY(-6px)
+  accounts\templates\accounts\odontograma.html:1298:        scale(1.05);
+  accounts\templates\accounts\odontograma.html:1299:}
+  accounts\templates\accounts\odontograma.html:1300:
+  accounts\templates\accounts\odontograma.html:1301:
+  accounts\templates\accounts\odontograma.html:1302:/* =========================================================
+  accounts\templates\accounts\odontograma.html:1303:   DENTE SELECIONADO NO ODONTOGRAMA
+  accounts\templates\accounts\odontograma.html:1304:   ========================================================= */
+  accounts\templates\accounts\odontograma.html:1305:
+> accounts\templates\accounts\odontograma.html:1306:.dente-posicao-selecionado {
+  accounts\templates\accounts\odontograma.html:1307:
+  accounts\templates\accounts\odontograma.html:1308:    outline:
+  accounts\templates\accounts\odontograma.html:1309:        2px solid #1769ff;
+  accounts\templates\accounts\odontograma.html:1310:
+  accounts\templates\accounts\odontograma.html:1311:    outline-offset:
+  accounts\templates\accounts\odontograma.html:1312:        3px;
+  accounts\templates\accounts\odontograma.html:1313:
+  accounts\templates\accounts\odontograma.html:1314:    border-radius:
+  accounts\templates\accounts\odontograma.html:1315:        6px;
+  accounts\templates\accounts\odontograma.html:1316:}
+  accounts\templates\accounts\odontograma.html:1571:        gap:
+  accounts\templates\accounts\odontograma.html:1572:            2px;
+  accounts\templates\accounts\odontograma.html:1573:    }
+  accounts\templates\accounts\odontograma.html:1574:
+  accounts\templates\accounts\odontograma.html:1575:
+> accounts\templates\accounts\odontograma.html:1576:    .opcao-posicao {
+  accounts\templates\accounts\odontograma.html:1577:
+  accounts\templates\accounts\odontograma.html:1578:        flex-basis:
+  accounts\templates\accounts\odontograma.html:1579:            58px;
+  accounts\templates\accounts\odontograma.html:1580:
+  accounts\templates\accounts\odontograma.html:1581:        width:
+  accounts\templates\accounts\odontograma.html:1582:            58px;
+  accounts\templates\accounts\odontograma.html:1583:    }
+  accounts\templates\accounts\odontograma.html:1584:
+  accounts\templates\accounts\odontograma.html:1585:
+> accounts\templates\accounts\odontograma.html:1586:    .desenho-posicao img {
+  accounts\templates\accounts\odontograma.html:1587:
+  accounts\templates\accounts\odontograma.html:1588:        width:
+  accounts\templates\accounts\odontograma.html:1589:            28px;
+  accounts\templates\accounts\odontograma.html:1590:
+  accounts\templates\accounts\odontograma.html:1591:        height:
+  accounts\templates\accounts\odontograma.html:1592:            40px;
+  accounts\templates\accounts\odontograma.html:1593:    }
+  accounts\templates\accounts\odontograma.html:1594:}
+  accounts\templates\accounts\odontograma.html:1595:
+  accounts\templates\accounts\odontograma.html:1596:</style>
+  accounts\templates\accounts\odontograma.html:1715:     SUPERIOR
+  accounts\templates\accounts\odontograma.html:1716:     ========================================= -->
+  accounts\templates\accounts\odontograma.html:1717:
+  accounts\templates\accounts\odontograma.html:1718:<div class="arcada">
+  accounts\templates\accounts\odontograma.html:1719:
+> accounts\templates\accounts\odontograma.html:1720:    {% for dente in superiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1721:
+  accounts\templates\accounts\odontograma.html:1722:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1723:
+  accounts\templates\accounts\odontograma.html:1724:        <img
+  accounts\templates\accounts\odontograma.html:1725:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1726:            class="
+  accounts\templates\accounts\odontograma.html:1727:                dente-img
+> accounts\templates\accounts\odontograma.html:1728:                posicao-dente-{{ dente.numero }}
+> accounts\templates\accounts\odontograma.html:1729:                {% if dente.posicao_css != 'normal' %}
+> accounts\templates\accounts\odontograma.html:1730:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1731:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1732:            "
+  accounts\templates\accounts\odontograma.html:1733:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1734:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1735:        >
+  accounts\templates\accounts\odontograma.html:1736:
+  accounts\templates\accounts\odontograma.html:1737:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1738:
+  accounts\templates\accounts\odontograma.html:1739:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1740:
+  accounts\templates\accounts\odontograma.html:1745:                        <img
+  accounts\templates\accounts\odontograma.html:1746:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1747:                            class="
+  accounts\templates\accounts\odontograma.html:1748:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1749:                                status-{{ item.status }}
+> accounts\templates\accounts\odontograma.html:1750:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1751:
+  accounts\templates\accounts\odontograma.html:1752:                                {% if item.procedimento.arquivo_icone == 'ausente.png' or 
+item.procedimento.arquivo_icone == 'rx_dente.png' %}
+  accounts\templates\accounts\odontograma.html:1753:                                    sem-rotacao
+  accounts\templates\accounts\odontograma.html:1754:                                {% endif %}
+  accounts\templates\accounts\odontograma.html:1755:                            "
+  accounts\templates\accounts\odontograma.html:1756:                            data-id="{{ item.id }}"
+  accounts\templates\accounts\odontograma.html:1757:                            data-status="{{ item.status }}"
+  accounts\templates\accounts\odontograma.html:1758:                            title="{{ item.procedimento.nome }}"
+  accounts\templates\accounts\odontograma.html:1759:                        >
+  accounts\templates\accounts\odontograma.html:1760:
+  accounts\templates\accounts\odontograma.html:1785:     INFERIOR
+  accounts\templates\accounts\odontograma.html:1786:     ========================================= -->
+  accounts\templates\accounts\odontograma.html:1787:
+  accounts\templates\accounts\odontograma.html:1788:<div class="arcada inferior">
+  accounts\templates\accounts\odontograma.html:1789:
+> accounts\templates\accounts\odontograma.html:1790:    {% for dente in inferiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1791:
+  accounts\templates\accounts\odontograma.html:1792:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1793:
+  accounts\templates\accounts\odontograma.html:1794:        <img
+  accounts\templates\accounts\odontograma.html:1795:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1796:            class="
+  accounts\templates\accounts\odontograma.html:1797:                dente-img
+  accounts\templates\accounts\odontograma.html:1798:                inferior
+> accounts\templates\accounts\odontograma.html:1799:                posicao-dente-{{ dente.numero }}
+> accounts\templates\accounts\odontograma.html:1800:                {% if dente.posicao_css != 'normal' %}
+> accounts\templates\accounts\odontograma.html:1801:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1802:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1803:            "
+  accounts\templates\accounts\odontograma.html:1804:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1805:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1806:        >
+  accounts\templates\accounts\odontograma.html:1807:
+  accounts\templates\accounts\odontograma.html:1808:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1809:
+  accounts\templates\accounts\odontograma.html:1810:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1811:
+  accounts\templates\accounts\odontograma.html:1816:                        <img
+  accounts\templates\accounts\odontograma.html:1817:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1818:                            class="
+  accounts\templates\accounts\odontograma.html:1819:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1820:                                status-{{ item.status }}
+> accounts\templates\accounts\odontograma.html:1821:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1822:
+  accounts\templates\accounts\odontograma.html:1823:                                {% if item.procedimento.arquivo_icone == 'ausente.png' or 
+item.procedimento.arquivo_icone == 'rx_dente.png' %}
+  accounts\templates\accounts\odontograma.html:1824:                                    sem-rotacao
+  accounts\templates\accounts\odontograma.html:1825:                                {% endif %}
+  accounts\templates\accounts\odontograma.html:1826:                            "
+  accounts\templates\accounts\odontograma.html:1827:                            data-id="{{ item.id }}"
+  accounts\templates\accounts\odontograma.html:1828:                            data-status="{{ item.status }}"
+  accounts\templates\accounts\odontograma.html:1829:                            title="{{ item.procedimento.nome }}"
+  accounts\templates\accounts\odontograma.html:1830:                        >
+  accounts\templates\accounts\odontograma.html:1831:
+  accounts\templates\accounts\odontograma.html:1868:     SUPERIOR
+  accounts\templates\accounts\odontograma.html:1869:     ========================================= -->
+  accounts\templates\accounts\odontograma.html:1870:
+  accounts\templates\accounts\odontograma.html:1871:<div class="arcada">
+  accounts\templates\accounts\odontograma.html:1872:
+> accounts\templates\accounts\odontograma.html:1873:    {% for dente in dec_superiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1874:
+  accounts\templates\accounts\odontograma.html:1875:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1876:
+  accounts\templates\accounts\odontograma.html:1877:        <img
+  accounts\templates\accounts\odontograma.html:1878:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1879:            class="
+  accounts\templates\accounts\odontograma.html:1880:                dente-img
+> accounts\templates\accounts\odontograma.html:1881:                posicao-dente-{{ dente.numero }}
+> accounts\templates\accounts\odontograma.html:1882:                {% if dente.posicao_css != 'normal' %}
+> accounts\templates\accounts\odontograma.html:1883:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1884:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1885:            "
+  accounts\templates\accounts\odontograma.html:1886:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1887:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1888:        >
+  accounts\templates\accounts\odontograma.html:1889:
+  accounts\templates\accounts\odontograma.html:1890:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1891:
+  accounts\templates\accounts\odontograma.html:1892:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1893:
+  accounts\templates\accounts\odontograma.html:1898:                        <img
+  accounts\templates\accounts\odontograma.html:1899:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1900:                            class="
+  accounts\templates\accounts\odontograma.html:1901:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1902:                                status-{{ item.status }}
+> accounts\templates\accounts\odontograma.html:1903:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1904:
+  accounts\templates\accounts\odontograma.html:1905:                                {% if item.procedimento.arquivo_icone == 'ausente.png' or 
+item.procedimento.arquivo_icone == 'rx_dente.png' %}
+  accounts\templates\accounts\odontograma.html:1906:                                    sem-rotacao
+  accounts\templates\accounts\odontograma.html:1907:                                {% endif %}
+  accounts\templates\accounts\odontograma.html:1908:                            "
+  accounts\templates\accounts\odontograma.html:1909:                            data-id="{{ item.id }}"
+  accounts\templates\accounts\odontograma.html:1910:                            data-status="{{ item.status }}"
+  accounts\templates\accounts\odontograma.html:1911:                            title="{{ item.procedimento.nome }}"
+  accounts\templates\accounts\odontograma.html:1912:                        >
+  accounts\templates\accounts\odontograma.html:1913:
+  accounts\templates\accounts\odontograma.html:1939:     INFERIOR
+  accounts\templates\accounts\odontograma.html:1940:     ========================================= -->
+  accounts\templates\accounts\odontograma.html:1941:
+  accounts\templates\accounts\odontograma.html:1942:<div class="arcada inferior">
+  accounts\templates\accounts\odontograma.html:1943:
+> accounts\templates\accounts\odontograma.html:1944:    {% for dente in dec_inferiores_posicionados %}
+  accounts\templates\accounts\odontograma.html:1945:
+  accounts\templates\accounts\odontograma.html:1946:    <div class="dente-box dente-{{ dente.numero }}">
+  accounts\templates\accounts\odontograma.html:1947:
+  accounts\templates\accounts\odontograma.html:1948:        <img
+  accounts\templates\accounts\odontograma.html:1949:            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+  accounts\templates\accounts\odontograma.html:1950:            class="
+  accounts\templates\accounts\odontograma.html:1951:                dente-img
+  accounts\templates\accounts\odontograma.html:1952:                inferior
+> accounts\templates\accounts\odontograma.html:1953:                posicao-dente-{{ dente.numero }}
+> accounts\templates\accounts\odontograma.html:1954:                {% if dente.posicao_css != 'normal' %}
+> accounts\templates\accounts\odontograma.html:1955:                    posicao-{{ dente.posicao_css }}
+  accounts\templates\accounts\odontograma.html:1956:                {% endif %}
+  accounts\templates\accounts\odontograma.html:1957:            "
+  accounts\templates\accounts\odontograma.html:1958:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1959:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1960:        >
+  accounts\templates\accounts\odontograma.html:1961:
+  accounts\templates\accounts\odontograma.html:1962:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1963:
+  accounts\templates\accounts\odontograma.html:1964:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1965:
+  accounts\templates\accounts\odontograma.html:1970:                        <img
+  accounts\templates\accounts\odontograma.html:1971:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1972:                            class="
+  accounts\templates\accounts\odontograma.html:1973:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1974:                                status-{{ item.status }}
+> accounts\templates\accounts\odontograma.html:1975:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1976:
+  accounts\templates\accounts\odontograma.html:1977:                                {% if item.procedimento.arquivo_icone == 'ausente.png' or 
+item.procedimento.arquivo_icone == 'rx_dente.png' %}
+  accounts\templates\accounts\odontograma.html:1978:                                    sem-rotacao
+  accounts\templates\accounts\odontograma.html:1979:                                {% endif %}
+  accounts\templates\accounts\odontograma.html:1980:                            "
+  accounts\templates\accounts\odontograma.html:1981:                            data-id="{{ item.id }}"
+  accounts\templates\accounts\odontograma.html:1982:                            data-status="{{ item.status }}"
+  accounts\templates\accounts\odontograma.html:1983:                            title="{{ item.procedimento.nome }}"
+  accounts\templates\accounts\odontograma.html:1984:                        >
+  accounts\templates\accounts\odontograma.html:1985:
+  accounts\templates\accounts\odontograma.html:2019:
+  accounts\templates\accounts\odontograma.html:2020:    <div class="painel-posicionamento-info">
+  accounts\templates\accounts\odontograma.html:2021:        Selecione um dente no odontograma
+  accounts\templates\accounts\odontograma.html:2022:    </div>
+  accounts\templates\accounts\odontograma.html:2023:
+> accounts\templates\accounts\odontograma.html:2024:    <div class="dente-selecionado-posicao">
+  accounts\templates\accounts\odontograma.html:2025:        Dente:
+> accounts\templates\accounts\odontograma.html:2026:        <strong id="denteSelecionadoPosicao">Nenhum</strong>
+  accounts\templates\accounts\odontograma.html:2027:    </div>
+  accounts\templates\accounts\odontograma.html:2028:
+  accounts\templates\accounts\odontograma.html:2029:    <div class="posicoes-dentes">
+  accounts\templates\accounts\odontograma.html:2030:
+  accounts\templates\accounts\odontograma.html:2031:        <!-- NORMAL -->
+  accounts\templates\accounts\odontograma.html:2032:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2033:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2034:                data-posicao="normal"
+  accounts\templates\accounts\odontograma.html:2035:                title="Normal">
+  accounts\templates\accounts\odontograma.html:2036:
+> accounts\templates\accounts\odontograma.html:2037:            <div class="desenho-posicao normal">
+  accounts\templates\accounts\odontograma.html:2038:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2039:            </div>
+  accounts\templates\accounts\odontograma.html:2040:
+  accounts\templates\accounts\odontograma.html:2041:            <span>Normal</span>
+  accounts\templates\accounts\odontograma.html:2042:
+  accounts\templates\accounts\odontograma.html:2043:        </button>
+  accounts\templates\accounts\odontograma.html:2044:
+  accounts\templates\accounts\odontograma.html:2045:
+  accounts\templates\accounts\odontograma.html:2046:        <!-- INCLUSO VERTICAL -->
+  accounts\templates\accounts\odontograma.html:2047:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2048:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2049:                data-posicao="incluso-vertical"
+  accounts\templates\accounts\odontograma.html:2050:                title="Incluso vertical">
+  accounts\templates\accounts\odontograma.html:2051:
+> accounts\templates\accounts\odontograma.html:2052:            <div class="desenho-posicao incluso-vertical">
+  accounts\templates\accounts\odontograma.html:2053:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2054:            </div>
+  accounts\templates\accounts\odontograma.html:2055:
+  accounts\templates\accounts\odontograma.html:2056:            <span>Incluso</span>
+  accounts\templates\accounts\odontograma.html:2057:
+  accounts\templates\accounts\odontograma.html:2058:        </button>
+  accounts\templates\accounts\odontograma.html:2059:
+  accounts\templates\accounts\odontograma.html:2060:
+  accounts\templates\accounts\odontograma.html:2061:        <!-- INCLUSO HORIZONTAL -->
+  accounts\templates\accounts\odontograma.html:2062:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2063:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2064:                data-posicao="incluso-horizontal"
+  accounts\templates\accounts\odontograma.html:2065:                title="Incluso horizontal">
+  accounts\templates\accounts\odontograma.html:2066:
+> accounts\templates\accounts\odontograma.html:2067:            <div class="desenho-posicao incluso-horizontal">
+  accounts\templates\accounts\odontograma.html:2068:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2069:            </div>
+  accounts\templates\accounts\odontograma.html:2070:
+  accounts\templates\accounts\odontograma.html:2071:            <span>Incluso</span>
+  accounts\templates\accounts\odontograma.html:2072:
+  accounts\templates\accounts\odontograma.html:2073:        </button>
+  accounts\templates\accounts\odontograma.html:2074:
+  accounts\templates\accounts\odontograma.html:2075:
+  accounts\templates\accounts\odontograma.html:2076:        <!-- INCLINADO MESIAL -->
+  accounts\templates\accounts\odontograma.html:2077:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2078:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2079:                data-posicao="inclinado-mesial"
+  accounts\templates\accounts\odontograma.html:2080:                title="Inclinado para mesial">
+  accounts\templates\accounts\odontograma.html:2081:
+> accounts\templates\accounts\odontograma.html:2082:            <div class="desenho-posicao inclinado-mesial">
+  accounts\templates\accounts\odontograma.html:2083:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2084:            </div>
+  accounts\templates\accounts\odontograma.html:2085:
+  accounts\templates\accounts\odontograma.html:2086:            <span>Mesial</span>
+  accounts\templates\accounts\odontograma.html:2087:
+  accounts\templates\accounts\odontograma.html:2088:        </button>
+  accounts\templates\accounts\odontograma.html:2089:
+  accounts\templates\accounts\odontograma.html:2090:
+  accounts\templates\accounts\odontograma.html:2091:        <!-- INCLINADO DISTAL -->
+  accounts\templates\accounts\odontograma.html:2092:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2093:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2094:                data-posicao="inclinado-distal"
+  accounts\templates\accounts\odontograma.html:2095:                title="Inclinado para distal">
+  accounts\templates\accounts\odontograma.html:2096:
+> accounts\templates\accounts\odontograma.html:2097:            <div class="desenho-posicao inclinado-distal">
+  accounts\templates\accounts\odontograma.html:2098:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2099:            </div>
+  accounts\templates\accounts\odontograma.html:2100:
+  accounts\templates\accounts\odontograma.html:2101:            <span>Distal</span>
+  accounts\templates\accounts\odontograma.html:2102:
+  accounts\templates\accounts\odontograma.html:2103:        </button>        
+  accounts\templates\accounts\odontograma.html:2104:
+  accounts\templates\accounts\odontograma.html:2105:
+  accounts\templates\accounts\odontograma.html:2106:        <!-- =========================================================
+  accounts\templates\accounts\odontograma.html:2107:     ROTAÇÃO
+  accounts\templates\accounts\odontograma.html:2108:     ========================================================= -->
+  accounts\templates\accounts\odontograma.html:2109:
+  accounts\templates\accounts\odontograma.html:2110:<!-- ROTAÇÃO +45° -->
+  accounts\templates\accounts\odontograma.html:2111:<button type="button"
+> accounts\templates\accounts\odontograma.html:2112:        class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2113:        data-posicao="rotacao-45"
+  accounts\templates\accounts\odontograma.html:2114:        title="Rotação +45°">
+  accounts\templates\accounts\odontograma.html:2115:
+> accounts\templates\accounts\odontograma.html:2116:    <div class="desenho-posicao rotacao">
+  accounts\templates\accounts\odontograma.html:2117:        <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2118:    </div>
+  accounts\templates\accounts\odontograma.html:2119:
+  accounts\templates\accounts\odontograma.html:2120:    <span>Rotação +45°</span>
+  accounts\templates\accounts\odontograma.html:2121:
+  accounts\templates\accounts\odontograma.html:2122:</button>
+  accounts\templates\accounts\odontograma.html:2123:
+  accounts\templates\accounts\odontograma.html:2124:
+  accounts\templates\accounts\odontograma.html:2125:<!-- ROTAÇÃO -45° -->
+  accounts\templates\accounts\odontograma.html:2126:<button type="button"
+> accounts\templates\accounts\odontograma.html:2127:        class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2128:        data-posicao="rotacao-menos-45"
+  accounts\templates\accounts\odontograma.html:2129:        title="Rotação -45°">
+  accounts\templates\accounts\odontograma.html:2130:
+> accounts\templates\accounts\odontograma.html:2131:    <div class="desenho-posicao rotacao">
+  accounts\templates\accounts\odontograma.html:2132:        <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2133:    </div>
+  accounts\templates\accounts\odontograma.html:2134:
+  accounts\templates\accounts\odontograma.html:2135:    <span>Rotação -45°</span>
+  accounts\templates\accounts\odontograma.html:2136:
+  accounts\templates\accounts\odontograma.html:2137:</button>
+  accounts\templates\accounts\odontograma.html:2138:
+  accounts\templates\accounts\odontograma.html:2139:
+  accounts\templates\accounts\odontograma.html:2140:<!-- ROTAÇÃO +35° -->
+  accounts\templates\accounts\odontograma.html:2141:<button type="button"
+> accounts\templates\accounts\odontograma.html:2142:        class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2143:        data-posicao="rotacao-35"
+  accounts\templates\accounts\odontograma.html:2144:        title="Rotação +35°">
+  accounts\templates\accounts\odontograma.html:2145:
+> accounts\templates\accounts\odontograma.html:2146:    <div class="desenho-posicao rotacao">
+  accounts\templates\accounts\odontograma.html:2147:        <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2148:    </div>
+  accounts\templates\accounts\odontograma.html:2149:
+  accounts\templates\accounts\odontograma.html:2150:    <span>Rotação +35°</span>
+  accounts\templates\accounts\odontograma.html:2151:
+  accounts\templates\accounts\odontograma.html:2152:</button>
+  accounts\templates\accounts\odontograma.html:2153:
+  accounts\templates\accounts\odontograma.html:2154:
+  accounts\templates\accounts\odontograma.html:2155:<!-- ROTAÇÃO -35° -->
+  accounts\templates\accounts\odontograma.html:2156:<button type="button"
+> accounts\templates\accounts\odontograma.html:2157:        class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2158:        data-posicao="rotacao-menos-35"
+  accounts\templates\accounts\odontograma.html:2159:        title="Rotação -35°">
+  accounts\templates\accounts\odontograma.html:2160:
+> accounts\templates\accounts\odontograma.html:2161:    <div class="desenho-posicao rotacao">
+  accounts\templates\accounts\odontograma.html:2162:        <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2163:    </div>
+  accounts\templates\accounts\odontograma.html:2164:
+  accounts\templates\accounts\odontograma.html:2165:    <span>Rotação -35°</span>
+  accounts\templates\accounts\odontograma.html:2166:
+  accounts\templates\accounts\odontograma.html:2167:</button>
+  accounts\templates\accounts\odontograma.html:2168:
+  accounts\templates\accounts\odontograma.html:2169:
+  accounts\templates\accounts\odontograma.html:2170:        <!-- EXTRUSÃO -->
+  accounts\templates\accounts\odontograma.html:2171:        <button type="button"
+> accounts\templates\accounts\odontograma.html:2172:                class="opcao-posicao"
+> accounts\templates\accounts\odontograma.html:2173:                data-posicao="extrusao"
+  accounts\templates\accounts\odontograma.html:2174:                title="Extrusão">
+  accounts\templates\accounts\odontograma.html:2175:
+> accounts\templates\accounts\odontograma.html:2176:            <div class="desenho-posicao extrusao">
+  accounts\templates\accounts\odontograma.html:2177:                <img src="{% static 'img/dentes/46.png' %}">
+  accounts\templates\accounts\odontograma.html:2178:            </div>
+  accounts\templates\accounts\odontograma.html:2179:
+  accounts\templates\accounts\odontograma.html:2180:            <span>Extrusão</span>
+  accounts\templates\accounts\odontograma.html:2181:
+  accounts\templates\accounts\odontograma.html:2182:        </button>
+  accounts\templates\accounts\odontograma.html:2183:
+  accounts\templates\accounts\odontograma.html:2184:    </div>
+  accounts\templates\accounts\odontograma.html:2185:
+  accounts\templates\accounts\odontograma.html:2186:</div>
+  accounts\templates\accounts\odontograma.html:2864:
+  accounts\templates\accounts\odontograma.html:2865:                            <label class="anamnese-label">
+  accounts\templates\accounts\odontograma.html:2866:                                Posição do Ícone
+  accounts\templates\accounts\odontograma.html:2867:                            </label>
+  accounts\templates\accounts\odontograma.html:2868:
+> accounts\templates\accounts\odontograma.html:2869:                            <select name="posicao_icone" class="anamnese-input">
+  accounts\templates\accounts\odontograma.html:2870:
+  accounts\templates\accounts\odontograma.html:2871:                                <option value="">
+  accounts\templates\accounts\odontograma.html:2872:                                    Automático
+  accounts\templates\accounts\odontograma.html:2873:                                </option>
+  accounts\templates\accounts\odontograma.html:2874:
+  accounts\templates\accounts\odontograma.html:2875:                                <option value="coroa">
+  accounts\templates\accounts\odontograma.html:2876:                                    Coroa
+  accounts\templates\accounts\odontograma.html:2877:                                </option>
+  accounts\templates\accounts\odontograma.html:2878:
+  accounts\templates\accounts\odontograma.html:2879:                                <option value="raiz">
+  accounts\templates\accounts\odontograma.html:2900:
+  accounts\templates\accounts\odontograma.html:2901:                            <label class="anamnese-label">
+  accounts\templates\accounts\odontograma.html:2902:                                Posicionamento do Dente
+  accounts\templates\accounts\odontograma.html:2903:                            </label>
+  accounts\templates\accounts\odontograma.html:2904:
+> accounts\templates\accounts\odontograma.html:2905:                            <select name="posicao_dente" class="anamnese-input">
+  accounts\templates\accounts\odontograma.html:2906:
+  accounts\templates\accounts\odontograma.html:2907:                                <option value="normal">
+  accounts\templates\accounts\odontograma.html:2908:                                    Normal
+  accounts\templates\accounts\odontograma.html:2909:                                </option>
+  accounts\templates\accounts\odontograma.html:2910:
+  accounts\templates\accounts\odontograma.html:2911:                                <option value="incluso_vertical">
+  accounts\templates\accounts\odontograma.html:2912:                                    Incluso — Vertical
+  accounts\templates\accounts\odontograma.html:2913:                                </option>
+  accounts\templates\accounts\odontograma.html:2914:
+  accounts\templates\accounts\odontograma.html:2915:                                <option value="incluso_horizontal">
+  accounts\templates\accounts\odontograma.html:3622:       ===================================================== */
+  accounts\templates\accounts\odontograma.html:3623:
+  accounts\templates\accounts\odontograma.html:3624:    let denteSelecionado = null;
+  accounts\templates\accounts\odontograma.html:3625:
+  accounts\templates\accounts\odontograma.html:3626:    const campoDente =
+> accounts\templates\accounts\odontograma.html:3627:        document.getElementById("denteSelecionadoPosicao");
+  accounts\templates\accounts\odontograma.html:3628:
+  accounts\templates\accounts\odontograma.html:3629:    const dentes =
+  accounts\templates\accounts\odontograma.html:3630:        document.querySelectorAll(".dente-img");
+  accounts\templates\accounts\odontograma.html:3631:
+  accounts\templates\accounts\odontograma.html:3632:    const opcoes =
+> accounts\templates\accounts\odontograma.html:3633:        document.querySelectorAll(".opcao-posicao");
+  accounts\templates\accounts\odontograma.html:3634:
+  accounts\templates\accounts\odontograma.html:3635:
+  accounts\templates\accounts\odontograma.html:3636:    console.log(
+  accounts\templates\accounts\odontograma.html:3637:        "Dentes encontrados:",
+  accounts\templates\accounts\odontograma.html:3638:        dentes.length
+  accounts\templates\accounts\odontograma.html:3639:    );
+  accounts\templates\accounts\odontograma.html:3640:
+  accounts\templates\accounts\odontograma.html:3641:    console.log(
+  accounts\templates\accounts\odontograma.html:3642:        "Opções de posicionamento encontradas:",
+  accounts\templates\accounts\odontograma.html:3643:        opcoes.length
+  accounts\templates\accounts\odontograma.html:3646:
+  accounts\templates\accounts\odontograma.html:3647:    /* =====================================================
+  accounts\templates\accounts\odontograma.html:3648:       CLASSES DE POSICIONAMENTO
+  accounts\templates\accounts\odontograma.html:3649:       ===================================================== */
+  accounts\templates\accounts\odontograma.html:3650:
+> accounts\templates\accounts\odontograma.html:3651:    const classesPosicao = [
+  accounts\templates\accounts\odontograma.html:3652:
+> accounts\templates\accounts\odontograma.html:3653:        "posicao-normal",
+  accounts\templates\accounts\odontograma.html:3654:
+> accounts\templates\accounts\odontograma.html:3655:        "posicao-incluso-vertical",
+  accounts\templates\accounts\odontograma.html:3656:
+> accounts\templates\accounts\odontograma.html:3657:        "posicao-incluso-horizontal",
+  accounts\templates\accounts\odontograma.html:3658:
+> accounts\templates\accounts\odontograma.html:3659:        "posicao-incluso-mesial",
+  accounts\templates\accounts\odontograma.html:3660:
+> accounts\templates\accounts\odontograma.html:3661:        "posicao-incluso-distal",
+  accounts\templates\accounts\odontograma.html:3662:
+> accounts\templates\accounts\odontograma.html:3663:        "posicao-inclinado-mesial",
+  accounts\templates\accounts\odontograma.html:3664:
+> accounts\templates\accounts\odontograma.html:3665:        "posicao-inclinado-distal",
+  accounts\templates\accounts\odontograma.html:3666:
+> accounts\templates\accounts\odontograma.html:3667:        "posicao-rotacao-45",
+  accounts\templates\accounts\odontograma.html:3668:
+> accounts\templates\accounts\odontograma.html:3669:        "posicao-rotacao-menos-45",
+  accounts\templates\accounts\odontograma.html:3670:
+> accounts\templates\accounts\odontograma.html:3671:        "posicao-rotacao-35",
+  accounts\templates\accounts\odontograma.html:3672:
+> accounts\templates\accounts\odontograma.html:3673:        "posicao-rotacao-menos-35",
+  accounts\templates\accounts\odontograma.html:3674:
+> accounts\templates\accounts\odontograma.html:3675:        "posicao-extrusao"
+  accounts\templates\accounts\odontograma.html:3676:
+  accounts\templates\accounts\odontograma.html:3677:    ];
+  accounts\templates\accounts\odontograma.html:3678:
+  accounts\templates\accounts\odontograma.html:3679:
+  accounts\templates\accounts\odontograma.html:3680:    /* =====================================================
+  accounts\templates\accounts\odontograma.html:3681:       FUNÇÃO PARA REMOVER POSIÇÕES
+  accounts\templates\accounts\odontograma.html:3682:       ===================================================== */
+  accounts\templates\accounts\odontograma.html:3683:
+> accounts\templates\accounts\odontograma.html:3684:    function removerClassesPosicao(dente) {
+  accounts\templates\accounts\odontograma.html:3685:
+  accounts\templates\accounts\odontograma.html:3686:        if (!dente) {
+  accounts\templates\accounts\odontograma.html:3687:            return;
+  accounts\templates\accounts\odontograma.html:3688:        }
+  accounts\templates\accounts\odontograma.html:3689:
+> accounts\templates\accounts\odontograma.html:3690:        classesPosicao.forEach(function (classe) {
+  accounts\templates\accounts\odontograma.html:3691:
+  accounts\templates\accounts\odontograma.html:3692:            dente.classList.remove(classe);
+  accounts\templates\accounts\odontograma.html:3693:
+  accounts\templates\accounts\odontograma.html:3694:        });
+  accounts\templates\accounts\odontograma.html:3695:
+  accounts\templates\accounts\odontograma.html:3696:    }
+  accounts\templates\accounts\odontograma.html:3697:
+  accounts\templates\accounts\odontograma.html:3698:
+  accounts\templates\accounts\odontograma.html:3699:    /* =====================================================
+  accounts\templates\accounts\odontograma.html:3700:       FUNÇÃO PARA LOCALIZAR DENTE
+  accounts\templates\accounts\odontograma.html:3787:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3788:
+  accounts\templates\accounts\odontograma.html:3789:                dentes.forEach(function (item) {
+  accounts\templates\accounts\odontograma.html:3790:
+  accounts\templates\accounts\odontograma.html:3791:                    item.classList.remove(
+> accounts\templates\accounts\odontograma.html:3792:                        "dente-posicao-selecionado"
+  accounts\templates\accounts\odontograma.html:3793:                    );
+  accounts\templates\accounts\odontograma.html:3794:
+  accounts\templates\accounts\odontograma.html:3795:                });
+  accounts\templates\accounts\odontograma.html:3796:
+  accounts\templates\accounts\odontograma.html:3797:
+  accounts\templates\accounts\odontograma.html:3798:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3799:                   MARCA DENTE ATUAL
+  accounts\templates\accounts\odontograma.html:3800:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3801:
+  accounts\templates\accounts\odontograma.html:3802:                this.classList.add(
+> accounts\templates\accounts\odontograma.html:3803:                    "dente-posicao-selecionado"
+  accounts\templates\accounts\odontograma.html:3804:                );
+  accounts\templates\accounts\odontograma.html:3805:
+  accounts\templates\accounts\odontograma.html:3806:
+  accounts\templates\accounts\odontograma.html:3807:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3808:                   LIMPA SELEÇÃO DAS OPÇÕES
+  accounts\templates\accounts\odontograma.html:3809:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3810:
+  accounts\templates\accounts\odontograma.html:3811:                opcoes.forEach(function (item) {
+  accounts\templates\accounts\odontograma.html:3812:
+  accounts\templates\accounts\odontograma.html:3813:                    item.classList.remove(
+  accounts\templates\accounts\odontograma.html:3870:
+  accounts\templates\accounts\odontograma.html:3871:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3872:                   OBTÉM POSIÇÃO
+  accounts\templates\accounts\odontograma.html:3873:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3874:
+> accounts\templates\accounts\odontograma.html:3875:                const posicao =
+> accounts\templates\accounts\odontograma.html:3876:                    this.dataset.posicao;
+  accounts\templates\accounts\odontograma.html:3877:
+  accounts\templates\accounts\odontograma.html:3878:
+  accounts\templates\accounts\odontograma.html:3879:                console.log(
+  accounts\templates\accounts\odontograma.html:3880:                    "========================================="
+  accounts\templates\accounts\odontograma.html:3881:                );
+  accounts\templates\accounts\odontograma.html:3882:
+  accounts\templates\accounts\odontograma.html:3883:                console.log(
+  accounts\templates\accounts\odontograma.html:3884:                    "SALVANDO POSICIONAMENTO"
+  accounts\templates\accounts\odontograma.html:3885:                );
+  accounts\templates\accounts\odontograma.html:3886:
+  accounts\templates\accounts\odontograma.html:3889:                    denteSelecionado
+  accounts\templates\accounts\odontograma.html:3890:                );
+  accounts\templates\accounts\odontograma.html:3891:
+  accounts\templates\accounts\odontograma.html:3892:                console.log(
+  accounts\templates\accounts\odontograma.html:3893:                    "POSIÇÃO:",
+> accounts\templates\accounts\odontograma.html:3894:                    posicao
+  accounts\templates\accounts\odontograma.html:3895:                );
+  accounts\templates\accounts\odontograma.html:3896:
+  accounts\templates\accounts\odontograma.html:3897:
+  accounts\templates\accounts\odontograma.html:3898:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3899:                   LOCALIZA DENTE
+  accounts\templates\accounts\odontograma.html:3900:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3901:
+  accounts\templates\accounts\odontograma.html:3902:                const dente =
+  accounts\templates\accounts\odontograma.html:3903:                    localizarDente(
+  accounts\templates\accounts\odontograma.html:3904:                        denteSelecionado
+  accounts\templates\accounts\odontograma.html:3923:
+  accounts\templates\accounts\odontograma.html:3924:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3925:                   REMOVE POSIÇÕES ANTERIORES
+  accounts\templates\accounts\odontograma.html:3926:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3927:
+> accounts\templates\accounts\odontograma.html:3928:                removerClassesPosicao(dente);
+  accounts\templates\accounts\odontograma.html:3929:
+  accounts\templates\accounts\odontograma.html:3930:
+  accounts\templates\accounts\odontograma.html:3931:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3932:                   MONTA CLASSE
+  accounts\templates\accounts\odontograma.html:3933:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3934:
+> accounts\templates\accounts\odontograma.html:3935:                const classePosicao =
+> accounts\templates\accounts\odontograma.html:3936:                    "posicao-" + posicao;
+  accounts\templates\accounts\odontograma.html:3937:
+  accounts\templates\accounts\odontograma.html:3938:
+  accounts\templates\accounts\odontograma.html:3939:                console.log(
+  accounts\templates\accounts\odontograma.html:3940:                    "CLASSE APLICADA:",
+> accounts\templates\accounts\odontograma.html:3941:                    classePosicao
+  accounts\templates\accounts\odontograma.html:3942:                );
+  accounts\templates\accounts\odontograma.html:3943:
+  accounts\templates\accounts\odontograma.html:3944:
+  accounts\templates\accounts\odontograma.html:3945:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3946:                   APLICA NOVA POSIÇÃO
+  accounts\templates\accounts\odontograma.html:3947:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3948:
+  accounts\templates\accounts\odontograma.html:3949:                dente.classList.add(
+> accounts\templates\accounts\odontograma.html:3950:                    classePosicao
+  accounts\templates\accounts\odontograma.html:3951:                );
+  accounts\templates\accounts\odontograma.html:3952:
+  accounts\templates\accounts\odontograma.html:3953:
+  accounts\templates\accounts\odontograma.html:3954:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3955:                   MARCA OPÇÃO SELECIONADA
+  accounts\templates\accounts\odontograma.html:3956:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3957:
+  accounts\templates\accounts\odontograma.html:3958:                opcoes.forEach(function (item) {
+  accounts\templates\accounts\odontograma.html:3959:
+  accounts\templates\accounts\odontograma.html:3960:                    item.classList.remove(
+  accounts\templates\accounts\odontograma.html:3982:                    denteSelecionado
+  accounts\templates\accounts\odontograma.html:3983:                );
+  accounts\templates\accounts\odontograma.html:3984:
+  accounts\templates\accounts\odontograma.html:3985:
+  accounts\templates\accounts\odontograma.html:3986:                formData.append(
+> accounts\templates\accounts\odontograma.html:3987:                    "posicao",
+> accounts\templates\accounts\odontograma.html:3988:                    posicao
+  accounts\templates\accounts\odontograma.html:3989:                );
+  accounts\templates\accounts\odontograma.html:3990:
+  accounts\templates\accounts\odontograma.html:3991:
+  accounts\templates\accounts\odontograma.html:3992:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3993:                   SALVAR NO SERVIDOR
+  accounts\templates\accounts\odontograma.html:3994:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3995:
+  accounts\templates\accounts\odontograma.html:3996:                fetch(
+  accounts\templates\accounts\odontograma.html:3997:                    '{% url "salvar_posicionamento_dente" paciente.id %}',
+  accounts\templates\accounts\odontograma.html:3998:                    {
+  accounts\templates\accounts\odontograma.html:4058:                         * Se o banco não salvou,
+  accounts\templates\accounts\odontograma.html:4059:                         * remove visualmente a classe
+  accounts\templates\accounts\odontograma.html:4060:                         * que acabamos de aplicar.
+  accounts\templates\accounts\odontograma.html:4061:                         */
+  accounts\templates\accounts\odontograma.html:4062:
+> accounts\templates\accounts\odontograma.html:4063:                        removerClassesPosicao(
+  accounts\templates\accounts\odontograma.html:4064:                            dente
+  accounts\templates\accounts\odontograma.html:4065:                        );
+  accounts\templates\accounts\odontograma.html:4066:
+  accounts\templates\accounts\odontograma.html:4067:
+  accounts\templates\accounts\odontograma.html:4068:                        this.classList.remove(
+  accounts\templates\accounts\odontograma.html:4069:                            "selecionada"
+  accounts\templates\accounts\odontograma.html:4070:                        );
+  accounts\templates\accounts\odontograma.html:4071:
+  accounts\templates\accounts\odontograma.html:4072:
+  accounts\templates\accounts\odontograma.html:4073:                        alert(
+
+

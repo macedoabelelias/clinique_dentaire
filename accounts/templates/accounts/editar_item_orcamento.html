@@ -34,99 +34,110 @@
 
                 <div class="row g-3">
 
-                    <!-- PROCEDIMENTO -->
+    <!-- PROCEDIMENTO -->
 
-                    <div class="col-md-6">
+    <div class="col-md-4">
 
-                        <label class="form-label fw-semibold">
+        <label class="form-label fw-semibold">
+            Procedimento
+        </label>
 
-                            Procedimento
+        <select
+            name="procedimento"
+            class="form-select rounded-3"
+        >
 
-                        </label>
+            {% for procedimento in procedimentos %}
 
-                        <select
-                            name="procedimento"
-                            class="form-select rounded-3"
-                        >
+            <option
+                value="{{ procedimento.id }}"
+                {% if procedimento.id == item.procedimento.id %}
+                selected
+                {% endif %}
+            >
 
-                            {% for procedimento in procedimentos %}
+                {{ procedimento.nome }}
 
-                            <option
-                                value="{{ procedimento.id }}"
-                                {% if procedimento.id == item.procedimento.id %}
-                                selected
-                                {% endif %}
-                            >
+            </option>
 
-                                {{ procedimento.nome }}
+            {% endfor %}
 
-                            </option>
+        </select>
 
-                            {% endfor %}
+    </div>
 
-                        </select>
+    <!-- DENTE -->
 
-                    </div>
+    <div class="col-md-2">
 
-                    <!-- DENTE -->
+        <label class="form-label fw-semibold">
+            Dente
+        </label>
 
-                    <div class="col-md-2">
+        <input
+            type="text"
+            name="dente"
+            value="{{ item.dente }}"
+            class="form-control rounded-3"
+        >
 
-                        <label class="form-label fw-semibold">
+    </div>
 
-                            Dente
+    <!-- FACE -->
 
-                        </label>
+    <div class="col-md-2">
 
-                        <input
-                            type="text"
-                            name="dente"
-                            value="{{ item.dente }}"
-                            class="form-control rounded-3"
-                        >
+        <label class="form-label fw-semibold">
+            Face
+        </label>
 
-                    </div>
+        <input
+            type="text"
+            name="face"
+            value="{{ item.face }}"
+            class="form-control rounded-3"
+        >
 
-                    <!-- FACE -->
+    </div>
 
-                    <div class="col-md-2">
+    <!-- QUANTIDADE -->
 
-                        <label class="form-label fw-semibold">
+    <div class="col-md-2">
 
-                            Face
+        <label class="form-label fw-semibold">
+            Quantidade
+        </label>
 
-                        </label>
+        <input
+            type="number"
+            name="quantidade"
+            value="{{ item.quantidade }}"
+            class="form-control rounded-3"
+            min="1"
+        >
 
-                        <input
-                            type="text"
-                            name="face"
-                            value="{{ item.face }}"
-                            class="form-control rounded-3"
-                        >
+    </div>
 
-                    </div>
+    <!-- VALOR UNITÁRIO -->
 
-                    <!-- QUANTIDADE -->
+    <div class="col-md-2">
 
-                    <div class="col-md-2">
+        <label class="form-label fw-semibold">
+            Valor Unitário
+        </label>
 
-                        <label class="form-label fw-semibold">
+        <input
+            type="number"
+            name="valor_unitario"
+            value="{{ item.valor_unitario|floatformat:2 }}"
+            class="form-control rounded-3"
+            min="0"
+            step="0.01"
+        >
 
-                            Quantidade
+    </div>
 
-                        </label>
-
-                        <input
-                            type="number"
-                            name="quantidade"
-                            value="{{ item.quantidade }}"
-                            class="form-control rounded-3"
-                            min="1"
-                        >
-
-                    </div>
-
-                </div>
+</div>
 
                 <!-- BOTÕES -->
 

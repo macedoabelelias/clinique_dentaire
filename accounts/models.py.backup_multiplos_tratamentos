@@ -1314,37 +1314,46 @@ class Tratamento(models.Model):
         ordering = ["-criado_em"]
 
     # =========================================
-# SAVE
-# =========================================
-
-def save(self, *args, **kwargs):
-
-    """
-    Regras do tratamento:
-
-    - Cada tratamento pertence a um dentista.
-    - O tratamento pode permanecer ativo
-      independentemente de outros tratamentos
-      da mesma paciente.
-    - Se não possuir dentista, utiliza o
-      dentista definido no paciente.
-    """
-
-    # =========================================
-    # HERDA O DENTISTA DO PACIENTE
+    # SAVE
     # =========================================
 
-    if not self.dentista_id and self.paciente_id:
+    def save(self, *args, **kwargs):
 
-        if self.paciente.dentista_id:
+        """
+        Regras do tratamento:
 
-            self.dentista_id = self.paciente.dentista_id
+        - Apenas um tratamento ativo por paciente.
+        - Se o tratamento não possuir dentista,
+          utiliza o dentista definido no paciente.
+        """
 
-    # =========================================
-    # SALVA O TRATAMENTO
-    # =========================================
+        # =========================================
+        # HERDA O DENTISTA DO PACIENTE
+        # =========================================
 
-    super().save(*args, **kwargs)
+        if not self.dentista_id and self.paciente_id:
+
+            if self.paciente.dentista_id:
+
+                self.dentista_id = self.paciente.dentista_id
+
+        # =========================================
+        # GARANTE APENAS UM TRATAMENTO ATIVO
+        # =========================================
+
+        if self.status == "ATIVO":
+
+            Tratamento.objects.filter(
+                paciente=self.paciente,
+                status="ATIVO"
+            ).exclude(
+                pk=self.pk
+            ).update(
+                status="ENCERRADO",
+                data_encerramento=timezone.now().date()
+            )
+
+        super().save(*args, **kwargs)
 
     # =========================================
     # STRING
@@ -1665,98 +1674,7 @@ class PosicionamentoDente(models.Model):
             f"Dente {self.dente} - "
             f"{self.posicao}"
         )
-
- # =========================================
-# CONDIÇÃO ODONTOLÓGICA PERMANENTE
-# =========================================
-
-class CondicaoOdontologica(models.Model):
-
-    TIPO_CHOICES = [
-
-        ("ausente", "Dente ausente"),
-
-        ("implante", "Implante"),
-
-        ("endodontia", "Tratamento endodôntico"),
-
-        ("restauracao", "Restauração"),
-
-        ("coroa", "Coroa"),
-
-        ("protese", "Prótese"),
-
-    ]
-
-    paciente = models.ForeignKey(
-
-        Paciente,
-
-        on_delete=models.CASCADE,
-
-        related_name="condicoes_odontologicas"
-
-    )
-
-    dente = models.CharField(
-
-        max_length=2
-
-    )
-
-    tipo = models.CharField(
-
-        max_length=30,
-
-        choices=TIPO_CHOICES
-
-    )
-
-    criado_em = models.DateTimeField(
-
-        auto_now_add=True
-
-    )
-
-    atualizado_em = models.DateTimeField(
-
-        auto_now=True
-
-    )
-
-    class Meta:
-
-        verbose_name = "Condição Odontológica"
-
-        verbose_name_plural = "Condições Odontológicas"
-
-        constraints = [
-
-            models.UniqueConstraint(
-
-                fields=[
-                    "paciente",
-                    "dente",
-                    "tipo"
-                ],
-
-                name="unique_condicao_odontologica"
-
-            )
-
-        ]
-
-    def __str__(self):
-
-        return (
-
-            f"{self.paciente.nome} - "
-
-            f"Dente {self.dente} - "
-
-            f"{self.get_tipo_display()}"
-
-        )   
+    
     
 # =========================================
 # ORÇAMENTO

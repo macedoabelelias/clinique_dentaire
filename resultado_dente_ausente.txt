@@ -1,0 +1,582 @@
+﻿
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:10:        ('accounts', 
+'0068_contareceber_parcela_contareceber_total_parcelas'),
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:11:    ]
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:12:
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:13:    operations = [
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:14:        migrations.AddField(
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:15:            model_name='evolucaoclinica',
+> accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:16:            name='item_orcamento',
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:17:            field=models.ForeignKey(blank=True, null=True, 
+on_delete=django.db.models.deletion.SET_NULL, related_name='evolucoes', to='accounts.itemorcamento'),
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:18:        ),
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:19:        migrations.AddField(
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:20:            model_name='evolucaoclinica',
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:21:            name='orcamento',
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:22:            field=models.ForeignKey(blank=True, null=True, 
+on_delete=django.db.models.deletion.SET_NULL, related_name='evolucoes', to='accounts.orcamento'),
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:23:        ),
+  accounts\migrations\0069_evolucaoclinica_item_orcamento_and_more.py:24:    ]
+  accounts\migrations\0070_tratamento.py:5:from django.db import migrations, models
+  accounts\migrations\0070_tratamento.py:6:
+  accounts\migrations\0070_tratamento.py:7:
+  accounts\migrations\0070_tratamento.py:8:class Migration(migrations.Migration):
+  accounts\migrations\0070_tratamento.py:9:
+  accounts\migrations\0070_tratamento.py:10:    dependencies = [
+> accounts\migrations\0070_tratamento.py:11:        ('accounts', '0069_evolucaoclinica_item_orcamento_and_more'),
+  accounts\migrations\0070_tratamento.py:12:    ]
+  accounts\migrations\0070_tratamento.py:13:
+  accounts\migrations\0070_tratamento.py:14:    operations = [
+  accounts\migrations\0070_tratamento.py:15:        migrations.CreateModel(
+  accounts\migrations\0070_tratamento.py:16:            name='Tratamento',
+  accounts\migrations\0070_tratamento.py:17:            fields=[
+  accounts\migrations\0070_tratamento.py:18:                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, 
+verbose_name='ID')),
+  accounts\migrations\0070_tratamento.py:19:                ('titulo', models.CharField(default='Tratamento', max_length=150, 
+verbose_name='Título')),
+  accounts\migrations\0070_tratamento.py:20:                ('status', models.CharField(choices=[('ATIVO', 'Ativo'), ('ENCERRADO', 
+'Encerrado')], default='ATIVO', max_length=15, verbose_name='Status')),
+  accounts\migrations\0070_tratamento.py:21:                ('data_inicio', models.DateField(default=django.utils.timezone.now, 
+verbose_name='Data de início')),
+  accounts\migrations\0070_tratamento.py:22:                ('data_encerramento', models.DateField(blank=True, null=True, verbose_name='Data 
+de encerramento')),
+  accounts\migrations\0070_tratamento.py:23:                ('observacoes', models.TextField(blank=True, verbose_name='Observações')),
+  accounts\templates\accounts\odontograma.html:1678:                    </button>
+  accounts\templates\accounts\odontograma.html:1679:
+  accounts\templates\accounts\odontograma.html:1680:                </div>
+  accounts\templates\accounts\odontograma.html:1681:
+  accounts\templates\accounts\odontograma.html:1682:                <div class="procedimentos-gerais-wrapper">
+  accounts\templates\accounts\odontograma.html:1683:
+> accounts\templates\accounts\odontograma.html:1684:                    {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1685:
+  accounts\templates\accounts\odontograma.html:1686:                    {% if item.procedimento.tipo == 'geral' or item.procedimento.tipo == 
+'hemiarcada' %}
+  accounts\templates\accounts\odontograma.html:1687:
+  accounts\templates\accounts\odontograma.html:1688:                    <div class="procedimento-geral-chip status-{{ item.status }}" 
+data-id="{{ item.id }}">
+  accounts\templates\accounts\odontograma.html:1689:
+  accounts\templates\accounts\odontograma.html:1690:                        <img src="{% static 'img/procedimentos/full/' %}{{ 
+item.procedimento.arquivo_icone|default:'default.png' }}"
+  accounts\templates\accounts\odontograma.html:1691:                            class="icone-geral" alt="{{ item.procedimento.nome }}">
+  accounts\templates\accounts\odontograma.html:1692:
+  accounts\templates\accounts\odontograma.html:1693:                        <span>
+  accounts\templates\accounts\odontograma.html:1694:
+  accounts\templates\accounts\odontograma.html:1695:                            {{ item.procedimento.nome }}
+  accounts\templates\accounts\odontograma.html:1696:
+  accounts\templates\accounts\odontograma.html:1733:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1734:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1735:        >
+  accounts\templates\accounts\odontograma.html:1736:
+  accounts\templates\accounts\odontograma.html:1737:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1738:
+> accounts\templates\accounts\odontograma.html:1739:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1740:
+  accounts\templates\accounts\odontograma.html:1741:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1742:
+  accounts\templates\accounts\odontograma.html:1743:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1744:
+  accounts\templates\accounts\odontograma.html:1745:                        <img
+  accounts\templates\accounts\odontograma.html:1746:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1747:                            class="
+  accounts\templates\accounts\odontograma.html:1748:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1749:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1750:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1751:
+  accounts\templates\accounts\odontograma.html:1804:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1805:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1806:        >
+  accounts\templates\accounts\odontograma.html:1807:
+  accounts\templates\accounts\odontograma.html:1808:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1809:
+> accounts\templates\accounts\odontograma.html:1810:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1811:
+  accounts\templates\accounts\odontograma.html:1812:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1813:
+  accounts\templates\accounts\odontograma.html:1814:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1815:
+  accounts\templates\accounts\odontograma.html:1816:                        <img
+  accounts\templates\accounts\odontograma.html:1817:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1818:                            class="
+  accounts\templates\accounts\odontograma.html:1819:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1820:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1821:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1822:
+  accounts\templates\accounts\odontograma.html:1886:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1887:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1888:        >
+  accounts\templates\accounts\odontograma.html:1889:
+  accounts\templates\accounts\odontograma.html:1890:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1891:
+> accounts\templates\accounts\odontograma.html:1892:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1893:
+  accounts\templates\accounts\odontograma.html:1894:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1895:
+  accounts\templates\accounts\odontograma.html:1896:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1897:
+  accounts\templates\accounts\odontograma.html:1898:                        <img
+  accounts\templates\accounts\odontograma.html:1899:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1900:                            class="
+  accounts\templates\accounts\odontograma.html:1901:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1902:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1903:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1904:
+  accounts\templates\accounts\odontograma.html:1958:            data-dente="{{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1959:            alt="Dente {{ dente.numero }}"
+  accounts\templates\accounts\odontograma.html:1960:        >
+  accounts\templates\accounts\odontograma.html:1961:
+  accounts\templates\accounts\odontograma.html:1962:        <div class="procedimentos-dente">
+  accounts\templates\accounts\odontograma.html:1963:
+> accounts\templates\accounts\odontograma.html:1964:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:1965:
+  accounts\templates\accounts\odontograma.html:1966:                {% if item.dente == dente.numero %}
+  accounts\templates\accounts\odontograma.html:1967:
+  accounts\templates\accounts\odontograma.html:1968:                    {% if item.procedimento.tipo == 'dente' %}
+  accounts\templates\accounts\odontograma.html:1969:
+  accounts\templates\accounts\odontograma.html:1970:                        <img
+  accounts\templates\accounts\odontograma.html:1971:                            src="{% static 'img/procedimentos/mini/' %}{{ 
+item.procedimento.arquivo_icone }}"
+  accounts\templates\accounts\odontograma.html:1972:                            class="
+  accounts\templates\accounts\odontograma.html:1973:                                icone-procedimento-dente
+  accounts\templates\accounts\odontograma.html:1974:                                status-{{ item.status }}
+  accounts\templates\accounts\odontograma.html:1975:                                posicao-{{ 
+item.posicao_icone|default:item.procedimento.posicao_icone }}
+  accounts\templates\accounts\odontograma.html:1976:
+  accounts\templates\accounts\odontograma.html:2484:            </p>
+  accounts\templates\accounts\odontograma.html:2485:
+  accounts\templates\accounts\odontograma.html:2486:        </div>
+  accounts\templates\accounts\odontograma.html:2487:
+  accounts\templates\accounts\odontograma.html:2488:        <div class="timeline-body">
+  accounts\templates\accounts\odontograma.html:2489:
+> accounts\templates\accounts\odontograma.html:2490:            {% for item in itens_orcamento %}
+  accounts\templates\accounts\odontograma.html:2491:
+  accounts\templates\accounts\odontograma.html:2492:            <div class="timeline-item">
+  accounts\templates\accounts\odontograma.html:2493:
+  accounts\templates\accounts\odontograma.html:2494:                <div class="timeline-dot"></div>
+  accounts\templates\accounts\odontograma.html:2495:
+  accounts\templates\accounts\odontograma.html:2496:                <div class="timeline-content">
+  accounts\templates\accounts\odontograma.html:2497:
+  accounts\templates\accounts\odontograma.html:2498:                    <div class="timeline-top">
+  accounts\templates\accounts\odontograma.html:2499:
+  accounts\templates\accounts\odontograma.html:2500:                        <div class="timeline-procedimento">
+  accounts\templates\accounts\odontograma.html:2501:
+  accounts\templates\accounts\odontograma.html:2502:                            {% if item.procedimento.arquivo_icone %}
+  accounts\templates\accounts\odontograma.html:2570:                                Planejado
+  accounts\templates\accounts\odontograma.html:2571:
+  accounts\templates\accounts\odontograma.html:2572:                            </option>
+  accounts\templates\accounts\odontograma.html:2573:
+  accounts\templates\accounts\odontograma.html:2574:                            <option
+  accounts\templates\accounts\odontograma.html:2575:                                value="existente"
+> accounts\templates\accounts\odontograma.html:2576:                                {% if item.status == 'existente' %}selected{% endif %}
+  accounts\templates\accounts\odontograma.html:2577:                            >
+  accounts\templates\accounts\odontograma.html:2578:
+  accounts\templates\accounts\odontograma.html:2579:                                Existente
+  accounts\templates\accounts\odontograma.html:2580:
+  accounts\templates\accounts\odontograma.html:2581:                            </option>
+  accounts\templates\accounts\odontograma.html:2582:
+  accounts\templates\accounts\odontograma.html:2583:                            <option
+  accounts\templates\accounts\odontograma.html:2584:                                value="andamento"
+  accounts\templates\accounts\odontograma.html:2585:                                {% if item.status == 'andamento' %}selected{% endif %}
+  accounts\templates\accounts\odontograma.html:2586:                            >
+  accounts\templates\accounts\odontograma.html:2587:
+  accounts\templates\accounts\odontograma.html:2588:                                Em andamento
+  accounts\templates\accounts\odontograma.html:3155:
+  accounts\templates\accounts\odontograma.html:3156:
+  accounts\templates\accounts\odontograma.html:3157:    <!-- MENU STATUS PREMIUM -->
+  accounts\templates\accounts\odontograma.html:3158:
+  accounts\templates\accounts\odontograma.html:3159:    <div id="menuStatus" class="menu-status">
+  accounts\templates\accounts\odontograma.html:3160:
+> accounts\templates\accounts\odontograma.html:3161:        <div class="status-item status-existente" data-status="existente">
+  accounts\templates\accounts\odontograma.html:3162:            Existente
+  accounts\templates\accounts\odontograma.html:3163:        </div>
+  accounts\templates\accounts\odontograma.html:3164:
+  accounts\templates\accounts\odontograma.html:3165:        <div class="status-item status-planejado" data-status="planejado">
+  accounts\templates\accounts\odontograma.html:3166:            Planejado
+  accounts\templates\accounts\odontograma.html:3167:        </div>
+  accounts\templates\accounts\odontograma.html:3168:
+  accounts\templates\accounts\odontograma.html:3169:        <div class="status-item status-andamento" data-status="andamento">
+  accounts\templates\accounts\odontograma.html:3170:            Em Andamento
+  accounts\templates\accounts\odontograma.html:3171:        </div>
+  accounts\templates\accounts\odontograma.html:3172:
+  accounts\templates\accounts\odontograma.html:3173:        <div class="status-item status-realizado" data-status="realizado">
+  accounts\templates\accounts\orcamento.html:452:                        <span class="badge bg-primary rounded-pill px-3">
+  accounts\templates\accounts\orcamento.html:453:
+  accounts\templates\accounts\orcamento.html:454:                            Realizado
+  accounts\templates\accounts\orcamento.html:455:
+  accounts\templates\accounts\orcamento.html:456:                        </span>
+  accounts\templates\accounts\orcamento.html:457:
+> accounts\templates\accounts\orcamento.html:458:                    {% elif item.status == "existente" %}
+  accounts\templates\accounts\orcamento.html:459:
+  accounts\templates\accounts\orcamento.html:460:                        <span class="badge bg-secondary rounded-pill px-3">
+  accounts\templates\accounts\orcamento.html:461:
+  accounts\templates\accounts\orcamento.html:462:                            Existente
+  accounts\templates\accounts\orcamento.html:463:
+  accounts\templates\accounts\orcamento.html:464:                        </span>
+  accounts\templates\accounts\orcamento.html:465:
+  accounts\templates\accounts\orcamento.html:466:                    {% endif %}
+  accounts\templates\accounts\orcamento.html:467:
+  accounts\templates\accounts\orcamento.html:468:                </td>
+  accounts\templates\accounts\orcamento.html:469:
+  accounts\templates\accounts\orcamento.html:470:                <!-- AÇÕES -->
+  accounts\templates\accounts\orcamento.html:473:
+  accounts\templates\accounts\orcamento.html:474:                    <div class="d-flex justify-content-end gap-2">
+  accounts\templates\accounts\orcamento.html:475:
+  accounts\templates\accounts\orcamento.html:476:                        <!-- EDITAR -->
+  accounts\templates\accounts\orcamento.html:477:
+  accounts\templates\accounts\orcamento.html:478:                        <a
+> accounts\templates\accounts\orcamento.html:479:                            href="{% url 'editar_item_orcamento' item.id %}"
+  accounts\templates\accounts\orcamento.html:480:                            class="btn btn-sm btn-light border rounded-circle"
+  accounts\templates\accounts\orcamento.html:481:                            title="Editar">
+  accounts\templates\accounts\orcamento.html:482:
+  accounts\templates\accounts\orcamento.html:483:                            <i class="fas fa-edit text-primary"></i>
+  accounts\templates\accounts\orcamento.html:484:
+  accounts\templates\accounts\orcamento.html:485:                        </a>
+  accounts\templates\accounts\orcamento.html:486:
+  accounts\templates\accounts\orcamento.html:487:                        <!-- EXCLUIR -->
+  accounts\templates\accounts\orcamento.html:488:
+  accounts\templates\accounts\orcamento.html:489:                        <a
+> accounts\templates\accounts\orcamento.html:490:                            href="{% url 'excluir_item_orcamento' item.id %}"
+  accounts\templates\accounts\orcamento.html:491:                            class="btn btn-sm btn-light border rounded-circle"
+  accounts\templates\accounts\orcamento.html:492:                            title="Excluir">
+  accounts\templates\accounts\orcamento.html:493:
+  accounts\templates\accounts\orcamento.html:494:                            <i class="fas fa-trash text-danger"></i>
+  accounts\templates\accounts\orcamento.html:495:
+  accounts\templates\accounts\orcamento.html:496:                        </a>
+  accounts\templates\accounts\orcamento.html:497:
+  accounts\templates\accounts\orcamento.html:498:                    </div>
+  accounts\templates\accounts\orcamento.html:499:
+  accounts\templates\accounts\orcamento.html:500:                </td>
+  accounts\templates\accounts\orcamento.html:501:
+  accounts\templates\accounts\orcamento.html:502:            </tr>
+  accounts\templates\accounts\orcamento_pdf.html:274:
+  accounts\templates\accounts\orcamento_pdf.html:275:.status-cancelado{
+  accounts\templates\accounts\orcamento_pdf.html:276:    color:#dc3545;
+  accounts\templates\accounts\orcamento_pdf.html:277:    font-weight:bold;
+  accounts\templates\accounts\orcamento_pdf.html:278:}
+  accounts\templates\accounts\orcamento_pdf.html:279:
+> accounts\templates\accounts\orcamento_pdf.html:280:.status-existente{
+  accounts\templates\accounts\orcamento_pdf.html:281:    color:#6c757d;
+  accounts\templates\accounts\orcamento_pdf.html:282:    font-weight:bold;
+  accounts\templates\accounts\orcamento_pdf.html:283:}
+  accounts\templates\accounts\orcamento_pdf.html:284:
+  accounts\templates\accounts\orcamento_pdf.html:285:th, td{
+  accounts\templates\accounts\orcamento_pdf.html:286:    border:1px solid #ddd;
+  accounts\templates\accounts\orcamento_pdf.html:287:    padding:10px;
+  accounts\templates\accounts\orcamento_pdf.html:288:    text-align:left;
+  accounts\templates\accounts\orcamento_pdf.html:289:}
+  accounts\templates\accounts\orcamento_pdf.html:290:
+  accounts\templates\accounts\orcamento_pdf.html:291:table td:nth-child(3){
+  accounts\templates\accounts\orcamento_pdf.html:292:
+  accounts\models.py:991:    )
+  accounts\models.py:992:
+  accounts\models.py:993:    # =========================================
+  accounts\models.py:994:    # ITEM DO ORÇAMENTO
+  accounts\models.py:995:    # =========================================
+  accounts\models.py:996:
+> accounts\models.py:997:    item_orcamento = models.ForeignKey(
+  accounts\models.py:998:
+  accounts\models.py:999:        'ItemOrcamento',
+  accounts\models.py:1000:
+  accounts\models.py:1001:        on_delete=models.SET_NULL,
+  accounts\models.py:1002:
+  accounts\models.py:1003:        null=True,
+  accounts\models.py:1004:
+  accounts\models.py:1005:        blank=True,
+  accounts\models.py:1006:
+  accounts\models.py:1007:        related_name='evolucoes'
+  accounts\models.py:1008:
+  accounts\models.py:1009:    )
+  accounts\urls.py:477:),
+  accounts\urls.py:478:
+  accounts\urls.py:479:path(
+  accounts\urls.py:480:
+  accounts\urls.py:481:    'orcamento/item/<int:id>/excluir/',
+  accounts\urls.py:482:
+> accounts\urls.py:483:    views.excluir_item_orcamento,
+  accounts\urls.py:484:
+> accounts\urls.py:485:    name='excluir_item_orcamento'
+  accounts\urls.py:486:
+  accounts\urls.py:487:),
+  accounts\urls.py:488:
+  accounts\urls.py:489:path(
+  accounts\urls.py:490:
+  accounts\urls.py:491:    'orcamento/item/<int:id>/editar/',
+  accounts\urls.py:492:
+> accounts\urls.py:493:    views.editar_item_orcamento,
+  accounts\urls.py:494:
+> accounts\urls.py:495:    name='editar_item_orcamento'
+  accounts\urls.py:496:
+  accounts\urls.py:497:),
+  accounts\urls.py:498:
+  accounts\urls.py:499:path(
+  accounts\urls.py:500:    'procedimento/<int:id>/status/',
+  accounts\urls.py:501:    views.alterar_status_procedimento,
+  accounts\urls.py:502:    name='alterar_status_procedimento'
+  accounts\urls.py:503:),
+  accounts\urls.py:504:
+  accounts\urls.py:505:path(
+  accounts\urls.py:506:
+  accounts\urls.py:507:    'pacientes/<int:id>/prontuario/pdf/',
+  accounts\views.py:3967:            paciente=paciente,
+  accounts\views.py:3968:
+  accounts\views.py:3969:            tratamento=tratamento,
+  accounts\views.py:3970:
+  accounts\views.py:3971:            orcamento=orcamento,
+  accounts\views.py:3972:
+> accounts\views.py:3973:            item_orcamento=item,
+  accounts\views.py:3974:
+  accounts\views.py:3975:            dente=dente,
+  accounts\views.py:3976:
+  accounts\views.py:3977:            face=face,
+  accounts\views.py:3978:
+  accounts\views.py:3979:            posicao_icone=posicao_icone,
+  accounts\views.py:3980:
+  accounts\views.py:3981:            procedimento=procedimento,
+  accounts\views.py:3982:
+  accounts\views.py:3983:            status=status,
+  accounts\views.py:3984:
+  accounts\views.py:3985:            descricao=descricao
+  accounts\views.py:4015:    # =========================================
+  accounts\views.py:4016:    # ITENS DO ORÇAMENTO
+  accounts\views.py:4017:    # =========================================
+  accounts\views.py:4018:
+  accounts\views.py:4019:    if orcamento:
+  accounts\views.py:4020:
+> accounts\views.py:4021:        itens_orcamento = ItemOrcamento.objects.filter(
+  accounts\views.py:4022:            orcamento=orcamento
+  accounts\views.py:4023:        ).select_related(
+  accounts\views.py:4024:            "procedimento"
+  accounts\views.py:4025:        )
+  accounts\views.py:4026:
+  accounts\views.py:4027:    else:
+  accounts\views.py:4028:
+> accounts\views.py:4029:        itens_orcamento = ItemOrcamento.objects.none()
+  accounts\views.py:4030:
+  accounts\views.py:4031:    # =========================================
+  accounts\views.py:4032:    # ANEXOS — RADIOGRAFIAS E FOTOS
+  accounts\views.py:4033:    # =========================================
+  accounts\views.py:4034:
+  accounts\views.py:4035:    anexos = AnexoPaciente.objects.filter(
+  accounts\views.py:4036:        paciente=paciente
+  accounts\views.py:4037:    ).order_by(
+  accounts\views.py:4038:        "-criado_em"
+  accounts\views.py:4039:    )
+  accounts\views.py:4040:
+  accounts\views.py:4041:    anexos_imagem = []
+  accounts\views.py:4261:        "orcamento":
+  accounts\views.py:4262:            orcamento,
+  accounts\views.py:4263:
+  accounts\views.py:4264:        "evolucoes":
+  accounts\views.py:4265:            evolucoes,
+  accounts\views.py:4266:
+> accounts\views.py:4267:        "itens_orcamento":
+> accounts\views.py:4268:            itens_orcamento,
+  accounts\views.py:4269:
+  accounts\views.py:4270:        "anexos_imagem":
+  accounts\views.py:4271:            anexos_imagem,
+  accounts\views.py:4272:
+  accounts\views.py:4273:        "procedimentos":
+  accounts\views.py:4274:            procedimentos,
+  accounts\views.py:4275:
+  accounts\views.py:4276:        "procedimentos_gerais":
+  accounts\views.py:4277:            procedimentos_gerais,
+  accounts\views.py:4278:
+  accounts\views.py:4279:        # =====================================
+  accounts\views.py:4280:        # POSICIONAMENTOS
+  accounts\views.py:4318:    }
+  accounts\views.py:4319:
+  accounts\views.py:4320:    # =========================================
+  accounts\views.py:4321:    # DEBUG DOS PROCEDIMENTOS
+  accounts\views.py:4322:    # =========================================
+  accounts\views.py:4323:
+> accounts\views.py:4324:    for item in itens_orcamento:
+  accounts\views.py:4325:
+  accounts\views.py:4326:        print(
+  accounts\views.py:4327:            f"ITEM {item.id} | "
+  accounts\views.py:4328:            f"DENTE={item.dente} | "
+  accounts\views.py:4329:            f"POSICAO_ICONE={item.posicao_icone}"
+  accounts\views.py:4330:        )
+  accounts\views.py:4331:
+  accounts\views.py:4332:    # =========================================
+  accounts\views.py:4333:    # DEBUG DOS POSICIONAMENTOS
+  accounts\views.py:4334:    # =========================================
+  accounts\views.py:4335:
+  accounts\views.py:4336:    print(
+  accounts\views.py:4731:        paciente=paciente,
+  accounts\views.py:4732:
+  accounts\views.py:4733:        tratamento=tratamento,
+  accounts\views.py:4734:
+  accounts\views.py:4735:        orcamento=orcamento,
+  accounts\views.py:4736:
+> accounts\views.py:4737:        item_orcamento=item,
+  accounts\views.py:4738:
+  accounts\views.py:4739:        dente=None,
+  accounts\views.py:4740:
+  accounts\views.py:4741:        face=None,
+  accounts\views.py:4742:
+  accounts\views.py:4743:        posicao_icone=None,
+  accounts\views.py:4744:
+  accounts\views.py:4745:        procedimento=procedimento,
+  accounts\views.py:4746:
+  accounts\views.py:4747:        status=status,
+  accounts\views.py:4748:
+  accounts\views.py:4749:        descricao=descricao
+  accounts\views.py:5105:    )
+  accounts\views.py:5106:
+  accounts\views.py:5107:    # =========================================
+  accounts\views.py:5108:    # PROCEDIMENTOS DO ORÇAMENTO
+  accounts\views.py:5109:    # =========================================
+  accounts\views.py:5110:
+> accounts\views.py:5111:    itens_orcamento = (
+  accounts\views.py:5112:        ItemOrcamento.objects
+  accounts\views.py:5113:        .filter(
+  accounts\views.py:5114:            orcamento__paciente=paciente
+  accounts\views.py:5115:        )
+  accounts\views.py:5116:        .select_related('procedimento')
+  accounts\views.py:5117:        .order_by('-id')
+  accounts\views.py:5118:    )
+  accounts\views.py:5119:   
+  accounts\views.py:5120:
+  accounts\views.py:5121:    # =========================================
+  accounts\views.py:5122:    # RESUMO CLÍNICO
+  accounts\views.py:5123:    # =========================================
+  accounts\views.py:5178:        'receitas': receitas,
+  accounts\views.py:5179:
+  accounts\views.py:5180:        'exames': exames,
+  accounts\views.py:5181:
+  accounts\views.py:5182:        'solicitacoes': solicitacoes,
+  accounts\views.py:5183:
+> accounts\views.py:5184:        'itens_orcamento': itens_orcamento,
+  accounts\views.py:5185:
+  accounts\views.py:5186:        'total_procedimentos': total_procedimentos,
+  accounts\views.py:5187:
+  accounts\views.py:5188:        'realizados': realizados,
+  accounts\views.py:5189:
+  accounts\views.py:5190:        'planejados': planejados,
+  accounts\views.py:5191:
+  accounts\views.py:5192:        'andamento': andamento,
+  accounts\views.py:5193:
+  accounts\views.py:5194:        'ultima_evolucao': ultima_evolucao
+  accounts\views.py:5195:
+  accounts\views.py:5196:    }
+  accounts\views.py:5596:        )
+  accounts\views.py:5597:
+  accounts\views.py:5598:    # =========================================
+  accounts\views.py:5599:    # BUSCA OS ITENS DO ORÇAMENTO
+  accounts\views.py:5600:    # =========================================
+  accounts\views.py:5601:
+> accounts\views.py:5602:    itens_orcamento = (
+  accounts\views.py:5603:        ItemOrcamento.objects
+  accounts\views.py:5604:        .filter(
+  accounts\views.py:5605:            orcamento=orcamento
+  accounts\views.py:5606:        )
+  accounts\views.py:5607:        .select_related(
+  accounts\views.py:5608:            'procedimento'
+  accounts\views.py:5609:        )
+  accounts\views.py:5610:        .order_by('id')
+  accounts\views.py:5611:    )
+  accounts\views.py:5612:
+  accounts\views.py:5613:    # =========================================
+  accounts\views.py:5614:    # FORMULÁRIO
+  accounts\views.py:5906:            )
+  accounts\views.py:5907:
+  accounts\views.py:5908:    # =========================================
+  accounts\views.py:5909:    # ATUALIZA OS ITENS
+  accounts\views.py:5910:    # =========================================
+  accounts\views.py:5911:
+> accounts\views.py:5912:    itens_orcamento = (
+  accounts\views.py:5913:        ItemOrcamento.objects
+  accounts\views.py:5914:        .filter(
+  accounts\views.py:5915:            orcamento=orcamento
+  accounts\views.py:5916:        )
+  accounts\views.py:5917:        .select_related(
+  accounts\views.py:5918:            'procedimento'
+  accounts\views.py:5919:        )
+  accounts\views.py:5920:        .order_by('id')
+  accounts\views.py:5921:    )
+  accounts\views.py:5922:
+  accounts\views.py:5923:    # =========================================
+  accounts\views.py:5924:    # CONTEXT
+  accounts\views.py:5929:        'paciente': paciente,
+  accounts\views.py:5930:
+  accounts\views.py:5931:        'orcamento': orcamento,
+  accounts\views.py:5932:
+  accounts\views.py:5933:        'item_form': item_form,
+  accounts\views.py:5934:
+> accounts\views.py:5935:        'itens_orcamento': itens_orcamento,
+  accounts\views.py:5936:
+  accounts\views.py:5937:    }
+  accounts\views.py:5938:
+  accounts\views.py:5939:    # =========================================
+  accounts\views.py:5940:    # RENDER
+  accounts\views.py:5941:    # =========================================
+  accounts\views.py:5942:
+  accounts\views.py:5943:    return render(
+  accounts\views.py:5944:        request,
+  accounts\views.py:5945:        'accounts/orcamento.html',
+  accounts\views.py:5946:        context
+  accounts\views.py:5947:    )
+  accounts\views.py:6434:# =========================================
+  accounts\views.py:6435:# EXCLUIR ITEM ORÇAMENTO
+  accounts\views.py:6436:# =========================================
+  accounts\views.py:6437:
+  accounts\views.py:6438:@login_required(login_url='/')
+  accounts\views.py:6439:@permissao_required("odontograma", "excluir")
+> accounts\views.py:6440:def excluir_item_orcamento(request, id):
+  accounts\views.py:6441:
+  accounts\views.py:6442:    item = get_object_or_404(
+  accounts\views.py:6443:        ItemOrcamento,
+  accounts\views.py:6444:        id=id
+  accounts\views.py:6445:    )
+  accounts\views.py:6446:
+  accounts\views.py:6447:    paciente = item.orcamento.paciente
+  accounts\views.py:6448:
+  accounts\views.py:6449:    # =========================================
+  accounts\views.py:6450:    # REMOVE DA EVOLUÇÃO CLÍNICA
+  accounts\views.py:6451:    # =========================================
+  accounts\views.py:6452:
+  accounts\views.py:6479:
+  accounts\views.py:6480:# =========================================
+  accounts\views.py:6481:# EDITAR ITEM ORÇAMENTO
+  accounts\views.py:6482:# =========================================
+  accounts\views.py:6483:
+  accounts\views.py:6484:@login_required(login_url='/')
+> accounts\views.py:6485:def editar_item_orcamento(request, id):
+  accounts\views.py:6486:
+  accounts\views.py:6487:    item = get_object_or_404(
+  accounts\views.py:6488:        ItemOrcamento,
+  accounts\views.py:6489:        id=id
+  accounts\views.py:6490:    )
+  accounts\views.py:6491:
+  accounts\views.py:6492:    if request.method == 'POST':
+  accounts\views.py:6493:
+  accounts\views.py:6494:        item.procedimento_id = request.POST.get(
+  accounts\views.py:6495:            'procedimento'
+  accounts\views.py:6496:        )
+  accounts\views.py:6497:
+  accounts\views.py:6563:    }
+  accounts\views.py:6564:
+  accounts\views.py:6565:    return render(
+  accounts\views.py:6566:
+  accounts\views.py:6567:        request,
+  accounts\views.py:6568:
+> accounts\views.py:6569:        'accounts/editar_item_orcamento.html',
+  accounts\views.py:6570:
+  accounts\views.py:6571:        context
+  accounts\views.py:6572:
+  accounts\views.py:6573:    )
+  accounts\views.py:6574:
+  accounts\views.py:6575:# =========================================
+  accounts\views.py:6576:# PDF ORÇAMENTO
+  accounts\views.py:6577:# =========================================
+  accounts\views.py:6578:
+  accounts\views.py:6579:@login_required(login_url='/')
+  accounts\views.py:6580:def gerar_pdf_orcamento(request, id):
+  accounts\views.py:6581:
+
+

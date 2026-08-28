@@ -129,7 +129,6 @@ from .models import (
     Tratamento,
     PosTratamento,
     PosicionamentoDente,
-    CondicaoOdontologica,
 )
 
 from django.db.models import Q
@@ -3125,48 +3124,22 @@ def pacientes_view(request):
 
         return redirect('pacientes')
 
-        # =========================================
+    # =========================================
     # LISTAGEM
     # =========================================
 
     perfil = request.user.perfil.tipo_usuario
-
-    # =========================================
-    # BUSCA
-    # =========================================
-
-    q = request.GET.get('q', '').strip()
-
-    # =========================================
-    # PACIENTES DO DENTISTA
-    # =========================================
 
     if perfil == 'dentista':
 
         pacientes = Paciente.objects.filter(
             Q(dentista=request.user) |
             Q(tratamentos__dentista=request.user)
-        ).distinct()
+        ).distinct().order_by('-id')
 
     else:
 
-        pacientes = Paciente.objects.all()
-
-    # =========================================
-    # FILTRO POR NOME
-    # =========================================
-
-    if q:
-
-        pacientes = pacientes.filter(
-            nome__icontains=q
-        )
-
-    # =========================================
-    # ORDENAÇÃO
-    # =========================================
-
-    pacientes = pacientes.order_by('-id')
+        pacientes = Paciente.objects.all().order_by('-id')
 
     # =========================================
     # CONVÊNIOS ATIVOS
@@ -3762,24 +3735,9 @@ def odontograma(request, id):
     # TRATAMENTO ATIVO
     # =====================================
 
-    perfil_usuario = getattr(
-        getattr(request.user, "perfil", None),
-        "tipo_usuario",
-        ""
-    )
-
-    if perfil_usuario == "dentista":
-
-        tratamento = paciente.tratamentos.filter(
-            status="ATIVO",
-            dentista=request.user
-        ).first()
-
-    else:
-
-        tratamento = paciente.tratamentos.filter(
-            status="ATIVO"
-        ).first()
+    tratamento = paciente.tratamentos.filter(
+        status="ATIVO"
+    ).first()
 
     # =====================================
     # HISTÓRICO DE TRATAMENTOS
@@ -4100,31 +4058,6 @@ def odontograma(request, id):
     )
 
     # =========================================
-    # CONDIÇÕES ODONTOLÓGICAS PERMANENTES
-    #
-    # Estas condições pertencem ao paciente,
-    # e não ao tratamento ou ao dentista.
-    # =========================================
-
-    condicoes_odontologicas = (
-        CondicaoOdontologica.objects.filter(
-            paciente=paciente
-        )
-    )
-
-        # =========================================
-    # DENTES AUSENTES
-    #
-    # Condição permanente do paciente.
-    # =========================================
-
-    dentes_ausentes = set(
-        str(condicao.dente)
-        for condicao in condicoes_odontologicas
-        if condicao.tipo == "ausente"
-    )
-
-    # =========================================
     # DICIONÁRIO DAS POSIÇÕES
     # =========================================
 
@@ -4301,23 +4234,6 @@ def odontograma(request, id):
 
         "procedimentos_gerais":
             procedimentos_gerais,
-
-                # =====================================
-        # CONDIÇÕES ODONTOLÓGICAS PERMANENTES
-        # =====================================
-
-        "condicoes_odontologicas":
-            condicoes_odontologicas,
-
-        "dentes_ausentes":
-            dentes_ausentes,
-
-        # =====================================
-        # POSICIONAMENTOS
-        # =====================================
-
-        "posicoes_dentes":
-            posicoes_dentes,
 
         # =====================================
         # POSICIONAMENTOS
@@ -7003,65 +6919,32 @@ def alterar_status_procedimento(request, id):
                         )
 
     # =====================================
-    # CONDIÇÃO ODONTOLÓGICA PERMANENTE
-    #
-    # DENTE AUSENTE
-    #
-    # SOMENTE "REALIZADO":
-    # registra a ausência permanente.
-    #
-    # EXISTENTE:
-    # remove a ausência e faz o dente
-    # voltar ao odontograma.
-    #
-    # PLANEJADO / ANDAMENTO / CANCELADO:
-    # também não representam ausência
-    # definitiva.
+    # ATUALIZA EVOLUÇÃO EXISTENTE
     # =====================================
 
-    if (
-        item.dente
-        and item.procedimento
-        and item.procedimento.nome == "Dente ausente"
-    ):
+    evolucao = EvolucaoClinica.objects.filter(
 
-        # =====================================
-        # DENTE EFETIVAMENTE AUSENTE
-        # =====================================
+        paciente=item.orcamento.paciente,
 
-        if novo_status == "realizado":
+        procedimento=item.procedimento,
 
-            CondicaoOdontologica.objects.get_or_create(
+        dente=item.dente,
 
-                paciente=item.orcamento.paciente,
+        face=item.face
 
-                dente=str(item.dente),
+    ).order_by(
+        '-id'
+    ).first()
 
-                tipo="ausente"
+    if evolucao:
 
-            )
+        evolucao.status = novo_status
 
-        # =====================================
-        # DENTE DEVE VOLTAR AO ODONTOGRAMA
-        # =====================================
+        evolucao.save()
 
-        else:
+    else:
 
-            CondicaoOdontologica.objects.filter(
-
-                paciente=item.orcamento.paciente,
-
-                dente=str(item.dente),
-
-                tipo="ausente"
-
-            ).delete()
-
-        # =====================================
-        # ATUALIZA EVOLUÇÃO EXISTENTE
-        # =====================================
-
-        evolucao = EvolucaoClinica.objects.filter(
+        EvolucaoClinica.objects.create(
 
             paciente=item.orcamento.paciente,
 
@@ -7069,47 +6952,25 @@ def alterar_status_procedimento(request, id):
 
             dente=item.dente,
 
-            face=item.face
+            face=item.face,
 
-        ).order_by(
-            '-id'
-        ).first()
+            posicao_icone=item.posicao_icone,
 
-        if evolucao:
+            status=novo_status,
 
-            evolucao.status = novo_status
+            descricao=''
 
-            evolucao.save()
+        )
 
-        else:
+    # =====================================
+    # RETORNO
+    # =====================================
 
-            EvolucaoClinica.objects.create(
+    return JsonResponse({
 
-                paciente=item.orcamento.paciente,
+        'sucesso': True
 
-                procedimento=item.procedimento,
-
-                dente=item.dente,
-
-                face=item.face,
-
-                posicao_icone=item.posicao_icone,
-
-                status=novo_status,
-
-                descricao=''
-
-            )
-
-        # =====================================
-        # RETORNO
-        # =====================================
-
-        return JsonResponse({
-
-            'sucesso': True
-
-        })
+    })
 
 # =========================================
 # RODAPÉ PDF

@@ -1,0 +1,624 @@
+﻿
+          return None
+      
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+      @property
+>     def status(self):
+  
+          return "Ativo" if self.ativo else "Inativo"
+  
+      # =========================================
+      # TRATAMENTO ATIVO
+      # =========================================
+      def tratamento_ativo(self):
+  
+          return self.tratamentos.filter(
+>             status="ATIVO"
+          ).first()
+  
+          # =========================================
+      # WHATSAPP
+      # =========================================
+  
+  
+      TIPOS = [
+  
+>         ('dente', 'Por Dente'),
+          ('hemiarcada', 'Hemi-Arcada'),
+          ('geral', 'Geral'),
+          ('cirurgia', 'Cirurgia')
+  
+      ]
+  
+      ]
+  
+      # =========================================
+>     # STATUS CLÃNICO
+      # =========================================
+  
+>     STATUS = [
+  
+          ('realizar', 'A Realizar'),
+          ('andamento', 'Em Andamento'),
+          ('realizado', 'Realizado'),
+          ('cancelado', 'Cancelado'),
+          ('reavaliar', 'Reavaliar')
+  
+          choices=TIPOS,
+  
+>         default='dente'
+  
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+  
+          max_length=30,
+  
+>         choices=STATUS,
+  
+          default='realizar'
+  
+      )
+  
+      # =========================================
+  
+  class EvolucaoClinica(models.Model):
+  
+>     STATUS_CHOICES = (
+  
+          ('existente', 'Existente'),
+          ('planejado', 'Planejado'),
+          ('andamento', 'Em Andamento'),
+          ('realizado', 'Realizado'),
+          ('cancelado', 'Cancelado'),
+      )
+  
+      # =========================================
+>     # DENTE
+      # =========================================
+  
+>     dente = models.CharField(
+  
+          max_length=10,
+  
+          blank=True,
+  
+          null=True
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+  
+          max_length=20,
+  
+>         choices=STATUS_CHOICES,
+  
+          default='planejado'
+  
+      )
+  
+      # =========================================
+  
+              f'{procedimento} - '
+  
+>             f'{self.get_status_display()}'
+  
+          )
+  
+  
+  
+  # =========================================
+  
+      anotacao = models.TextField()
+  
+>     dente = models.CharField(
+          max_length=10,
+          blank=True,
+          null=True
+      )
+  
+      procedimento = models.ForeignKey(
+  
+  class Tratamento(models.Model):
+  
+>     STATUS_CHOICES = [
+          ("ATIVO", "Ativo"),
+          ("ENCERRADO", "Encerrado"),
+      ]
+  
+      # =========================================
+      # PACIENTE
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+>         "Status",
+          max_length=15,
+>         choices=STATUS_CHOICES,
+          default="ATIVO"
+      )
+  
+      # =========================================
+      # DATA DE INÃCIO
+      # =========================================
+  
+      - Cada tratamento pertence a um dentista.
+      - O tratamento pode permanecer ativo
+>       independentemente de outros tratamentos
+        da mesma paciente.
+      - Se nÃ£o possuir dentista, utiliza o
+        dentista definido no paciente.
+      """
+  
+      # =========================================
+          return f"{self.paciente.nome} - {self.titulo}"
+  
+  # =========================================
+> # POSIÃ‡Ã•ES CLÃNICAS DO DENTE
+  # =========================================
+  
+> POSICOES_DENTE = (
+  
+      ('normal', 'Normal'),
+  
+      ('incluso_vertical', 'InclusÃ£o vertical'),
+  
+      ('incluso_horizontal', 'InclusÃ£o horizontal'),
+      # AGRADECIMENTO
+      # =========================================
+  
+>     STATUS_AGRADECIMENTO_CHOICES = [
+  
+>         ("PENDENTE", "Pendente"),
+  
+          ("ENVIADO", "Enviado"),
+  
+      ]
+  
+>     status_agradecimento = models.CharField(
+>         "Status do agradecimento",
+          max_length=15,
+>         choices=STATUS_AGRADECIMENTO_CHOICES,
+>         default="PENDENTE"
+      )
+  
+      data_agradecimento = models.DateField(
+          "Data do agradecimento",
+          null=True,
+          blank=True
+      # PESQUISA DE SATISFAÃ‡ÃƒO
+      # =========================================
+  
+>     STATUS_PESQUISA_CHOICES = [
+  
+>         ("PENDENTE", "Pendente"),
+  
+          ("ENVIADA", "Enviada"),
+  
+          ("RESPONDIDA", "Respondida"),
+  
+      ]
+  
+>     status_pesquisa = models.CharField(
+>         "Status da pesquisa",
+          max_length=15,
+>         choices=STATUS_PESQUISA_CHOICES,
+>         default="PENDENTE"
+      )
+  
+      # Data em que a clÃ­nica enviou a pesquisa
+  
+      data_pesquisa = models.DateField(
+          "Data da pesquisa",
+          blank=True
+      )
+  
+>     STATUS_RETORNO_CHOICES = [
+  
+>         ("PENDENTE", "Pendente"),
+  
+          ("CONTATADO", "Contatado"),
+  
+          ("AGENDADO", "Agendado"),
+  
+          ("REALIZADO", "Realizado"),
+  
+      ]
+  
+>     status_retorno = models.CharField(
+>         "Status do retorno",
+          max_length=15,
+>         choices=STATUS_RETORNO_CHOICES,
+>         default="PENDENTE"
+      )
+  
+      # =========================================
+      # CONTROLE
+      # =========================================
+  
+          )
+      
+  # =========================================
+> # POSICIONAMENTO DO DENTE
+  # =========================================
+  
+> class PosicionamentoDente(models.Model):
+  
+      paciente = models.ForeignKey(
+          Paciente,
+          on_delete=models.CASCADE,
+>         related_name="posicionamentos_dentes"
+      )
+  
+>     dente = models.CharField(
+          max_length=2
+      )
+  
+      posicao = models.CharField(
+          max_length=30,
+>         choices=POSICOES_DENTE,
+          default="normal"
+      )
+  
+      atualizado_em = models.DateTimeField(
+          auto_now=True
+      )
+  
+      class Meta:
+  
+>         verbose_name = "Posicionamento do Dente"
+>         verbose_name_plural = "Posicionamentos dos Dentes"
+  
+          constraints = [
+              models.UniqueConstraint(
+>                 fields=["paciente", "dente"],
+>                 name="unique_posicionamento_dente_paciente"
+              )
+          ]
+  
+      def __str__(self):
+  
+          return (
+              f"{self.paciente.nome} - "
+>             f"Dente {self.dente} - "
+              f"{self.posicao}"
+          )
+      
+      
+  # =========================================
+  # ORÃ‡AMENTO
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     STATUS_CHOICES = (
+  
+          ("rascunho", "Rascunho"),
+          ("aprovado", "Aprovado"),
+          ("em_execucao", "Em ExecuÃ§Ã£o"),
+          ("finalizado", "Finalizado"),
+          ("cancelado", "Cancelado"),
+  
+      )
+  
+>     status = models.CharField(
+          max_length=20,
+>         choices=STATUS_CHOICES,
+          default="rascunho"
+      )
+  
+      # =========================================
+      # NEGOCIAÃ‡ÃƒO
+      # =========================================
+              (
+                  item.total
+                  for item in self.itens.all()
+>                 if item.status != "cancelado"
+              ),
+              Decimal("0.00")
+          )
+  
+  
+      # =========================================
+      def tem_itens_ativos(self):
+  
+          return self.itens.exclude(
+>             status="cancelado"
+          ).exists()
+  
+      # =========================================
+      # VALOR DO DESCONTO
+      # =========================================
+  
+  
+  TIPO_LOCAL = (
+  
+>     ('dente', 'Dente'),
+      ('hemiarcada', 'Hemi Arcada'),
+      ('geral', 'Geral'),
+  
+  )
+  
+  
+  
+  
+  class ItemOrcamento(models.Model):
+>     STATUS_CHOICES = (
+  
+          ('existente', 'Existente'),
+          ('planejado', 'Planejado'),
+          ('andamento', 'Em Andamento'),
+          ('realizado', 'Realizado'),
+          ('cancelado', 'Cancelado'),
+  
+          choices=TIPO_LOCAL,
+  
+>         default='dente'
+  
+      )
+  
+      # =========================================
+>     # DENTE
+      # =========================================
+  
+>     dente = models.CharField(
+  
+          max_length=10,
+  
+          blank=True,
+  
+          null=True
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+  
+          max_length=20,
+  
+>         choices=STATUS_CHOICES,
+  
+          default='planejado'
+  
+      )
+  
+      # =========================================
+  
+  class DocumentoClinico(models.Model):
+  
+>     STATUS = (
+  
+          ('rascunho', 'Rascunho'),
+          ('finalizado', 'Finalizado'),
+  
+      )
+  
+  
+      conteudo = models.TextField()
+  
+>     status = models.CharField(
+          max_length=20,
+>         choices=STATUS,
+          default='rascunho'
+      )
+  
+      pdf = models.FileField(
+          upload_to='documentos/',
+          blank=True,
+  
+      )
+  
+>     status = models.CharField(
+  
+          max_length=20,
+  
+          default='ativo'
+  
+      )
+  
+  class ContaPagar(models.Model):
+  
+>     STATUS_CHOICES = [
+  
+>         ('PENDENTE', 'Pendente'),
+  
+          ('PAGO', 'Pago'),
+  
+          ('VENCIDO', 'Vencido')
+  
+      ]
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+  
+          max_length=20,
+  
+>         choices=STATUS_CHOICES,
+  
+>         default='PENDENTE'
+  
+      )
+  
+      # =========================================
+      # OBSERVAÃ‡ÃƒO
+      # =========================================
+  
+          return (
+  
+>             self.status != 'PAGO'
+  
+              and
+  
+              self.vencimento < date.today()
+  
+          )
+  
+  class ContaReceber(models.Model):
+  
+>     STATUS_CHOICES = [
+  
+>         ('PENDENTE', 'Pendente'),
+          ('RECEBIDO', 'Recebido'),
+          ('VENCIDO', 'Vencido'),
+          ('CANCELADO', 'Cancelado'),
+  
+      ]
+  
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+  
+          max_length=20,
+  
+>         choices=STATUS_CHOICES,
+  
+>         default='PENDENTE'
+  
+      )
+  
+      observacao = models.TextField(
+  
+          blank=True,
+  
+  class CaixaDiario(models.Model):
+  
+>     STATUS_CHOICES = [
+  
+          ("ABERTO", "Aberto"),
+  
+          ("FECHADO", "Fechado"),
+  
+      ]
+  
+      )
+  
+>     status = models.CharField(
+  
+          max_length=10,
+  
+>         choices=STATUS_CHOICES,
+  
+          default="ABERTO"
+  
+      )
+  
+      observacoes = models.TextField(
+  
+      def __str__(self):
+  
+>         return f"{self.data} - {self.get_status_display()}"
+  
+  # =========================================
+  # FECHAMENTO MENSAL
+  # =========================================
+  
+  class FechamentoMensal(models.Model):
+  
+>     STATUS_CHOICES = [
+          ("ABERTO", "Aberto"),
+          ("FECHADO", "Fechado"),
+      ]
+  
+      # =========================================
+      # COMPETÃŠNCIA
+      )
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     status = models.CharField(
+          max_length=10,
+>         choices=STATUS_CHOICES,
+          default="ABERTO"
+      )
+  
+      # =========================================
+      # RESPONSÃVEL PELO FECHAMENTO
+      # =========================================
+  
+              models.Index(
+                  fields=[
+>                     "status",
+                  ],
+>                 name="idx_fechamento_status"
+              ),
+  
+          ]
+  
+      # =========================================
+      # REPRESENTAÃ‡ÃƒO
+  
+      ]
+  
+>     STATUS_CHOICES = [
+  
+          ("NOVO", "Novo"),
+          ("CONTATADO", "Contatado"),
+          ("AGENDADO", "Agendado"),
+          ("CONVERTIDO", "Convertido"),
+          ("PERDIDO", "Perdido"),
+          verbose_name="Campanha",
+      )
+  
+>     status = models.CharField(
+          max_length=20,
+>         choices=STATUS_CHOICES,
+          default="NOVO"
+      )
+  
+      observacoes = models.TextField(
+          blank=True
+      )
+      ]
+  
+      # =========================================
+>     # STATUS
+      # =========================================
+  
+>     STATUS_CHOICES = [
+  
+          ("ATIVA", "Ativa"),
+          ("PAUSADA", "Pausada"),
+          ("FINALIZADA", "Finalizada"),
+  
+      ]
+          default=True
+      )
+  
+>     status = models.CharField(
+          max_length=20,
+>         choices=STATUS_CHOICES,
+          default="ATIVA"
+      )
+  
+      # =========================================
+      # USUÃRIO RESPONSÃVEL
+      # =========================================
+
+

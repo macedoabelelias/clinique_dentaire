@@ -144,14 +144,14 @@ ATENDIMENTO
 {% possui_permissao request.user 'pacientes' as pode_ver_pacientes %}
 {% possui_permissao request.user 'orcamentos' as pode_ver_orcamentos %}
 {% possui_permissao request.user 'relatorios' as pode_ver_relatorios %}
+{% possui_permissao request.user 'aniversariantes' as pode_ver_aniversariantes %}
 
 
-{% if pode_ver_agenda or pode_ver_pacientes or pode_ver_orcamentos or pode_ver_relatorios %}
+{% if pode_ver_agenda or pode_ver_pacientes or pode_ver_orcamentos %}
 
 <div class="sidebar-section">
     ATENDIMENTO
 </div>
-
 
 <li class="menu-group">
 
@@ -166,9 +166,7 @@ ATENDIMENTO
 
     </button>
 
-
     <ul class="submenu">
-
 
         <!-- =================================================
         AGENDA
@@ -232,33 +230,37 @@ ATENDIMENTO
 
         {% endif %}
 
-
-        <!-- =================================================
-        RELATÓRIOS
-        ================================================== -->
-
-        {% if pode_ver_relatorios %}
-
-        <li class="{% if 'central_relatorios' in request.path %}active{% endif %}">
-
-            <a href="{% url 'central_relatorios' %}">
-
-                <i class="bi bi-bar-chart-line-fill"></i>
-
-                <span>Relatórios</span>
-
-            </a>
-
-        </li>
-
-        {% endif %}
-
-
     </ul>
 
 </li>
 
 {% endif %}
+
+
+<!-- =================================================
+RELATÓRIOS
+================================================= -->
+
+{% if pode_ver_relatorios or pode_ver_aniversariantes %}
+
+<div class="sidebar-section">
+    RELATÓRIOS
+</div>
+
+<li class="{% if 'central_relatorios' in request.path %}active{% endif %}">
+
+    <a href="{% url 'central_relatorios' %}">
+
+        <i class="bi bi-bar-chart-line-fill"></i>
+
+        <span>Relatórios</span>
+
+    </a>
+
+</li>
+
+{% endif %}
+
 
 <!-- =====================================================
 CADASTROS

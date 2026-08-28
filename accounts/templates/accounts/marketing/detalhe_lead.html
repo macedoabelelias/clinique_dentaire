@@ -439,6 +439,48 @@ BOTÕES
 
 <div class="d-flex justify-content-end gap-2">
 
+    {% if lead.paciente %}
+
+        <!-- PACIENTE JÁ CADASTRADO -->
+
+        <a
+            href="{% url 'novo_agendamento_paciente' lead.paciente.id %}"
+            class="btn btn-success"
+        >
+
+            <i class="bi bi-calendar-plus me-1"></i>
+
+            Agendar Consulta
+
+        </a>
+
+        <span class="btn btn-outline-success disabled">
+
+            <i class="bi bi-person-check me-1"></i>
+
+            Paciente Cadastrado
+
+        </span>
+
+    {% else %}
+
+        <!-- CADASTRAR COMO PACIENTE -->
+
+        <a
+            href="{% url 'converter_lead_paciente' lead.pk %}"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-person-plus me-1"></i>
+
+            Cadastrar como Paciente
+
+        </a>
+
+    {% endif %}
+
+    <!-- EDITAR LEAD -->
+
     <a
         href="{% url 'editar_lead' lead.pk %}"
         class="btn btn-warning"
@@ -450,6 +492,7 @@ BOTÕES
 
     </a>
 
+    <!-- VOLTAR -->
 
     <a
         href="{% url 'leads' %}"

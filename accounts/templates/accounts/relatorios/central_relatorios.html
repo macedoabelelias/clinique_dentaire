@@ -1,15 +1,39 @@
 {% extends 'accounts/base.html' %}
 
+{% load permissions_tags %}
+
 {% block title %}
 Central de Relatórios
 {% endblock %}
 
 {% block content %}
 
+<!-- =========================================================
+     PERMISSÕES DOS RELATÓRIOS
+     ========================================================= -->
+
+{% possui_permissao request.user 'pacientes' as pode_ver_pacientes %}
+{% possui_permissao request.user 'tratamentos' as pode_ver_tratamentos %}
+{% possui_permissao request.user 'orcamentos' as pode_ver_orcamentos %}
+{% possui_permissao request.user 'relatorio_atendimentos' as pode_ver_atendimentos %}
+
+{% possui_permissao request.user 'contas_receber' as pode_ver_contas_receber %}
+{% possui_permissao request.user 'contas_pagar' as pode_ver_contas_pagar %}
+{% possui_permissao request.user 'caixa' as pode_ver_caixa %}
+
+{% possui_permissao request.user 'relatorio_producao' as pode_ver_producao %}
+{% possui_permissao request.user 'relatorio_faturamento' as pode_ver_faturamento %}
+{% possui_permissao request.user 'auditoria' as pode_ver_auditoria %}
+{% possui_permissao request.user 'aniversariantes' as pode_ver_aniversariantes %}
+
 
 <div class="container-fluid mt-4">
 
     <div class="card shadow-sm">
+
+        <!-- =================================================
+             CABEÇALHO
+             ================================================= -->
 
         <div class="card-header bg-primary text-white">
 
@@ -20,288 +44,542 @@ Central de Relatórios
 
         </div>
 
+
         <div class="card-body">
 
-            <!-- CADASTRAIS -->
+
+            <!-- =================================================
+                 RELATÓRIOS CADASTRAIS
+                 ================================================= -->
+
+            {% if pode_ver_pacientes or pode_ver_tratamentos or pode_ver_orcamentos or pode_ver_atendimentos or pode_ver_aniversariantes %}
+
             <h5 class="fw-bold text-primary mb-4">
+
                 <i class="bi bi-folder2-open"></i>
+
                 Relatórios Cadastrais
+
             </h5>
+
 
             <div class="row g-4 mb-5">
 
-                <div class="col-lg-3 col-md-6">
+
+                <!-- =================================================
+                     PACIENTES
+                     ================================================= -->
+
+                {% if pode_ver_pacientes %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Marketing' or request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg-3{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-people-fill text-primary relatorio-icon"></i>
+
                             <h5>Pacientes</h5>
-                            <p>Cadastros completos dos pacientes.</p>
-                            <a href="{% url 'relatorio_pacientes' %}" class="btn btn-outline-primary btn-sm">
+
+                            <p>
+                                Cadastros completos dos pacientes.
+                            </p>
+
+                            <a href="{% url 'relatorio_pacientes' %}"
+                               class="btn btn-outline-primary btn-sm">
+
                                 Acessar
+
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                {% endif %}
+
+
+                <!-- =================================================
+                     TRATAMENTOS
+                     ================================================= -->
+
+                {% if pode_ver_tratamentos %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Marketing' or request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg-3{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-heart-pulse-fill text-success relatorio-icon"></i>
+
                             <h5>Tratamentos</h5>
-                            <p>Histórico completo dos tratamentos.</p>
-                            <a href="{% url 'relatorio_tratamentos' %}" class="btn btn-outline-success btn-sm">
+
+                            <p>
+                                Histórico completo dos tratamentos.
+                            </p>
+
+                            <a href="{% url 'relatorio_tratamentos' %}"
+                               class="btn btn-outline-success btn-sm">
 
                                 Acessar
 
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                {% endif %}
+
+
+                <!-- =================================================
+                     ORÇAMENTOS
+                     ================================================= -->
+
+                {% if pode_ver_orcamentos %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Marketing' or request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg-3{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-cash-stack text-warning relatorio-icon"></i>
+
                             <h5>Orçamentos</h5>
-                            <p>Orçamentos emitidos e aprovados.</p>
+
+                            <p>
+                                Orçamentos emitidos e aprovados.
+                            </p>
+
                             <a href="{% url 'relatorio_orcamentos' %}"
-                            class="btn btn-outline-warning btn-sm">
+                               class="btn btn-outline-warning btn-sm">
 
                                 Acessar
 
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                {% endif %}
+
+
+                <!-- =================================================
+                     ATENDIMENTOS
+                     ================================================= -->
+
+                {% if pode_ver_atendimentos %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Marketing' or request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg-3{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-clipboard2-pulse-fill text-info relatorio-icon"></i>
 
-                                <h5>Atendimentos</h5>
+                            <h5>Atendimentos</h5>
 
-                                <p>
-                                    Histórico de consultas e atendimentos realizados.
-                                </p>
+                            <p>
+                                Histórico de consultas e atendimentos realizados.
+                            </p>
 
-                                <a href="{% url 'relatorio_atendimentos' %}" class="btn btn-outline-info btn-sm">
+                            <a href="{% url 'relatorio_atendimentos' %}"
+                               class="btn btn-outline-info btn-sm">
 
-                                    Acessar
+                                Acessar
 
-                                </a>
+                            </a>
+
                         </div>
+
                     </div>
+
                 </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     ANIVERSARIANTES
+                     
+                     MARKETING E SECRETÁRIA
+                     ================================================= -->
+
+                {% if pode_ver_aniversariantes and request.user.perfil.perfil_acesso.nome == "Marketing" or pode_ver_aniversariantes and request.user.perfil.perfil_acesso.nome == "Secretária" %}
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="card shadow-sm relatorio-card h-100 text-center">
+
+                        <div class="card-body">
+
+                            <i class="bi bi-cake2-fill text-warning relatorio-icon"></i>
+
+                            <h5>Aniversariantes</h5>
+
+                            <p>
+                                Relação de pacientes aniversariantes.
+                            </p>
+
+                            <a href="{% url 'relatorio_aniversariantes' %}"
+                               class="btn btn-outline-warning btn-sm">
+
+                                Acessar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
 
             </div>
 
-            <!-- FINANCEIRO -->
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 RELATÓRIOS FINANCEIROS
+                 ================================================= -->
+
+            {% if pode_ver_contas_receber or pode_ver_contas_pagar or pode_ver_caixa %}
+
             <h5 class="fw-bold text-success mb-4">
+
                 <i class="bi bi-cash-coin"></i>
+
                 Relatórios Financeiros
+
             </h5>
+
 
             <div class="row g-4 mb-5">
 
-                <div class="col-lg-4">
+
+                <!-- CONTAS A RECEBER -->
+
+                {% if pode_ver_contas_receber %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-wallet2 text-success relatorio-icon"></i>
+
                             <h5>Contas a Receber</h5>
-                            <p>Controle dos recebimentos.</p>
-                            <a href="{% url 'relatorio_contas_receber' %}" class="btn btn-outline-success btn-sm">
+
+                            <p>
+                                Controle dos recebimentos.
+                            </p>
+
+                            <a href="{% url 'relatorio_contas_receber' %}"
+                               class="btn btn-outline-success btn-sm">
+
                                 Acessar
+
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <div class="col-lg-4">
+                {% endif %}
+
+
+                <!-- CONTAS A PAGAR -->
+
+                {% if pode_ver_contas_pagar %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-credit-card-fill text-danger relatorio-icon"></i>
+
                             <h5>Contas a Pagar</h5>
-                            <p>Despesas e pagamentos.</p>
+
+                            <p>
+                                Despesas e pagamentos.
+                            </p>
+
                             <a href="{% url 'relatorio_contas_pagar' %}"
-                            class="btn btn-outline-danger btn-sm">
+                               class="btn btn-outline-danger btn-sm">
 
                                 Acessar
 
                             </a>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <div class="col-lg-4">
+                {% endif %}
+
+
+                <!-- CAIXA -->
+
+                {% if pode_ver_caixa %}
+
+                <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
+
                     <div class="card shadow-sm relatorio-card h-100 text-center">
+
                         <div class="card-body">
+
                             <i class="bi bi-safe-fill text-secondary relatorio-icon"></i>
+
                             <h5>Caixa</h5>
-                            <p>Movimentação diária do caixa.</p>
+
+                            <p>
+                                Movimentação diária do caixa.
+                            </p>
+
                             <a href="{% url 'relatorio_caixa' %}"
-                            class="btn btn-outline-primary btn-sm">
+                               class="btn btn-outline-primary btn-sm">
 
                                 Acessar
 
                             </a>
+
                         </div>
+
                     </div>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+     RELATÓRIOS GERENCIAIS
+     
+     Marketing não utiliza esta seção.
+     Secretária não utiliza Aniversariantes aqui.
+     ================================================= -->
+
+{% possui_permissao request.user 'relatorio_producao' as pode_ver_producao %}
+{% possui_permissao request.user 'relatorio_faturamento' as pode_ver_faturamento %}
+{% possui_permissao request.user 'relatorio_auditoria' as pode_ver_auditoria %}     
+
+{% if pode_ver_producao or pode_ver_faturamento or pode_ver_auditoria %}
+
+    {% if request.user.perfil.perfil_acesso.nome != "Marketing" %}
+
+    <h5 class="fw-bold text-dark mb-4">
+
+        <i class="bi bi-graph-up-arrow"></i>
+
+        Relatórios Gerenciais
+
+    </h5>
+
+
+    <div class="row g-4">
+
+
+        <!-- =================================================
+             PRODUÇÃO
+             ================================================= -->
+
+        {% if pode_ver_producao %}
+
+        <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-bar-chart-fill fs-1 text-success"></i>
+
+                    <h4 class="mt-3">
+                        Produção
+                    </h4>
+
+                    <p>
+                        Produção clínica e procedimentos.
+                    </p>
+
+                    <a href="{% url 'relatorio_producao' %}"
+                       class="btn btn-outline-success">
+
+                        Acessar
+
+                    </a>
+
                 </div>
 
             </div>
 
-            <!-- GERENCIAL -->
-<h5 class="fw-bold text-dark mb-4">
-    <i class="bi bi-graph-up-arrow"></i>
-    Relatórios Gerenciais
-</h5>
+        </div>
 
-<div class="row g-4">
+        {% endif %}
 
-    <!-- PRODUÇÃO -->
 
-    <div class="col-lg-3 col-md-6">
+        <!-- =================================================
+             FATURAMENTO
+             ================================================= -->
 
-        <div class="card h-100">
+        {% if pode_ver_faturamento %}
 
-            <div class="card-body text-center">
+        <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
 
-                <i class="bi bi-bar-chart-fill fs-1 text-success"></i>
+            <div class="card h-100">
 
-                <h4 class="mt-3">
+                <div class="card-body text-center">
 
-                    Produção
+                    <i class="bi bi-currency-dollar fs-1 text-warning"></i>
 
-                </h4>
+                    <h4 class="mt-3">
+                        Faturamento
+                    </h4>
 
-                <p>
+                    <p>
+                        Análise do faturamento da clínica.
+                    </p>
 
-                    Produção clínica e procedimentos.
+                    <a href="{% url 'relatorio_faturamento' %}"
+                       class="btn btn-outline-warning">
 
-                </p>
+                        Acessar
 
-                <a href="{% url 'relatorio_producao' %}"
-                   class="btn btn-outline-success">
+                    </a>
 
-                    Acessar
-
-                </a>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        {% endif %}
 
-    <!-- FATURAMENTO -->
 
-    <div class="col-lg-3 col-md-6">
+        <!-- =================================================
+             AUDITORIA
+             ================================================= -->
 
-        <div class="card h-100">
+        {% if pode_ver_auditoria %}
 
-            <div class="card-body text-center">
+        <div class="{% if request.user.perfil.perfil_acesso.nome == 'Secretária' or request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
 
-                <i class="bi bi-currency-dollar fs-1 text-warning"></i>
+            <div class="card h-100">
 
-                <h4 class="mt-3">
+                <div class="card-body text-center">
 
-                    Faturamento
+                    <i class="bi bi-shield-check fs-1 text-primary"></i>
 
-                </h4>
+                    <h4 class="mt-3">
+                        Auditoria do Sistema
+                    </h4>
 
-                <p>
+                    <p>
+                        Consulte o histórico de ações realizadas no sistema.
+                    </p>
 
-                    Análise do faturamento da clínica.
+                    <a href="{% url 'relatorio_auditoria' %}"
+                       class="btn btn-primary">
 
-                </p>
+                        Acessar
 
-                <a href="{% url 'relatorio_faturamento' %}"
-                   class="btn btn-outline-warning">
+                    </a>
 
-                    Acessar
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- AUDITORIA -->
-
-    <div class="col-lg-3 col-md-6">
-
-        <div class="card h-100">
-
-            <div class="card-body text-center">
-
-                <i class="bi bi-shield-check fs-1 text-primary"></i>
-
-                <h4 class="mt-3">
-
-                    Auditoria do Sistema
-
-                </h4>
-
-                <p>
-
-                    Consulte o histórico de ações realizadas no sistema.
-
-                </p>
-
-                <a href="{% url 'relatorio_auditoria' %}"
-                   class="btn btn-primary">
-
-                    Acessar
-
-                </a>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        {% endif %}
 
-    <!-- ANIVERSARIANTES -->
 
-    <div class="col-lg-3 col-md-6">
+        <!-- =================================================
+             ANIVERSARIANTES
+             
+             Marketing: não aparece aqui.
+             Secretária: não aparece aqui.
+             ASB: continua aqui.
+             Demais perfis com permissão: continuam aqui.
+             ================================================= -->
 
-        <div class="card h-100">
+        {% if pode_ver_aniversariantes %}
 
-            <div class="card-body text-center">
+            {% if request.user.perfil.perfil_acesso.nome != "Marketing" and request.user.perfil.perfil_acesso.nome != "Secretária" %}
 
-                <i class="bi bi-cake2-fill fs-1 text-warning"></i>
+            <div class="{% if request.user.perfil.perfil_acesso.nome == 'Auxiliar de Saúde Bucal' %}col-lg-4{% else %}col-lg{% endif %} col-md-6">
 
-                <h4 class="mt-3">
+                <div class="card h-100">
 
-                    Aniversariantes
+                    <div class="card-body text-center">
 
-                </h4>
+                        <i class="bi bi-cake2-fill fs-1 text-warning"></i>
 
-                <p>
+                        <h4 class="mt-3">
+                            Aniversariantes
+                        </h4>
 
-                    Relação de pacientes aniversariantes.
+                        <p>
+                            Relação de pacientes aniversariantes.
+                        </p>
 
-                </p>
+                        <a href="{% url 'relatorio_aniversariantes' %}"
+                           class="btn btn-outline-warning">
 
-                <a href="{% url 'relatorio_aniversariantes' %}"
-                   class="btn btn-outline-warning">
+                            Acessar
 
-                    Acessar
+                        </a>
 
-                </a>
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+            {% endif %}
+
+        {% endif %}
+
 
     </div>
+
+    {% endif %}
+
+{% endif %}
+
 
 </div>
 
-            
+</div>
 
+</div>
 
 {% endblock %}
+

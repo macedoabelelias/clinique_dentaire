@@ -104,12 +104,13 @@
 
         <thead>
 
-            <tr>
+           <tr>
 
                 <th>Data</th>
                 <th>Nome</th>
                 <th>Telefone</th>
                 <th>Status</th>
+                <th>Ação</th>
 
             </tr>
 
@@ -141,13 +142,33 @@
 
                 </td>
 
+                <td>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalParabens"
+                        data-nome="{{ paciente.nome|escapejs }}"
+                        data-whatsapp="{{ paciente.whatsapp|default:''|escapejs }}"
+                        onclick="abrirMensagemAniversario(this)"
+                    >
+
+                        <i class="bi bi-gift me-1"></i>
+
+                        Parabéns
+
+                    </button>
+
+                </td>
+
             </tr>
 
             {% empty %}
 
             <tr>
 
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
 
                     Nenhum aniversariante encontrado.
 
@@ -166,5 +187,331 @@
     </div>
 
 </div>
+
+<!-- =========================================
+MODAL - MENSAGEM DE ANIVERSÁRIO
+========================================= -->
+
+<div
+    class="modal fade"
+    id="modalParabens"
+    tabindex="-1"
+    aria-labelledby="modalParabensLabel"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content rounded-4 shadow">
+
+            <!-- CABEÇALHO -->
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title fw-bold"
+                    id="modalParabensLabel"
+                >
+
+                    🎉 Mensagem de Aniversário
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+
+            </div>
+
+            <!-- CORPO -->
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Paciente
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="aniversarioNome"
+                        class="form-control"
+                        readonly
+                    >
+
+                </div>
+
+
+                <!-- MODELO DA MENSAGEM -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Modelo da mensagem
+
+                    </label>
+
+                    <select
+                        id="modeloMensagem"
+                        class="form-select"
+                        onchange="selecionarMensagem()"
+                    >
+
+                        <option value="carinhosa">
+                            🎂 Mensagem Carinhosa
+                        </option>
+
+                        <option value="elegante">
+                            ✨ Mensagem Elegante
+                        </option>
+
+                        <option value="clinica">
+                            🦷 Mensagem da Clínica
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- MENSAGEM -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Mensagem
+
+                    </label>
+
+                    <textarea
+                        id="mensagemAniversario"
+                        class="form-control"
+                        rows="8"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- AVISO WHATSAPP -->
+
+                <div
+                    id="avisoWhatsApp"
+                    class="alert alert-warning d-none mb-0"
+                >
+
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+
+                    Este paciente não possui um número de WhatsApp
+                    cadastrado.
+
+                </div>
+
+            </div>
+
+            <!-- RODAPÉ -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-light border"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="button"
+                    id="btnWhatsApp"
+                    class="btn btn-success"
+                    onclick="enviarWhatsApp()"
+                >
+
+                    <i class="bi bi-whatsapp me-1"></i>
+
+                    Enviar pelo WhatsApp
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+JAVASCRIPT - ANIVERSARIANTES
+========================================= -->
+
+<script>
+
+let whatsappAtual = '';
+
+let nomeAtual = '';
+
+
+function abrirMensagemAniversario(botao) {
+
+    nomeAtual = botao.dataset.nome || '';
+
+    whatsappAtual = botao.dataset.whatsapp || '';
+
+    document.getElementById(
+        'aniversarioNome'
+    ).value = nomeAtual;
+
+
+    selecionarMensagem();
+
+
+    const aviso = document.getElementById(
+        'avisoWhatsApp'
+    );
+
+    const botaoWhatsApp = document.getElementById(
+        'btnWhatsApp'
+    );
+
+
+    if (whatsappAtual.trim()) {
+
+        aviso.classList.add('d-none');
+
+        botaoWhatsApp.disabled = false;
+
+    } else {
+
+        aviso.classList.remove('d-none');
+
+        botaoWhatsApp.disabled = true;
+
+    }
+
+}
+
+
+function selecionarMensagem() {
+
+    const modelo = document.getElementById(
+        'modeloMensagem'
+    ).value;
+
+
+    let mensagem = '';
+
+
+    if (modelo === 'carinhosa') {
+
+        mensagem =
+`🎉 Olá, ${nomeAtual}!
+
+Hoje é um dia muito especial e queremos desejar a você um feliz aniversário! 🎂
+
+Que este novo ciclo seja repleto de saúde, alegria, conquistas e muitos momentos felizes. 😊
+
+Que nunca faltem motivos para sorrir!
+
+Um grande abraço de toda a equipe da Clinique Dentaire! 🦷✨`;
+
+    }
+
+
+    if (modelo === 'elegante') {
+
+        mensagem =
+`✨ Olá, ${nomeAtual}!
+
+Neste dia especial, toda a equipe da Clinique Dentaire deseja a você um feliz aniversário!
+
+Que este novo ciclo seja marcado por saúde, realizações, felicidade e muitos momentos especiais.
+
+Receba nosso carinho e os melhores desejos para você!
+
+Feliz aniversário! 🎂✨`;
+
+    }
+
+
+    if (modelo === 'clinica') {
+
+        mensagem =
+`🦷🎂 Feliz aniversário, ${nomeAtual}!
+
+Toda a equipe da Clinique Dentaire deseja a você muita saúde, felicidade e um novo ciclo repleto de conquistas.
+
+Que você continue tendo muitos motivos para sorrir! 😁✨
+
+Um grande abraço de toda a nossa equipe!`;
+
+    }
+
+
+    document.getElementById(
+        'mensagemAniversario'
+    ).value = mensagem;
+
+}
+
+
+function enviarWhatsApp() {
+
+    if (!whatsappAtual.trim()) {
+
+        return;
+
+    }
+
+
+    const numero = whatsappAtual.replace(
+        /\D/g,
+        ''
+    );
+
+
+    if (!numero) {
+
+        alert(
+            'O número de WhatsApp cadastrado não é válido.'
+        );
+
+        return;
+
+    }
+
+
+    const mensagem =
+        document.getElementById(
+            'mensagemAniversario'
+        ).value;
+
+
+    const url =
+        'https://wa.me/' +
+        numero +
+        '?text=' +
+        encodeURIComponent(mensagem);
+
+
+    window.open(
+        url,
+        '_blank'
+    );
+
+}
+
+</script>
 
 {% endblock %}

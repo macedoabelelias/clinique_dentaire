@@ -1705,306 +1705,404 @@ LAYOUT
                 </div>
 
 
-                <!-- DENTIÇÃO PERMANENTE -->
-
-                <div class="secao-titulo">
-                    Dentição Permanente
-                </div>
-
                 <!-- =========================================
-     SUPERIOR
+     DENTIÇÃO PERMANENTE
+     ========================================= -->
+
+<div class="secao-titulo">
+    Dentição Permanente
+</div>
+
+
+<!-- =========================================
+     ARCADA SUPERIOR
      ========================================= -->
 
 <div class="arcada">
 
     {% for dente in superiores_posicionados %}
 
-    <div class="dente-box dente-{{ dente.numero }}">
+        <div class="dente-box dente-{{ dente.numero }}">
 
-        <img
-            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
-            class="
-                dente-img
-                posicao-dente-{{ dente.numero }}
-                {% if dente.posicao_css != 'normal' %}
-                    posicao-{{ dente.posicao_css }}
-                {% endif %}
-            "
-            data-dente="{{ dente.numero }}"
-            alt="Dente {{ dente.numero }}"
-        >
+            {% if dente.numero in dentes_ausentes %}
 
-        <div class="procedimentos-dente">
+                <!-- DENTE AUSENTE -->
 
-            {% for item in itens_orcamento %}
+                <span
+                    class="dente-ausente-numero"
+                    data-dente="{{ dente.numero }}"
+                >
+                    {{ dente.numero }}
+                </span>
 
-                {% if item.dente == dente.numero %}
+            {% else %}
 
-                    {% if item.procedimento.tipo == 'dente' %}
+                <!-- DENTE NORMAL -->
 
-                        <img
-                            src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                            class="
-                                icone-procedimento-dente
-                                status-{{ item.status }}
-                                posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                <img
+                    src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+                    class="
+                        dente-img
+                        posicao-dente-{{ dente.numero }}
+                        {% if dente.posicao_css != 'normal' %}
+                            posicao-{{ dente.posicao_css }}
+                        {% endif %}
+                    "
+                    data-dente="{{ dente.numero }}"
+                    alt="Dente {{ dente.numero }}"
+                >
 
-                                {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                    sem-rotacao
+                <!-- PROCEDIMENTOS DO DENTE -->
+
+                <div class="procedimentos-dente">
+
+                    {% for item in itens_orcamento %}
+
+                        {% if item.dente == dente.numero %}
+
+                            {% if item.procedimento.tipo == 'dente' %}
+
+                                <!--
+                                Dente ausente cancelado:
+                                não exibe o ícone.
+                                -->
+
+                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+
+                                    <img
+                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                        class="
+                                            icone-procedimento-dente
+                                            status-{{ item.status }}
+                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+
+                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                                sem-rotacao
+                                            {% endif %}
+                                        "
+                                        data-id="{{ item.id }}"
+                                        data-status="{{ item.status }}"
+                                        title="{{ item.procedimento.nome }}"
+                                    >
+
+                                    {% if item.face %}
+
+                                        <span class="face-badge status-{{ item.status }}">
+                                            {{ item.face }}
+                                        </span>
+
+                                    {% endif %}
+
                                 {% endif %}
-                            "
-                            data-id="{{ item.id }}"
-                            data-status="{{ item.status }}"
-                            title="{{ item.procedimento.nome }}"
-                        >
 
-                        {% if item.face %}
-
-                            <span class="face-badge status-{{ item.status }}">
-                                {{ item.face }}
-                            </span>
+                            {% endif %}
 
                         {% endif %}
 
-                    {% endif %}
+                    {% endfor %}
 
-                {% endif %}
+                </div>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
-
-    </div>
 
     {% endfor %}
 
 </div>
 
 
-                <!-- =========================================
-     INFERIOR
+<!-- =========================================
+     ARCADA INFERIOR
      ========================================= -->
 
 <div class="arcada inferior">
 
     {% for dente in inferiores_posicionados %}
 
-    <div class="dente-box dente-{{ dente.numero }}">
+        <div class="dente-box dente-{{ dente.numero }}">
 
-        <img
-            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
-            class="
-                dente-img
-                inferior
-                posicao-dente-{{ dente.numero }}
-                {% if dente.posicao_css != 'normal' %}
-                    posicao-{{ dente.posicao_css }}
-                {% endif %}
-            "
-            data-dente="{{ dente.numero }}"
-            alt="Dente {{ dente.numero }}"
-        >
+            {% if dente.numero in dentes_ausentes %}
 
-        <div class="procedimentos-dente">
+                <!-- DENTE AUSENTE -->
 
-            {% for item in itens_orcamento %}
+                <span
+                    class="dente-ausente-numero dente-ausente-inferior"
+                    data-dente="{{ dente.numero }}"
+                >
+                    {{ dente.numero }}
+                </span>
 
-                {% if item.dente == dente.numero %}
+            {% else %}
 
-                    {% if item.procedimento.tipo == 'dente' %}
+                <!-- DENTE NORMAL -->
 
-                        <img
-                            src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                            class="
-                                icone-procedimento-dente
-                                status-{{ item.status }}
-                                posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                <img
+                    src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+                    class="
+                        dente-img
+                        inferior
+                        posicao-dente-{{ dente.numero }}
+                        {% if dente.posicao_css != 'normal' %}
+                            posicao-{{ dente.posicao_css }}
+                        {% endif %}
+                    "
+                    data-dente="{{ dente.numero }}"
+                    alt="Dente {{ dente.numero }}"
+                >
 
-                                {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                    sem-rotacao
+                <!-- PROCEDIMENTOS DO DENTE -->
+
+                <div class="procedimentos-dente">
+
+                    {% for item in itens_orcamento %}
+
+                        {% if item.dente == dente.numero %}
+
+                            {% if item.procedimento.tipo == 'dente' %}
+
+                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+
+                                    <img
+                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                        class="
+                                            icone-procedimento-dente
+                                            status-{{ item.status }}
+                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+
+                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                                sem-rotacao
+                                            {% endif %}
+                                        "
+                                        data-id="{{ item.id }}"
+                                        data-status="{{ item.status }}"
+                                        title="{{ item.procedimento.nome }}"
+                                    >
+
+                                    {% if item.face %}
+
+                                        <span class="face-badge status-{{ item.status }}">
+                                            {{ item.face }}
+                                        </span>
+
+                                    {% endif %}
+
                                 {% endif %}
-                            "
-                            data-id="{{ item.id }}"
-                            data-status="{{ item.status }}"
-                            title="{{ item.procedimento.nome }}"
-                        >
 
-                        {% if item.face %}
-
-                            <span class="face-badge status-{{ item.status }}">
-                                {{ item.face }}
-                            </span>
+                            {% endif %}
 
                         {% endif %}
 
-                    {% endif %}
+                    {% endfor %}
 
-                {% endif %}
+                </div>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
-
-    </div>
 
     {% endfor %}
 
 </div>
 
-                <div class="linha-divisao"></div>
+
+<div class="linha-divisao"></div>
 
 
-                <!-- =========================================
-                DENTIÇÃO DECÍDUA
-                ========================================= -->
-
-                <div class="secao-titulo">
-                    Dentição Decídua
-                </div>
-
-
-                <!-- =========================================
+<!-- =========================================
      DENTIÇÃO DECÍDUA
-     SUPERIOR
+     ========================================= -->
+
+<div class="secao-titulo">
+    Dentição Decídua
+</div>
+
+
+<!-- =========================================
+     DECÍDUA SUPERIOR
      ========================================= -->
 
 <div class="arcada">
 
     {% for dente in dec_superiores_posicionados %}
 
-    <div class="dente-box dente-{{ dente.numero }}">
+        <div class="dente-box dente-{{ dente.numero }}">
 
-        <img
-            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
-            class="
-                dente-img
-                posicao-dente-{{ dente.numero }}
-                {% if dente.posicao_css != 'normal' %}
-                    posicao-{{ dente.posicao_css }}
-                {% endif %}
-            "
-            data-dente="{{ dente.numero }}"
-            alt="Dente {{ dente.numero }}"
-        >
+            {% if dente.numero in dentes_ausentes %}
 
-        <div class="procedimentos-dente">
+                <!-- DENTE AUSENTE -->
 
-            {% for item in itens_orcamento %}
+                <span
+                    class="dente-ausente-numero"
+                    data-dente="{{ dente.numero }}"
+                >
+                    {{ dente.numero }}
+                </span>
 
-                {% if item.dente == dente.numero %}
+            {% else %}
 
-                    {% if item.procedimento.tipo == 'dente' %}
+                <!-- DENTE NORMAL -->
 
-                        <img
-                            src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                            class="
-                                icone-procedimento-dente
-                                status-{{ item.status }}
-                                posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                <img
+                    src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+                    class="
+                        dente-img
+                        posicao-dente-{{ dente.numero }}
+                        {% if dente.posicao_css != 'normal' %}
+                            posicao-{{ dente.posicao_css }}
+                        {% endif %}
+                    "
+                    data-dente="{{ dente.numero }}"
+                    alt="Dente {{ dente.numero }}"
+                >
 
-                                {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                    sem-rotacao
+                <!-- PROCEDIMENTOS DO DENTE -->
+
+                <div class="procedimentos-dente">
+
+                    {% for item in itens_orcamento %}
+
+                        {% if item.dente == dente.numero %}
+
+                            {% if item.procedimento.tipo == 'dente' %}
+
+                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+
+                                    <img
+                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                        class="
+                                            icone-procedimento-dente
+                                            status-{{ item.status }}
+                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+
+                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                                sem-rotacao
+                                            {% endif %}
+                                        "
+                                        data-id="{{ item.id }}"
+                                        data-status="{{ item.status }}"
+                                        title="{{ item.procedimento.nome }}"
+                                    >
+
+                                    {% if item.face %}
+
+                                        <span class="face-badge status-{{ item.status }}">
+                                            {{ item.face }}
+                                        </span>
+
+                                    {% endif %}
+
                                 {% endif %}
-                            "
-                            data-id="{{ item.id }}"
-                            data-status="{{ item.status }}"
-                            title="{{ item.procedimento.nome }}"
-                        >
 
-                        {% if item.face %}
-
-                            <span class="face-badge status-{{ item.status }}">
-                                {{ item.face }}
-                            </span>
+                            {% endif %}
 
                         {% endif %}
 
-                    {% endif %}
+                    {% endfor %}
 
-                {% endif %}
+                </div>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
-
-    </div>
 
     {% endfor %}
 
 </div>
 
 
-                <!-- =========================================
-     DENTIÇÃO DECÍDUA
-     INFERIOR
+<!-- =========================================
+     DECÍDUA INFERIOR
      ========================================= -->
 
 <div class="arcada inferior">
 
     {% for dente in dec_inferiores_posicionados %}
 
-    <div class="dente-box dente-{{ dente.numero }}">
+        <div class="dente-box dente-{{ dente.numero }}">
 
-        <img
-            src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
-            class="
-                dente-img
-                inferior
-                posicao-dente-{{ dente.numero }}
-                {% if dente.posicao_css != 'normal' %}
-                    posicao-{{ dente.posicao_css }}
-                {% endif %}
-            "
-            data-dente="{{ dente.numero }}"
-            alt="Dente {{ dente.numero }}"
-        >
+            {% if dente.numero in dentes_ausentes %}
 
-        <div class="procedimentos-dente">
+                <!-- DENTE AUSENTE -->
 
-            {% for item in itens_orcamento %}
+                <span
+                    class="dente-ausente-numero dente-ausente-inferior"
+                    data-dente="{{ dente.numero }}"
+                >
+                    {{ dente.numero }}
+                </span>
 
-                {% if item.dente == dente.numero %}
+            {% else %}
 
-                    {% if item.procedimento.tipo == 'dente' %}
+                <!-- DENTE NORMAL -->
 
-                        <img
-                            src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                            class="
-                                icone-procedimento-dente
-                                status-{{ item.status }}
-                                posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                <img
+                    src="{% static 'img/dentes/'|add:dente.numero|add:'.png' %}"
+                    class="
+                        dente-img
+                        inferior
+                        posicao-dente-{{ dente.numero }}
+                        {% if dente.posicao_css != 'normal' %}
+                            posicao-{{ dente.posicao_css }}
+                        {% endif %}
+                    "
+                    data-dente="{{ dente.numero }}"
+                    alt="Dente {{ dente.numero }}"
+                >
 
-                                {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                    sem-rotacao
+                <!-- PROCEDIMENTOS DO DENTE -->
+
+                <div class="procedimentos-dente">
+
+                    {% for item in itens_orcamento %}
+
+                        {% if item.dente == dente.numero %}
+
+                            {% if item.procedimento.tipo == 'dente' %}
+
+                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+
+                                    <img
+                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                        class="
+                                            icone-procedimento-dente
+                                            status-{{ item.status }}
+                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+
+                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                                sem-rotacao
+                                            {% endif %}
+                                        "
+                                        data-id="{{ item.id }}"
+                                        data-status="{{ item.status }}"
+                                        title="{{ item.procedimento.nome }}"
+                                    >
+
+                                    {% if item.face %}
+
+                                        <span class="face-badge status-{{ item.status }}">
+                                            {{ item.face }}
+                                        </span>
+
+                                    {% endif %}
+
                                 {% endif %}
-                            "
-                            data-id="{{ item.id }}"
-                            data-status="{{ item.status }}"
-                            title="{{ item.procedimento.nome }}"
-                        >
 
-                        {% if item.face %}
-
-                            <span class="face-badge status-{{ item.status }}">
-                                {{ item.face }}
-                            </span>
+                            {% endif %}
 
                         {% endif %}
 
-                    {% endif %}
+                    {% endfor %}
 
-                {% endif %}
+                </div>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
-
-    </div>
 
     {% endfor %}
 
 </div>
-
  
 <!-- =========================================
      POSICIONAMENTO DOS DENTES
@@ -2946,17 +3044,24 @@ CARD RADIOGRAFIAS E FOTOS
 
                         <!-- PROCEDIMENTO -->
 
-                        <div class="mb-4">
+<div class="mb-4">
 
-                            <label class="anamnese-label">
-                                Procedimento
-                            </label>
+    <label class="anamnese-label">
+        Procedimento
+    </label>
 
-                            <select name="procedimento" class="anamnese-input" required>
+    <input
+        type="hidden"
+        name="item_id"
+        id="itemOrcamentoSelecionado"
+        value=""
+    >
 
-                                <option value="">
-                                    Selecione um procedimento
-                                </option>
+    <select name="procedimento" class="anamnese-input" required>
+
+        <option value="">
+            Selecione um procedimento
+        </option>
 
                                 {% regroup procedimentos by categoria as categorias %}
 
@@ -3276,262 +3381,701 @@ MODAL - NOVO TRATAMENTO
 
     <script>
 
-    /* =========================================
-       PREVIEW DOS ÍCONES
-       ========================================= */
+/* =========================================
+   PREVIEW DOS ÍCONES
+   ========================================= */
 
-    function atualizarPreviewIcone() {
+function atualizarPreviewIcone() {
 
-        const input =
-            document.getElementById('id_icone');
+    const input =
+        document.getElementById('id_icone');
 
-        const preview =
-            document.getElementById('preview-icone');
+    const preview =
+        document.getElementById('preview-icone');
 
-        if (!input || !preview) return;
+    if (!input || !preview) return;
 
-        const nomeIcone = input.value;
+    const nomeIcone = input.value;
 
-        if (nomeIcone) {
+    if (nomeIcone) {
+
+        preview.src =
+            `/static/img/procedimentos/full/${nomeIcone}`;
+
+        preview.style.display = 'block';
+
+        preview.onerror = function () {
 
             preview.src =
-                `/static/img/procedimentos/full/${nomeIcone}`;
+                `/static/img/procedimentos/mini/${nomeIcone}`;
 
-            preview.style.display = 'block';
+        };
 
-            preview.onerror = function () {
+    } else {
 
-                preview.src =
-                    `/static/img/procedimentos/mini/${nomeIcone}`;
-
-            };
-
-        } else {
-
-            preview.style.display = 'none';
-
-        }
+        preview.style.display = 'none';
 
     }
 
-    window.addEventListener(
-        'load',
-        atualizarPreviewIcone
-    );
+}
+
+window.addEventListener(
+    'load',
+    atualizarPreviewIcone
+);
 
 
-    /* =========================================
-       MENU STATUS PREMIUM
-       ========================================= */
+/* =========================================
+   MENU STATUS PREMIUM
+   ========================================= */
 
-    const menuStatus =
-        document.getElementById('menuStatus');
+const menuStatus =
+    document.getElementById('menuStatus');
 
-    let procedimentoAtual = null;
+let procedimentoAtual = null;
 
-    document.addEventListener(
-        'contextmenu',
-        function (e) {
+document.addEventListener(
+    'contextmenu',
+    function (e) {
 
-            const elemento = e.target.closest(
-                '.icone-procedimento-dente, .procedimento-geral-chip'
-            );
+        const elemento = e.target.closest(
+            '.icone-procedimento-dente, .procedimento-geral-chip'
+        );
 
-            if (!elemento || !menuStatus) return;
+        if (!elemento || !menuStatus) return;
 
-            e.preventDefault();
+        e.preventDefault();
 
-            procedimentoAtual =
-                elemento.dataset.id;
+        procedimentoAtual =
+            elemento.dataset.id;
 
-            menuStatus.style.display = 'block';
+        menuStatus.style.display = 'block';
 
-            const larguraMenu = 190;
-            const alturaMenu = 230;
+        const larguraMenu = 190;
+        const alturaMenu = 230;
 
-            let posX =
-                e.pageX -
-                (larguraMenu / 2);
+        let posX =
+            e.pageX -
+            (larguraMenu / 2);
 
-            let posY =
-                e.pageY + 15;
+        let posY =
+            e.pageY + 15;
 
-            if (
-                posY + alturaMenu >
-                window.innerHeight +
-                window.scrollY
-            ) {
+        if (
+            posY + alturaMenu >
+            window.innerHeight +
+            window.scrollY
+        ) {
 
-                posY =
-                    e.pageY -
-                    alturaMenu -
-                    15;
-
-            }
-
-            if (posX < 10)
-                posX = 10;
-
-            if (
-                posX + larguraMenu >
-                window.innerWidth
-            ) {
-
-                posX =
-                    window.innerWidth -
-                    larguraMenu -
-                    10;
-
-            }
-
-            if (posY < 10)
-                posY = 10;
-
-            menuStatus.style.left =
-                posX + 'px';
-
-            menuStatus.style.top =
-                posY + 'px';
+            posY =
+                e.pageY -
+                alturaMenu -
+                15;
 
         }
-    );
+
+        if (posX < 10)
+            posX = 10;
+
+        if (
+            posX + larguraMenu >
+            window.innerWidth
+        ) {
+
+            posX =
+                window.innerWidth -
+                larguraMenu -
+                10;
+
+        }
+
+        if (posY < 10)
+            posY = 10;
+
+        menuStatus.style.left =
+            posX + 'px';
+
+        menuStatus.style.top =
+            posY + 'px';
+
+    }
+);
 
 
-    /* =========================================
-       ALTERAR STATUS
-       ========================================= */
+/* =========================================
+   ALTERAR STATUS
+   ========================================= */
 
-    document
-        .querySelectorAll('.status-item')
-        .forEach(item => {
+document
+    .querySelectorAll('.status-item')
+    .forEach(item => {
 
-            item.addEventListener(
-                'click',
-                function () {
+        item.addEventListener(
+            'click',
+            function (event) {
 
-                    const status =
-                        this.dataset.status;
+                event.stopPropagation();
 
-                    fetch(
-                        `/procedimento/${procedimentoAtual}/status/`,
-                        {
-                            method: 'POST',
+                const status =
+                    this.dataset.status;
 
-                            headers: {
-                                'Content-Type':
-                                    'application/json',
+                if (!procedimentoAtual) {
+                    return;
+                }
 
-                                'X-CSRFToken':
-                                    '{{ csrf_token }}'
-                            },
+                fetch(
+                    `/procedimento/${procedimentoAtual}/status/`,
+                    {
+                        method: 'POST',
 
-                            body: JSON.stringify({
-                                status: status
-                            })
-                        }
-                    )
+                        headers: {
+                            'Content-Type':
+                                'application/json',
 
-                    .then(response =>
-                        response.json()
-                    )
+                            'X-CSRFToken':
+                                '{{ csrf_token }}'
+                        },
 
-                    .then(data => {
+                        body: JSON.stringify({
+                            status: status
+                        })
+                    }
+                )
+
+                .then(response =>
+                    response.json()
+                )
+
+                .then(data => {
+
+                    if (data.sucesso) {
 
                         location.reload();
 
-                    });
+                    } else {
 
-                }
+                        alert(
+                            data.erro ||
+                            'Erro ao atualizar o status.'
+                        );
+
+                    }
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        'ERRO:',
+                        error
+                    );
+
+                    alert(
+                        'Não foi possível atualizar o status.'
+                    );
+
+                });
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   FECHAR MENU
+   ========================================= */
+
+document.addEventListener(
+    'click',
+    function () {
+
+        if (menuStatus) {
+
+            menuStatus.style.display =
+                'none';
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   IGUALAR ALTURA DOS CARDS
+   ========================================= */
+
+function igualarAlturaCards() {
+
+    const odontograma =
+        document.querySelector(
+            '.odontograma-card'
+        );
+
+    const timeline =
+        document.querySelector(
+            '.timeline-card'
+        );
+
+    if (!odontograma || !timeline)
+        return;
+
+}
+
+window.addEventListener(
+    'load',
+    igualarAlturaCards
+);
+
+window.addEventListener(
+    'resize',
+    igualarAlturaCards
+);
+
+
+/* =========================================
+   ALTERAÇÃO DE STATUS PELO CARD
+   ========================================= */
+
+document
+    .querySelectorAll('.status-procedimento')
+    .forEach(select => {
+
+        select.addEventListener(
+            'change',
+            function () {
+
+                const itemId =
+                    this.dataset.item;
+
+                const status =
+                    this.value;
+
+                fetch(
+                    `/procedimento/${itemId}/status/`,
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type':
+                                'application/json',
+
+                            'X-CSRFToken':
+                                '{{ csrf_token }}'
+                        },
+
+                        body: JSON.stringify({
+                            status: status
+                        })
+                    }
+                )
+
+                .then(response =>
+                    response.json()
+                )
+
+                .then(data => {
+
+                    if (data.sucesso) {
+
+                        location.reload();
+
+                    } else {
+
+                        alert(
+                            'Erro ao atualizar o status.'
+                        );
+
+                    }
+
+                });
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   DESTACAR DENTES COM CONDIÇÃO ESPECIAL
+   ========================================= */
+
+document
+    .querySelectorAll('.dente-box')
+    .forEach(box => {
+
+        const icones =
+            box.querySelectorAll(
+                '.icone-procedimento-dente'
             );
+
+        icones.forEach(icone => {
+
+            const src =
+                icone.getAttribute('src') || '';
+
+            const nomeArquivo =
+                src
+                    .split('/')
+                    .pop()
+                    .toLowerCase();
+
+            if (
+                nomeArquivo === 'ausente.png' ||
+                nomeArquivo === 'extracao_incluso.png' ||
+                nomeArquivo === 'extracao.png' ||
+                nomeArquivo === 'implante.png'
+            ) {
+
+                box.classList.add(
+                    'condicao-especial'
+                );
+
+            }
 
         });
 
+    });
 
-    /* =========================================
-       FECHAR MENU
-       ========================================= */
 
-    document.addEventListener(
-        'click',
-        function () {
+/* =========================================================
+   POSICIONAMENTO DOS DENTES
+   ========================================================= */
 
-            if (menuStatus) {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-                menuStatus.style.display =
-                    'none';
+        console.log(
+            "========================================="
+        );
+
+        console.log(
+            "ODONTOGRAMA - POSICIONAMENTO DOS DENTES"
+        );
+
+        console.log(
+            "========================================="
+        );
+
+
+        /* =====================================================
+           ELEMENTOS
+           ===================================================== */
+
+        let denteSelecionado = null;
+
+        const campoDente =
+            document.getElementById(
+                "denteSelecionadoPosicao"
+            );
+
+        const campoItemOrcamento =
+            document.getElementById(
+                "itemOrcamentoSelecionado"
+            );
+
+        const campoProcedimento =
+            document.querySelector(
+                '#modalEvolucao select[name="procedimento"]'
+            );
+
+        const campoStatus =
+            document.querySelector(
+                '#modalEvolucao select[name="status"]'
+            );
+
+        const formEvolucao =
+            document.querySelector(
+                '#modalEvolucao form'
+            );
+
+        const dentes =
+            document.querySelectorAll(
+                ".dente-img, .dente-ausente-numero"
+            );
+
+        const opcoes =
+            document.querySelectorAll(
+                ".opcao-posicao"
+            );
+
+
+        /* =====================================================
+           MAPA DOS DENTES AUSENTES
+           ===================================================== */
+
+        const dentesAusentesItens = {};
+
+        {% for item in itens_orcamento %}
+
+            {% if item.procedimento and item.procedimento.nome == "Dente ausente" and item.dente and item.status != "cancelado" %}
+
+                dentesAusentesItens[
+                    "{{ item.dente }}"
+                ] = {
+                    id: "{{ item.id }}",
+                    procedimento: "{{ item.procedimento.id }}",
+                    status: "{{ item.status }}"
+                };
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        console.log(
+            "Itens de dentes ausentes:",
+            dentesAusentesItens
+        );
+
+
+        /* =====================================================
+           CLASSES DE POSICIONAMENTO
+           ===================================================== */
+
+        const classesPosicao = [
+
+            "posicao-normal",
+            "posicao-incluso-vertical",
+            "posicao-incluso-horizontal",
+            "posicao-incluso-mesial",
+            "posicao-incluso-distal",
+            "posicao-inclinado-mesial",
+            "posicao-inclinado-distal",
+            "posicao-rotacao-45",
+            "posicao-rotacao-menos-45",
+            "posicao-rotacao-35",
+            "posicao-rotacao-menos-35",
+            "posicao-extrusao"
+
+        ];
+
+
+        /* =====================================================
+           REMOVER POSIÇÕES
+           ===================================================== */
+
+        function removerClassesPosicao(dente) {
+
+            if (!dente) {
+                return;
+            }
+
+            classesPosicao.forEach(function (classe) {
+
+                dente.classList.remove(
+                    classe
+                );
+
+            });
+
+        }
+
+
+        /* =====================================================
+           LOCALIZAR DENTE
+           ===================================================== */
+
+        function localizarDente(numero) {
+
+            return document.querySelector(
+                '.dente-img[data-dente="' + numero + '"], ' +
+                '.dente-ausente-numero[data-dente="' + numero + '"]'
+            );
+
+        }
+
+
+        /* =====================================================
+           LIMPAR PROCEDIMENTO
+           ===================================================== */
+
+        function limparProcedimentoSelecionado() {
+
+            if (campoItemOrcamento) {
+
+                campoItemOrcamento.value = "";
+
+            }
+
+            if (campoProcedimento) {
+
+                campoProcedimento.value = "";
 
             }
 
         }
-    );
 
 
-    /* =========================================
-       IGUALAR ALTURA DOS CARDS
-       ========================================= */
+        /* =====================================================
+           PREPARAR PROCEDIMENTO DO DENTE
+           ===================================================== */
 
-    function igualarAlturaCards() {
+        function prepararProcedimentoDente(numero) {
 
-        const odontograma =
-            document.querySelector(
-                '.odontograma-card'
+            const item =
+                dentesAusentesItens[
+                    String(numero)
+                ];
+
+            limparProcedimentoSelecionado();
+
+
+            /* =========================================
+               NOVO PROCEDIMENTO
+               ========================================= */
+
+            if (!item) {
+
+                console.log(
+                    "NOVO PROCEDIMENTO PARA O DENTE:",
+                    numero
+                );
+
+                return;
+
+            }
+
+
+            /* =========================================
+               PROCEDIMENTO EXISTENTE
+               ========================================= */
+
+            console.log(
+                "DENTE AUSENTE ENCONTRADO:",
+                numero
             );
 
-        const timeline =
-            document.querySelector(
-                '.timeline-card'
+            console.log(
+                "ITEM ORÇAMENTO:",
+                item.id
             );
 
-        if (!odontograma || !timeline)
-            return;
 
-        /*
-        timeline.style.height =
-            odontograma.offsetHeight + 'px';
-        */
+            if (campoItemOrcamento) {
 
-    }
+                campoItemOrcamento.value =
+                    item.id;
 
-    window.addEventListener(
-        'load',
-        igualarAlturaCards
-    );
-
-    window.addEventListener(
-        'resize',
-        igualarAlturaCards
-    );
+            }
 
 
-    /* =========================================
-       ALTERAÇÃO DE STATUS PELO CARD
-       ========================================= */
+            if (campoProcedimento) {
 
-    document
-        .querySelectorAll('.status-procedimento')
-        .forEach(select => {
+                campoProcedimento.value =
+                    item.procedimento;
 
-            select.addEventListener(
-                'change',
-                function () {
+            }
+
+
+            if (campoStatus) {
+
+                campoStatus.value =
+                    item.status;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ABRIR MODAL
+           ===================================================== */
+
+        function abrirModalDente(numero) {
+
+            denteSelecionado =
+                String(numero);
+
+
+            if (campoDente) {
+
+                campoDente.textContent =
+                    denteSelecionado;
+
+            }
+
+
+            prepararProcedimentoDente(
+                denteSelecionado
+            );
+
+
+            const campoDenteModal =
+                document.getElementById(
+                    "denteSelecionado"
+                );
+
+            if (campoDenteModal) {
+
+                campoDenteModal.value =
+                    denteSelecionado;
+
+            }
+
+
+            const modalProcedimento =
+                document.getElementById(
+                    "modalEvolucao"
+                );
+
+            if (modalProcedimento) {
+
+                const modal =
+                    bootstrap.Modal.getOrCreateInstance(
+                        modalProcedimento
+                    );
+
+                modal.show();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INTERCEPTA O ENVIO DA MODAL
+           ===================================================== */
+
+        if (formEvolucao) {
+
+            formEvolucao.addEventListener(
+                "submit",
+                function (event) {
 
                     const itemId =
-                        this.dataset.item;
+                        campoItemOrcamento
+                            ? campoItemOrcamento.value
+                            : "";
+
+                    if (!itemId) {
+
+                        return;
+
+                    }
+
+
+                    event.preventDefault();
+
 
                     const status =
-                        this.value;
+                        campoStatus
+                            ? campoStatus.value
+                            : "planejado";
+
 
                     fetch(
                         `/procedimento/${itemId}/status/`,
                         {
-                            method: 'POST',
+                            method: "POST",
 
                             headers: {
-                                'Content-Type':
-                                    'application/json',
+                                "Content-Type":
+                                    "application/json",
 
-                                'X-CSRFToken':
-                                    '{{ csrf_token }}'
+                                "X-CSRFToken":
+                                    "{{ csrf_token }}"
                             },
 
                             body: JSON.stringify({
@@ -3540,11 +4084,22 @@ MODAL - NOVO TRATAMENTO
                         }
                     )
 
-                    .then(response =>
-                        response.json()
-                    )
+                    .then(function (response) {
 
-                    .then(data => {
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Erro HTTP " +
+                                response.status
+                            );
+
+                        }
+
+                        return response.json();
+
+                    })
+
+                    .then(function (data) {
 
                         if (data.sucesso) {
 
@@ -3553,10 +4108,326 @@ MODAL - NOVO TRATAMENTO
                         } else {
 
                             alert(
-                                'Erro ao atualizar o status.'
+                                data.erro ||
+                                "Não foi possível atualizar o procedimento."
                             );
 
                         }
+
+                    })
+
+                    .catch(function (error) {
+
+                        console.error(
+                            "ERRO:",
+                            error
+                        );
+
+                        alert(
+                            "Não foi possível atualizar o procedimento."
+                        );
+
+                    });
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           SELECIONAR DENTE
+           ===================================================== */
+
+        dentes.forEach(function (dente) {
+
+            dente.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+
+                    abrirModalDente(
+                        this.dataset.dente
+                    );
+
+
+                    /* =========================================
+                       REMOVE SELEÇÃO
+                       ========================================= */
+
+                    dentes.forEach(function (item) {
+
+                        item.classList.remove(
+                            "dente-posicao-selecionado"
+                        );
+
+                    });
+
+
+                    /* =========================================
+                       MARCA DENTE
+                       ========================================= */
+
+                    this.classList.add(
+                        "dente-posicao-selecionado"
+                    );
+
+
+                    /* =========================================
+                       LIMPA OPÇÕES
+                       ========================================= */
+
+                    opcoes.forEach(function (item) {
+
+                        item.classList.remove(
+                            "selecionada"
+                        );
+
+                    });
+
+
+                    console.log(
+                        "DENTE PRONTO PARA POSICIONAMENTO:",
+                        denteSelecionado
+                    );
+
+                }
+            );
+
+        });
+
+
+        /* =====================================================
+           CLIQUE ESQUERDO NO ÍCONE DO PROCEDIMENTO
+           
+           O ícone fica sobre o dente e, por isso,
+           o clique não chega ao .dente-img.
+           
+           Aqui redirecionamos o clique para
+           a mesma função usada pelo dente.
+           ===================================================== */
+
+        document
+            .querySelectorAll(
+                ".icone-procedimento-dente"
+            )
+            .forEach(function (icone) {
+
+                icone.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+
+                        const box =
+                            this.closest(
+                                ".dente-box"
+                            );
+
+                        if (!box) {
+                            return;
+                        }
+
+
+                        const dente =
+                            box.querySelector(
+                                "[data-dente]"
+                            );
+
+                        if (!dente) {
+                            return;
+                        }
+
+
+                        abrirModalDente(
+                            dente.dataset.dente
+                        );
+
+
+                        dentes.forEach(
+                            function (item) {
+
+                                item.classList.remove(
+                                    "dente-posicao-selecionado"
+                                );
+
+                            }
+                        );
+
+
+                        dente.classList.add(
+                            "dente-posicao-selecionado"
+                        );
+
+                    }
+                );
+
+            });
+
+
+        /* =====================================================
+           SELECIONAR POSIÇÃO
+           ===================================================== */
+
+        opcoes.forEach(function (opcao) {
+
+            opcao.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+
+                    if (!denteSelecionado) {
+
+                        alert(
+                            "Primeiro selecione um dente no odontograma."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const posicao =
+                        this.dataset.posicao;
+
+
+                    const dente =
+                        localizarDente(
+                            denteSelecionado
+                        );
+
+
+                    if (!dente) {
+
+                        console.error(
+                            "Dente não encontrado:",
+                            denteSelecionado
+                        );
+
+                        alert(
+                            "Não foi possível localizar o dente."
+                        );
+
+                        return;
+
+                    }
+
+
+                    removerClassesPosicao(
+                        dente
+                    );
+
+
+                    const classePosicao =
+                        "posicao-" + posicao;
+
+
+                    dente.classList.add(
+                        classePosicao
+                    );
+
+
+                    opcoes.forEach(function (item) {
+
+                        item.classList.remove(
+                            "selecionada"
+                        );
+
+                    });
+
+
+                    this.classList.add(
+                        "selecionada"
+                    );
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "dente",
+                        denteSelecionado
+                    );
+
+
+                    formData.append(
+                        "posicao",
+                        posicao
+                    );
+
+
+                    fetch(
+                        '{% url "salvar_posicionamento_dente" paciente.id %}',
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "X-CSRFToken":
+                                    "{{ csrf_token }}"
+                            },
+
+                            body: formData
+                        }
+                    )
+
+                    .then(function (response) {
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Erro HTTP " +
+                                response.status
+                            );
+
+                        }
+
+                        return response.json();
+
+                    })
+
+                    .then(function (data) {
+
+                        if (!data.sucesso) {
+
+                            removerClassesPosicao(
+                                dente
+                            );
+
+                            alert(
+                                data.erro ||
+                                "Erro ao salvar o posicionamento."
+                            );
+
+                            return;
+
+                        }
+
+
+                        console.log(
+                            "✓ POSICIONAMENTO SALVO COM SUCESSO"
+                        );
+
+                    })
+
+                    .catch(function (error) {
+
+                        console.error(
+                            "ERRO AO SALVAR POSICIONAMENTO:",
+                            error
+                        );
+
+                        alert(
+                            "Não foi possível salvar o posicionamento do dente."
+                        );
 
                     });
 
@@ -3566,561 +4437,15 @@ MODAL - NOVO TRATAMENTO
         });
 
 
-    /* =========================================
-       DESTACAR DENTES COM CONDIÇÃO ESPECIAL
-       ========================================= */
-
-    document
-        .querySelectorAll('.dente-box')
-        .forEach(box => {
-
-            const icones =
-                box.querySelectorAll(
-                    '.icone-procedimento-dente'
-                );
-
-            icones.forEach(icone => {
-
-                const src =
-                    icone.getAttribute('src') || '';
-
-                const nomeArquivo =
-                    src
-                        .split('/')
-                        .pop()
-                        .toLowerCase();
-
-                if (
-                    nomeArquivo === 'ausente.png' ||
-                    nomeArquivo === 'extracao_incluso.png' ||
-                    nomeArquivo === 'extracao.png' ||
-                    nomeArquivo === 'implante.png'
-                ) {
-
-                    box.classList.add(
-                        'condicao-especial'
-                    );
-
-                }
-
-            });
-
-        });
-
-/* =========================================================
-   POSICIONAMENTO DOS DENTES
-   ========================================================= */
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    console.log("=========================================");
-    console.log("ODONTOGRAMA - POSICIONAMENTO DOS DENTES");
-    console.log("=========================================");
-
-    /* =====================================================
-       ELEMENTOS
-       ===================================================== */
-
-    let denteSelecionado = null;
-
-    const campoDente =
-        document.getElementById("denteSelecionadoPosicao");
-
-    const dentes =
-        document.querySelectorAll(".dente-img");
-
-    const opcoes =
-        document.querySelectorAll(".opcao-posicao");
-
-
-    console.log(
-        "Dentes encontrados:",
-        dentes.length
-    );
-
-    console.log(
-        "Opções de posicionamento encontradas:",
-        opcoes.length
-    );
-
-
-    /* =====================================================
-       CLASSES DE POSICIONAMENTO
-       ===================================================== */
-
-    const classesPosicao = [
-
-        "posicao-normal",
-
-        "posicao-incluso-vertical",
-
-        "posicao-incluso-horizontal",
-
-        "posicao-incluso-mesial",
-
-        "posicao-incluso-distal",
-
-        "posicao-inclinado-mesial",
-
-        "posicao-inclinado-distal",
-
-        "posicao-rotacao-45",
-
-        "posicao-rotacao-menos-45",
-
-        "posicao-rotacao-35",
-
-        "posicao-rotacao-menos-35",
-
-        "posicao-extrusao"
-
-    ];
-
-
-    /* =====================================================
-       FUNÇÃO PARA REMOVER POSIÇÕES
-       ===================================================== */
-
-    function removerClassesPosicao(dente) {
-
-        if (!dente) {
-            return;
-        }
-
-        classesPosicao.forEach(function (classe) {
-
-            dente.classList.remove(classe);
-
-        });
-
-    }
-
-
-    /* =====================================================
-       FUNÇÃO PARA LOCALIZAR DENTE
-       ===================================================== */
-
-    function localizarDente(numero) {
-
-        return document.querySelector(
-            '.dente-img[data-dente="' + numero + '"]'
-        );
-
-    }
-
-
-    /* =====================================================
-       SELECIONAR DENTE
-       ===================================================== */
-
-    dentes.forEach(function (dente) {
-
-        dente.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-
-                /* =========================================
-                   IDENTIFICA O DENTE
-                   ========================================= */
-
-                denteSelecionado =
-                    this.dataset.dente;
-
-
-                console.log(
-                    "DENTE SELECIONADO:",
-                    denteSelecionado
-                );
-
-
-                /* =========================================
-                   ATUALIZA PAINEL
-                   ========================================= */
-
-                if (campoDente) {
-
-                    campoDente.textContent =
-                        denteSelecionado;
-
-                }
-
-                /* =========================================
-   ABRIR PROCEDIMENTO DO DENTE
-   ========================================= */
-
-const campoProcedimento =
-    document.getElementById("denteSelecionado");
-
-if (campoProcedimento) {
-
-    campoProcedimento.value =
-        denteSelecionado;
-
-}
-
-
-/* =========================================
-   ABRIR MODAL DE PROCEDIMENTO
-   ========================================= */
-
-const modalProcedimento =
-    document.getElementById("modalEvolucao");
-
-if (modalProcedimento) {
-
-    const modal =
-        bootstrap.Modal.getOrCreateInstance(
-            modalProcedimento
-        );
-
-    modal.show();
-
-}
-
-
-                /* =========================================
-                   REMOVE SELEÇÃO DOS OUTROS DENTES
-                   ========================================= */
-
-                dentes.forEach(function (item) {
-
-                    item.classList.remove(
-                        "dente-posicao-selecionado"
-                    );
-
-                });
-
-
-                /* =========================================
-                   MARCA DENTE ATUAL
-                   ========================================= */
-
-                this.classList.add(
-                    "dente-posicao-selecionado"
-                );
-
-
-                /* =========================================
-                   LIMPA SELEÇÃO DAS OPÇÕES
-                   ========================================= */
-
-                opcoes.forEach(function (item) {
-
-                    item.classList.remove(
-                        "selecionada"
-                    );
-
-                });
-
-
-                /* =========================================
-                   VERIFICA POSIÇÃO ATUAL DO DENTE
-                   ========================================= */
-
-                console.log(
-                    "DENTE PRONTO PARA POSICIONAMENTO:",
-                    denteSelecionado
-                );
-
-
-                /*
-                 * Se futuramente quisermos carregar
-                 * automaticamente a posição existente,
-                 * este é o ponto onde faremos isso.
-                 */
-
-            }
+        /* =====================================================
+           FINALIZAÇÃO
+           ===================================================== */
+
+        console.log(
+            "POSICIONAMENTO DOS DENTES PRONTO."
         );
 
     });
-
-
-    /* =====================================================
-       SELECIONAR POSIÇÃO
-       ===================================================== */
-
-    opcoes.forEach(function (opcao) {
-
-        opcao.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-
-                /* =========================================
-                   VERIFICA DENTE
-                   ========================================= */
-
-                if (!denteSelecionado) {
-
-                    alert(
-                        "Primeiro selecione um dente no odontograma."
-                    );
-
-                    return;
-
-                }
-
-
-                /* =========================================
-                   OBTÉM POSIÇÃO
-                   ========================================= */
-
-                const posicao =
-                    this.dataset.posicao;
-
-
-                console.log(
-                    "========================================="
-                );
-
-                console.log(
-                    "SALVANDO POSICIONAMENTO"
-                );
-
-                console.log(
-                    "DENTE:",
-                    denteSelecionado
-                );
-
-                console.log(
-                    "POSIÇÃO:",
-                    posicao
-                );
-
-
-                /* =========================================
-                   LOCALIZA DENTE
-                   ========================================= */
-
-                const dente =
-                    localizarDente(
-                        denteSelecionado
-                    );
-
-
-                if (!dente) {
-
-                    console.error(
-                        "Dente não encontrado:",
-                        denteSelecionado
-                    );
-
-                    alert(
-                        "Não foi possível localizar o dente."
-                    );
-
-                    return;
-
-                }
-
-
-                /* =========================================
-                   REMOVE POSIÇÕES ANTERIORES
-                   ========================================= */
-
-                removerClassesPosicao(dente);
-
-
-                /* =========================================
-                   MONTA CLASSE
-                   ========================================= */
-
-                const classePosicao =
-                    "posicao-" + posicao;
-
-
-                console.log(
-                    "CLASSE APLICADA:",
-                    classePosicao
-                );
-
-
-                /* =========================================
-                   APLICA NOVA POSIÇÃO
-                   ========================================= */
-
-                dente.classList.add(
-                    classePosicao
-                );
-
-
-                /* =========================================
-                   MARCA OPÇÃO SELECIONADA
-                   ========================================= */
-
-                opcoes.forEach(function (item) {
-
-                    item.classList.remove(
-                        "selecionada"
-                    );
-
-                });
-
-
-                this.classList.add(
-                    "selecionada"
-                );
-
-
-                /* =========================================
-                   FORM DATA
-                   ========================================= */
-
-                const formData =
-                    new FormData();
-
-
-                formData.append(
-                    "dente",
-                    denteSelecionado
-                );
-
-
-                formData.append(
-                    "posicao",
-                    posicao
-                );
-
-
-                /* =========================================
-                   SALVAR NO SERVIDOR
-                   ========================================= */
-
-                fetch(
-                    '{% url "salvar_posicionamento_dente" paciente.id %}',
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "X-CSRFToken":
-                                "{{ csrf_token }}"
-                        },
-
-                        body: formData
-                    }
-                )
-
-                /* =========================================
-                   RESPOSTA HTTP
-                   ========================================= */
-
-                .then(function (response) {
-
-                    console.log(
-                        "STATUS HTTP:",
-                        response.status
-                    );
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "Erro HTTP " +
-                            response.status
-                        );
-
-                    }
-
-
-                    return response.json();
-
-                })
-
-
-                /* =========================================
-                   RESPOSTA DJANGO
-                   ========================================= */
-
-                .then(function (data) {
-
-                    console.log(
-                        "RESPOSTA DO DJANGO:",
-                        data
-                    );
-
-
-                    if (!data.sucesso) {
-
-                        console.error(
-                            "ERRO AO SALVAR:",
-                            data.erro
-                        );
-
-
-                        /*
-                         * Se o banco não salvou,
-                         * remove visualmente a classe
-                         * que acabamos de aplicar.
-                         */
-
-                        removerClassesPosicao(
-                            dente
-                        );
-
-
-                        this.classList.remove(
-                            "selecionada"
-                        );
-
-
-                        alert(
-                            data.erro ||
-                            "Erro ao salvar o posicionamento."
-                        );
-
-                        return;
-
-                    }
-
-
-                    console.log(
-                        "✓ POSICIONAMENTO SALVO COM SUCESSO"
-                    );
-
-
-                }.bind(this))
-
-
-                /* =========================================
-                   ERRO DE COMUNICAÇÃO
-                   ========================================= */
-
-                .catch(function (error) {
-
-                    console.error(
-                        "ERRO AO SALVAR POSICIONAMENTO:",
-                        error
-                    );
-
-
-                    alert(
-                        "Não foi possível salvar o posicionamento do dente."
-                    );
-
-                });
-
-            }
-        );
-
-    });
-
-
-    /* =====================================================
-       FINALIZAÇÃO
-       ===================================================== */
-
-    console.log(
-        "POSICIONAMENTO DOS DENTES PRONTO."
-    );
-
-});
 
 </script>
 

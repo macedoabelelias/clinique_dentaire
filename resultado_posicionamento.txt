@@ -1,0 +1,100 @@
+﻿
+  accounts\templates\accounts\odontograma.html:3407:
+  accounts\templates\accounts\odontograma.html:3408:            item.addEventListener(
+  accounts\templates\accounts\odontograma.html:3409:                'click',
+  accounts\templates\accounts\odontograma.html:3410:                function () {
+  accounts\templates\accounts\odontograma.html:3411:
+  accounts\templates\accounts\odontograma.html:3412:                    const status =
+  accounts\templates\accounts\odontograma.html:3413:                        this.dataset.status;
+  accounts\templates\accounts\odontograma.html:3414:
+> accounts\templates\accounts\odontograma.html:3415:                    fetch(
+  accounts\templates\accounts\odontograma.html:3416:                        `/procedimento/${procedimentoAtual}/status/`,
+  accounts\templates\accounts\odontograma.html:3417:                        {
+  accounts\templates\accounts\odontograma.html:3418:                            method: 'POST',
+  accounts\templates\accounts\odontograma.html:3419:
+  accounts\templates\accounts\odontograma.html:3420:                            headers: {
+  accounts\templates\accounts\odontograma.html:3421:                                'Content-Type':
+  accounts\templates\accounts\odontograma.html:3422:                                    'application/json',
+  accounts\templates\accounts\odontograma.html:3423:
+  accounts\templates\accounts\odontograma.html:3424:                                'X-CSRFToken':
+  accounts\templates\accounts\odontograma.html:3425:                                    '{{ csrf_token }}'
+  accounts\templates\accounts\odontograma.html:3426:                            },
+  accounts\templates\accounts\odontograma.html:3427:
+  accounts\templates\accounts\odontograma.html:3428:                            body: JSON.stringify({
+  accounts\templates\accounts\odontograma.html:3429:                                status: status
+  accounts\templates\accounts\odontograma.html:3430:                            })
+  accounts\templates\accounts\odontograma.html:3516:                function () {
+  accounts\templates\accounts\odontograma.html:3517:
+  accounts\templates\accounts\odontograma.html:3518:                    const itemId =
+  accounts\templates\accounts\odontograma.html:3519:                        this.dataset.item;
+  accounts\templates\accounts\odontograma.html:3520:
+  accounts\templates\accounts\odontograma.html:3521:                    const status =
+  accounts\templates\accounts\odontograma.html:3522:                        this.value;
+  accounts\templates\accounts\odontograma.html:3523:
+> accounts\templates\accounts\odontograma.html:3524:                    fetch(
+  accounts\templates\accounts\odontograma.html:3525:                        `/procedimento/${itemId}/status/`,
+  accounts\templates\accounts\odontograma.html:3526:                        {
+  accounts\templates\accounts\odontograma.html:3527:                            method: 'POST',
+  accounts\templates\accounts\odontograma.html:3528:
+  accounts\templates\accounts\odontograma.html:3529:                            headers: {
+  accounts\templates\accounts\odontograma.html:3530:                                'Content-Type':
+  accounts\templates\accounts\odontograma.html:3531:                                    'application/json',
+  accounts\templates\accounts\odontograma.html:3532:
+  accounts\templates\accounts\odontograma.html:3533:                                'X-CSRFToken':
+  accounts\templates\accounts\odontograma.html:3534:                                    '{{ csrf_token }}'
+  accounts\templates\accounts\odontograma.html:3535:                            },
+  accounts\templates\accounts\odontograma.html:3536:
+  accounts\templates\accounts\odontograma.html:3537:                            body: JSON.stringify({
+  accounts\templates\accounts\odontograma.html:3538:                                status: status
+  accounts\templates\accounts\odontograma.html:3539:                            })
+  accounts\templates\accounts\odontograma.html:3868:                }
+  accounts\templates\accounts\odontograma.html:3869:
+  accounts\templates\accounts\odontograma.html:3870:
+  accounts\templates\accounts\odontograma.html:3871:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3872:                   OBTÉM POSIÇÃO
+  accounts\templates\accounts\odontograma.html:3873:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3874:
+  accounts\templates\accounts\odontograma.html:3875:                const posicao =
+> accounts\templates\accounts\odontograma.html:3876:                    this.dataset.posicao;
+  accounts\templates\accounts\odontograma.html:3877:
+  accounts\templates\accounts\odontograma.html:3878:
+  accounts\templates\accounts\odontograma.html:3879:                console.log(
+  accounts\templates\accounts\odontograma.html:3880:                    "========================================="
+  accounts\templates\accounts\odontograma.html:3881:                );
+  accounts\templates\accounts\odontograma.html:3882:
+  accounts\templates\accounts\odontograma.html:3883:                console.log(
+  accounts\templates\accounts\odontograma.html:3884:                    "SALVANDO POSICIONAMENTO"
+  accounts\templates\accounts\odontograma.html:3885:                );
+  accounts\templates\accounts\odontograma.html:3886:
+  accounts\templates\accounts\odontograma.html:3887:                console.log(
+  accounts\templates\accounts\odontograma.html:3888:                    "DENTE:",
+  accounts\templates\accounts\odontograma.html:3889:                    denteSelecionado
+  accounts\templates\accounts\odontograma.html:3890:                );
+  accounts\templates\accounts\odontograma.html:3891:
+  accounts\templates\accounts\odontograma.html:3988:                    posicao
+  accounts\templates\accounts\odontograma.html:3989:                );
+  accounts\templates\accounts\odontograma.html:3990:
+  accounts\templates\accounts\odontograma.html:3991:
+  accounts\templates\accounts\odontograma.html:3992:                /* =========================================
+  accounts\templates\accounts\odontograma.html:3993:                   SALVAR NO SERVIDOR
+  accounts\templates\accounts\odontograma.html:3994:                   ========================================= */
+  accounts\templates\accounts\odontograma.html:3995:
+> accounts\templates\accounts\odontograma.html:3996:                fetch(
+> accounts\templates\accounts\odontograma.html:3997:                    '{% url "salvar_posicionamento_dente" paciente.id %}',
+  accounts\templates\accounts\odontograma.html:3998:                    {
+  accounts\templates\accounts\odontograma.html:3999:                        method: "POST",
+  accounts\templates\accounts\odontograma.html:4000:
+  accounts\templates\accounts\odontograma.html:4001:                        headers: {
+  accounts\templates\accounts\odontograma.html:4002:                            "X-CSRFToken":
+  accounts\templates\accounts\odontograma.html:4003:                                "{{ csrf_token }}"
+  accounts\templates\accounts\odontograma.html:4004:                        },
+  accounts\templates\accounts\odontograma.html:4005:
+  accounts\templates\accounts\odontograma.html:4006:                        body: formData
+  accounts\templates\accounts\odontograma.html:4007:                    }
+  accounts\templates\accounts\odontograma.html:4008:                )
+  accounts\templates\accounts\odontograma.html:4009:
+  accounts\templates\accounts\odontograma.html:4010:                /* =========================================
+  accounts\templates\accounts\odontograma.html:4011:                   RESPOSTA HTTP
+  accounts\templates\accounts\odontograma.html:4012:                   ========================================= */
+
+
