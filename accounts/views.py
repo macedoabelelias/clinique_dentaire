@@ -3745,6 +3745,7 @@ def alterar_status_paciente(request, id):
     return redirect(
         'pacientes'
     )
+
 # =========================================
 # ODONTOGRAMA
 # =========================================
@@ -3759,91 +3760,208 @@ def odontograma(request, id):
     )
 
     # =====================================
-    # TRATAMENTO ATIVO
+    # PERFIL DO USUÁRIO
     # =====================================
 
     perfil_usuario = getattr(
-        getattr(request.user, "perfil", None),
+        getattr(
+            request.user,
+            "perfil",
+            None
+        ),
         "tipo_usuario",
         ""
     )
 
+    # =====================================
+    # TRATAMENTOS ATIVOS
+    # =====================================
+
     if perfil_usuario == "dentista":
 
-        tratamento = paciente.tratamentos.filter(
-            status="ATIVO",
-            dentista=request.user
-        ).first()
+        tratamentos_ativos = (
+            paciente.tratamentos
+            .filter(
+                status="ATIVO",
+                dentista=request.user
+            )
+            .order_by("-id")
+        )
 
     else:
 
-        tratamento = paciente.tratamentos.filter(
-            status="ATIVO"
-        ).first()
+        tratamentos_ativos = (
+            paciente.tratamentos
+            .filter(
+                status="ATIVO"
+            )
+            .order_by("-id")
+        )
+
+    # =====================================
+    # TRATAMENTO SELECIONADO
+    # =====================================
+
+    tratamento_id = request.GET.get(
+        "tratamento"
+    )
+
+    tratamento = None
+
+    if tratamento_id:
+
+        tratamento = (
+            tratamentos_ativos
+            .filter(
+                id=tratamento_id
+            )
+            .first()
+        )
+
+    # =====================================
+    # TRATAMENTO PADRÃO
+    # =====================================
+
+    if tratamento is None:
+
+        tratamento = (
+            tratamentos_ativos
+            .first()
+        )
+
+    # =====================================
+    # DEBUG TRATAMENTOS
+    # =====================================
+
+    print("")
+    print("=========================================")
+    print("DEBUG TRATAMENTOS ODONTOGRAMA")
+    print("=========================================")
+
+    print(
+        "PACIENTE:",
+        paciente.id
+    )
+
+    print(
+        "PERFIL:",
+        perfil_usuario
+    )
+
+    print(
+        "TRATAMENTO SOLICITADO:",
+        tratamento_id
+    )
+
+    print(
+        "TRATAMENTO SELECIONADO:",
+        tratamento.id
+        if tratamento
+        else None
+    )
+
+    print(
+        "TOTAL TRATAMENTOS ATIVOS:",
+        tratamentos_ativos.count()
+    )
+
+    for t in tratamentos_ativos:
+
+        print(
+            "TRATAMENTO:",
+            t.id,
+            "| TITULO:",
+            repr(t.titulo),
+            "| DENTISTA:",
+            t.dentista.username
+            if t.dentista
+            else None
+        )
+
+    print("=========================================")
 
     # =====================================
     # HISTÓRICO DE TRATAMENTOS
     # =====================================
 
-    historico_tratamentos = paciente.tratamentos.filter(
-        status="ENCERRADO"
-    ).order_by(
-        "-data_encerramento"
+    historico_tratamentos = (
+        paciente.tratamentos
+        .filter(
+            status="ENCERRADO"
+        )
+        .order_by(
+            "-data_encerramento"
+        )
     )
 
     # =====================================
-    # ORÇAMENTO DO TRATAMENTO ATIVO
+    # ORÇAMENTO DO TRATAMENTO
     # =====================================
 
     orcamento = None
 
     if tratamento:
 
-        orcamento, created = Orcamento.objects.get_or_create(
-            paciente=paciente,
-            tratamento=tratamento,
-            defaults={
-                "tratamento": tratamento
-            }
+        orcamento, created = (
+            Orcamento.objects.get_or_create(
+                paciente=paciente,
+                tratamento=tratamento,
+                defaults={
+                    "tratamento": tratamento
+                }
+            )
         )
 
-    # =========================================
-    # SALVAR PROCEDIMENTO / EVOLUÇÃO
-    # =========================================
+    # =====================================
+    # POST — NOVO PROCEDIMENTO
+    # =====================================
 
     if request.method == "POST":
 
-        print("=========================================")
-        print("POST ODONTOGRAMA")
-        print(request.POST)
-        print("=========================================")
+        print(
+            "========================================="
+        )
 
-        # =====================================
+        print(
+            "POST ODONTOGRAMA"
+        )
+
+        print(
+            request.POST
+        )
+
+        print(
+            "========================================="
+        )
+
+        # =================================
         # TRATAMENTO OBRIGATÓRIO
-        # =====================================
+        # =================================
 
         if not tratamento:
 
             return JsonResponse({
                 "sucesso": False,
-                "erro": "Paciente não possui tratamento ativo."
+                "erro":
+                    "Paciente não possui tratamento ativo."
             }, status=400)
 
-        # =====================================
+        # =================================
         # ORÇAMENTO OBRIGATÓRIO
-        # =====================================
+        # =================================
 
         if not orcamento:
 
             return JsonResponse({
                 "sucesso": False,
                 "erro":
-                    "Não foi possível localizar o orçamento do tratamento."
+                    "Não foi possível localizar o "
+                    "orçamento do tratamento."
             }, status=400)
 
-        # =====================================
+        # =================================
         # PROCEDIMENTO
-        # =====================================
+        # =================================
 
         procedimento_id = request.POST.get(
             "procedimento"
@@ -3853,7 +3971,8 @@ def odontograma(request, id):
 
             return JsonResponse({
                 "sucesso": False,
-                "erro": "Procedimento não informado."
+                "erro":
+                    "Procedimento não informado."
             }, status=400)
 
         procedimento = get_object_or_404(
@@ -3861,41 +3980,49 @@ def odontograma(request, id):
             id=procedimento_id
         )
 
-        # =====================================
+        # =================================
         # STATUS
-        # =====================================
+        # =================================
 
-        status = request.POST.get(
-            "status"
-        ) or "planejado"
+        status = (
+            request.POST.get(
+                "status"
+            )
+            or
+            "planejado"
+        )
 
-        # =====================================
+        # =================================
         # DENTE
-        # =====================================
+        # =================================
 
         dente = request.POST.get(
             "dente"
         )
 
-        # =====================================
+        # =================================
         # FACE
-        # =====================================
+        # =================================
 
         face = request.POST.get(
             "face"
         )
 
-        # =====================================
+        # =================================
         # DESCRIÇÃO
-        # =====================================
+        # =================================
 
-        descricao = request.POST.get(
-            "descricao"
-        ) or ""
+        descricao = (
+            request.POST.get(
+                "descricao"
+            )
+            or
+            ""
+        )
 
-        # =====================================
+        # =================================
         # POSIÇÃO DO ÍCONE
-        # =====================================
+        # =================================
 
         posicao_icone = request.POST.get(
             "posicao_icone"
@@ -3916,28 +4043,35 @@ def odontograma(request, id):
             posicao_icone
         )
 
-        # =====================================
-        # DEFINE VALOR CONFORME CONVÊNIO
-        # =====================================
+        # =================================
+        # VALOR DO PROCEDIMENTO
+        # =================================
 
-        valor_unitario = procedimento.valor_particular
+        valor_unitario = (
+            procedimento.valor_particular
+        )
 
         if paciente.convenio:
 
-            convenio = Convenio.objects.filter(
-                nome=paciente.convenio
-            ).first()
+            convenio = (
+                Convenio.objects
+                .filter(
+                    nome=paciente.convenio
+                )
+                .first()
+            )
 
             if convenio:
 
                 valor_unitario = (
                     procedimento.valor_particular
-                    * convenio.indice
+                    *
+                    convenio.indice
                 )
 
-        # =====================================
+        # =================================
         # CRIA ITEM DO ORÇAMENTO
-        # =====================================
+        # =================================
 
         item = ItemOrcamento.objects.create(
 
@@ -3956,12 +4090,11 @@ def odontograma(request, id):
             valor_unitario=valor_unitario,
 
             status=status
-
         )
 
-        # =====================================
+        # =================================
         # REGISTRA EVOLUÇÃO CLÍNICA
-        # =====================================
+        # =================================
 
         EvolucaoClinica.objects.create(
 
@@ -3984,59 +4117,262 @@ def odontograma(request, id):
             status=status,
 
             descricao=descricao
-
         )
 
-        # =====================================
-        # RETORNA AO ODONTOGRAMA
-        # =====================================
+        # =================================
+        # RETORNA AO MESMO TRATAMENTO
+        # =================================
 
         return redirect(
-            "odontograma",
-            id=paciente.id
+            f"/pacientes/{paciente.id}/odontograma/"
+            f"?tratamento={tratamento.id}"
         )
 
-    # =========================================
+    # =====================================
     # EVOLUÇÕES CLÍNICAS
-    # =========================================
+    # =====================================
 
     if tratamento:
 
-        evolucoes = EvolucaoClinica.objects.filter(
-            paciente=paciente,
-            tratamento=tratamento
-        ).order_by(
-            "-criado_em"
+        evolucoes = (
+            EvolucaoClinica.objects
+            .filter(
+                paciente=paciente,
+                tratamento=tratamento
+            )
+            .order_by(
+                "-criado_em"
+            )
         )
 
     else:
 
-        evolucoes = EvolucaoClinica.objects.none()
+        evolucoes = (
+            EvolucaoClinica.objects.none()
+        )
 
-    # =========================================
-    # ITENS DO ORÇAMENTO
-    # =========================================
+    # =====================================
+    # ITENS DO ORÇAMENTO ATUAL
+    # =====================================
 
     if orcamento:
 
-        itens_orcamento = ItemOrcamento.objects.filter(
-            orcamento=orcamento
-        ).select_related(
-            "procedimento"
+        itens_orcamento = (
+            ItemOrcamento.objects
+            .filter(
+                orcamento=orcamento
+            )
+            .select_related(
+                "procedimento"
+            )
+            .order_by(
+                "id"
+            )
         )
 
     else:
 
-        itens_orcamento = ItemOrcamento.objects.none()
+        itens_orcamento = (
+            ItemOrcamento.objects.none()
+        )
 
-    # =========================================
+    # =====================================
+    # PROCEDIMENTOS DO ODONTOGRAMA
+    #
+    # O odontograma representa a situação
+    # clínica do paciente.
+    #
+    # Mostra:
+    #
+    # 1. Procedimentos do tratamento atual.
+    #
+    # 2. Procedimentos realizados em outros
+    #    tratamentos do mesmo paciente.
+    #
+    # Procedimento realizado por:
+    #
+    # - próprio dentista:
+    #       REALIZADO
+    #
+    # - outro dentista:
+    #       EXISTENTE
+    #
+    # O status real do banco permanece intacto.
+    # =====================================
+
+    procedimentos_odontograma = []
+
+    # =====================================
+    # ITENS DO TRATAMENTO ATUAL
+    # =====================================
+
+    itens_para_odontograma = list(
+        itens_orcamento
+    )
+
+    # =====================================
+    # PROCEDIMENTOS REALIZADOS EM OUTROS
+    # TRATAMENTOS
+    # =====================================
+
+    if tratamento:
+
+        itens_realizados_outros = (
+            ItemOrcamento.objects
+            .filter(
+                orcamento__paciente=paciente,
+                status="realizado",
+                dente__isnull=False
+            )
+            .exclude(
+                orcamento=orcamento
+            )
+            .exclude(
+                procedimento__arquivo_icone__in=[
+                    "rx_dente.png",
+                    "ausente.png",
+                ]
+            )
+            .select_related(
+                "procedimento",
+                "orcamento",
+                "orcamento__tratamento",
+                "orcamento__tratamento__dentista"
+            )
+            .order_by(
+                "id"
+            )
+        )
+
+        itens_para_odontograma.extend(
+            list(
+                itens_realizados_outros
+            )
+        )
+
+    # =====================================
+    # PREPARA STATUS VISUAL
+    # =====================================
+
+    for item in itens_para_odontograma:
+
+        # =================================
+        # CANCELADOS
+        # =================================
+
+        if item.status == "cancelado":
+            continue
+
+        # =================================
+        # SEM DENTE
+        # =================================
+
+        if not item.dente:
+            continue
+
+        # =================================
+        # STATUS ORIGINAL
+        # =================================
+
+        status_visual = item.status
+
+        # =================================
+        # REALIZADO
+        # =================================
+
+        if item.status == "realizado":
+
+            tratamento_item = getattr(
+                item.orcamento,
+                "tratamento",
+                None
+            )
+
+            dentista_realizou = None
+
+            if tratamento_item:
+
+                dentista_realizou = (
+                    tratamento_item.dentista
+                )
+
+            # =============================
+            # SOMENTE PARA DENTISTAS
+            # =============================
+
+            if perfil_usuario == "dentista":
+
+                # Outro dentista realizou
+                # → EXISTENTE
+
+                if (
+                    dentista_realizou
+                    and
+                    dentista_realizou.id
+                    != request.user.id
+                ):
+
+                    status_visual = "existente"
+
+        # =================================
+        # GUARDA STATUS VISUAL
+        # =================================
+
+        item.status_visual = (
+            status_visual
+        )
+
+        # =================================
+        # GUARDA TAMBÉM O DENTISTA
+        # RESPONSÁVEL
+        # =================================
+        
+        tratamento_item = getattr(
+            item.orcamento,
+            "tratamento",
+            None
+        )
+        
+        item.dentista_realizador = (
+            tratamento_item.dentista
+            if tratamento_item
+                else None
+        )
+
+        print(
+            "DEBUG STATUS VISUAL:",
+            "ITEM=", item.id,
+            "| DENTE=", item.dente,
+            "| PROCEDIMENTO=", item.procedimento.nome
+            if item.procedimento
+            else None,
+            "| STATUS=", item.status,
+            "| STATUS_VISUAL=", item.status_visual,
+            "| DENTISTA_REALIZADOR=",
+            item.dentista_realizador.username
+            if item.dentista_realizador
+            else None,
+            "| USUARIO_ATUAL=", request.user.username
+        )
+
+        
+
+        procedimentos_odontograma.append(
+            item
+        )
+
+    # =====================================
     # ANEXOS — RADIOGRAFIAS E FOTOS
-    # =========================================
+    # =====================================
 
-    anexos = AnexoPaciente.objects.filter(
-        paciente=paciente
-    ).order_by(
-        "-criado_em"
+    anexos = (
+        AnexoPaciente.objects
+        .filter(
+            paciente=paciente
+        )
+        .order_by(
+            "-criado_em"
+        )
     )
 
     anexos_imagem = []
@@ -4046,142 +4382,134 @@ def odontograma(request, id):
         if not anexo.arquivo:
             continue
 
-        nome_arquivo = anexo.arquivo.name.lower()
+        nome_arquivo = (
+            anexo.arquivo.name.lower()
+        )
 
-        if nome_arquivo.endswith((
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".webp",
-            ".gif",
-            ".bmp"
-        )):
+        if nome_arquivo.endswith(
+            (
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp",
+                ".gif",
+                ".bmp"
+            )
+        ):
 
-            anexos_imagem.append(anexo)
+            anexos_imagem.append(
+                anexo
+            )
 
-    # =========================================
+    # =====================================
     # PROCEDIMENTOS
-    # =========================================
+    # =====================================
 
-    procedimentos = Procedimento.objects.all().order_by(
-        "categoria",
-        "nome"
+    procedimentos = (
+        Procedimento.objects
+        .all()
+        .order_by(
+            "categoria",
+            "nome"
+        )
     )
 
-    # =========================================
+    # =====================================
     # PROCEDIMENTOS GERAIS
-    # =========================================
+    # =====================================
 
-    procedimentos_gerais = Procedimento.objects.filter(
-        tipo__in=[
-            "geral",
-            "hemiarcada"
-        ]
-    ).order_by(
-        "categoria",
-        "nome"
+    procedimentos_gerais = (
+        Procedimento.objects
+        .filter(
+            tipo__in=[
+                "geral",
+                "hemiarcada"
+            ]
+        )
+        .order_by(
+            "categoria",
+            "nome"
+        )
     )
 
-    # =========================================
+    # =====================================
     # POSICIONAMENTOS DOS DENTES
-    #
-    # A posição é buscada diretamente
-    # na tabela PosicionamentoDente.
-    #
-    # Isso faz com que, ao sair e voltar
-    # para o odontograma, a posição seja
-    # recuperada do banco.
-    # =========================================
+    # =====================================
 
     posicionamentos_dentes = (
-        PosicionamentoDente.objects.filter(
+        PosicionamentoDente.objects
+        .filter(
             paciente=paciente
         )
     )
 
-    # =========================================
-    # CONDIÇÕES ODONTOLÓGICAS PERMANENTES
-    #
-    # Estas condições pertencem ao paciente,
-    # e não ao tratamento ou ao dentista.
-    # =========================================
+    # =====================================
+    # CONDIÇÕES ODONTOLÓGICAS
+    # =====================================
 
     condicoes_odontologicas = (
-        CondicaoOdontologica.objects.filter(
+        CondicaoOdontologica.objects
+        .filter(
             paciente=paciente
         )
     )
 
-        # =========================================
+    # =====================================
     # DENTES AUSENTES
-    #
-    # Condição permanente do paciente.
-    # =========================================
+    # =====================================
 
     dentes_ausentes = set(
+
         str(condicao.dente)
-        for condicao in condicoes_odontologicas
+
+        for condicao
+        in condicoes_odontologicas
+
         if condicao.tipo == "ausente"
     )
 
-    # =========================================
+    # =====================================
     # DICIONÁRIO DAS POSIÇÕES
-    # =========================================
+    # =====================================
 
     posicoes_dentes = {}
 
     for item in posicionamentos_dentes:
 
         posicao = (
-            item.posicao or
+            item.posicao
+            or
             "normal"
         ).strip().lower()
 
-        # -------------------------------------
-        # BANCO
-        #
-        # Exemplo:
-        # incluso_mesial
-        # rotacao_45
-        # rotacao_menos_45
-        # -------------------------------------
-
-        posicao_banco = posicao.replace(
-            "-",
-            "_"
+        posicao_banco = (
+            posicao.replace(
+                "-",
+                "_"
+            )
         )
 
-        # -------------------------------------
-        # CSS
-        #
-        # Exemplo:
-        # incluso_mesial
-        #       ↓
-        # incluso-mesial
-        #
-        # rotacao_45
-        #       ↓
-        # rotacao-45
-        # -------------------------------------
-
-        posicao_css = posicao_banco.replace(
-            "_",
-            "-"
+        posicao_css = (
+            posicao_banco.replace(
+                "_",
+                "-"
+            )
         )
 
-        posicoes_dentes[str(item.dente)] = {
+        posicoes_dentes[
+            str(item.dente)
+        ] = {
 
             "banco":
                 posicao_banco,
 
             "css":
                 posicao_css
-
         }
 
-    # =========================================
-    # LISTA DE DENTES PERMANENTES
-    # =========================================
+    # =====================================
+    # DENTES PERMANENTES
+    # =====================================
 
     superiores = [
         "18", "17", "16", "15",
@@ -4197,9 +4525,9 @@ def odontograma(request, id):
         "35", "36", "37", "38"
     ]
 
-    # =========================================
-    # LISTA DE DENTES DECÍDUOS
-    # =========================================
+    # =====================================
+    # DENTES DECÍDUOS
+    # =====================================
 
     dec_superiores = [
         "55", "54", "53", "52", "51",
@@ -4211,14 +4539,9 @@ def odontograma(request, id):
         "71", "72", "73", "74", "75"
     ]
 
-    # =========================================
-    # FUNÇÃO AUXILIAR
-    #
-    # Monta os dados de cada dente.
-    #
-    # Se não houver registro no banco,
-    # assume NORMAL.
-    # =========================================
+    # =====================================
+    # PREPARA DENTES
+    # =====================================
 
     def preparar_dentes(lista_dentes):
 
@@ -4226,12 +4549,14 @@ def odontograma(request, id):
 
         for numero in lista_dentes:
 
-            dados_posicao = posicoes_dentes.get(
-                numero,
-                {
-                    "banco": "normal",
-                    "css": "normal"
-                }
+            dados_posicao = (
+                posicoes_dentes.get(
+                    numero,
+                    {
+                        "banco": "normal",
+                        "css": "normal"
+                    }
+                )
             )
 
             resultado.append({
@@ -4244,34 +4569,41 @@ def odontograma(request, id):
 
                 "posicao_css":
                     dados_posicao["css"]
-
             })
 
         return resultado
 
-    # =========================================
-    # PREPARA DENTES
-    # =========================================
+    # =====================================
+    # DENTES POSICIONADOS
+    # =====================================
 
-    superiores_posicionados = preparar_dentes(
-        superiores
+    superiores_posicionados = (
+        preparar_dentes(
+            superiores
+        )
     )
 
-    inferiores_posicionados = preparar_dentes(
-        inferiores
+    inferiores_posicionados = (
+        preparar_dentes(
+            inferiores
+        )
     )
 
-    dec_superiores_posicionados = preparar_dentes(
-        dec_superiores
+    dec_superiores_posicionados = (
+        preparar_dentes(
+            dec_superiores
+        )
     )
 
-    dec_inferiores_posicionados = preparar_dentes(
-        dec_inferiores
+    dec_inferiores_posicionados = (
+        preparar_dentes(
+            dec_inferiores
+        )
     )
 
-    # =========================================
-    # CONTEXTO
-    # =========================================
+    # =====================================
+    # CONTEXT
+    # =====================================
 
     context = {
 
@@ -4280,6 +4612,9 @@ def odontograma(request, id):
 
         "tratamento":
             tratamento,
+
+        "tratamentos_ativos":
+            tratamentos_ativos,
 
         "historico_tratamentos":
             historico_tratamentos,
@@ -4293,6 +4628,9 @@ def odontograma(request, id):
         "itens_orcamento":
             itens_orcamento,
 
+        "procedimentos_odontograma":
+            procedimentos_odontograma,
+
         "anexos_imagem":
             anexos_imagem,
 
@@ -4302,26 +4640,11 @@ def odontograma(request, id):
         "procedimentos_gerais":
             procedimentos_gerais,
 
-                # =====================================
-        # CONDIÇÕES ODONTOLÓGICAS PERMANENTES
-        # =====================================
-
         "condicoes_odontologicas":
             condicoes_odontologicas,
 
         "dentes_ausentes":
             dentes_ausentes,
-
-        # =====================================
-        # POSICIONAMENTOS
-        # =====================================
-
-        "posicoes_dentes":
-            posicoes_dentes,
-
-        # =====================================
-        # POSICIONAMENTOS
-        # =====================================
 
         "posicoes_dentes":
             posicoes_dentes,
@@ -4338,19 +4661,11 @@ def odontograma(request, id):
         "dec_inferiores_posicionados":
             dec_inferiores_posicionados,
 
-        # =====================================
-        # DENTES PERMANENTES
-        # =====================================
-
         "superiores":
             superiores,
 
         "inferiores":
             inferiores,
-
-        # =====================================
-        # DENTES DECÍDUOS
-        # =====================================
 
         "dec_superiores":
             dec_superiores,
@@ -4360,52 +4675,15 @@ def odontograma(request, id):
 
     }
 
-    # =========================================
-    # DEBUG DOS PROCEDIMENTOS
-    # =========================================
-
-    for item in itens_orcamento:
-
-        print(
-            f"ITEM {item.id} | "
-            f"DENTE={item.dente} | "
-            f"POSICAO_ICONE={item.posicao_icone}"
-        )
-
-    # =========================================
-    # DEBUG DOS POSICIONAMENTOS
-    # =========================================
-
-    print(
-        "========================================="
-    )
-
-    print(
-        "POSICIONAMENTOS DOS DENTES:"
-    )
-
-    for dente, dados in posicoes_dentes.items():
-
-        print(
-            f"DENTE {dente} | "
-            f"BANCO={dados['banco']} | "
-            f"CSS={dados['css']}"
-        )
-
-    print(
-        "========================================="
-    )
-
-    # =========================================
+    # =====================================
     # RENDER
-    # =========================================
+    # =====================================
 
     return render(
         request,
         "accounts/odontograma.html",
         context
     )
-
 
 # =========================================
 # SALVAR POSICIONAMENTO DO DENTE
@@ -5591,66 +5869,129 @@ def orcamento(request, id):
     )
 
     # =========================================
-    # BUSCA O ÚLTIMO ORÇAMENTO
+    # TRATAMENTOS DO PACIENTE
+    # =========================================
+    #
+    # Administrador:
+    # visualiza todos os tratamentos.
+    #
+    # Dentista:
+    # também poderá visualizar apenas seus
+    # tratamentos quando necessário.
+    #
+    # Para a tela de orçamento do paciente,
+    # mantemos todos os tratamentos disponíveis
+    # para permitir consultar o histórico.
     # =========================================
 
-    orcamento = (
-        Orcamento.objects
-        .filter(
-            paciente=paciente
+    tratamentos = (
+        paciente.tratamentos
+        .select_related(
+            "dentista"
         )
-        .order_by("-id")
-        .first()
+        .order_by(
+            "-id"
+        )
     )
 
     # =========================================
-    # SE NÃO EXISTIR ORÇAMENTO
+    # TRATAMENTO SELECIONADO
     # =========================================
 
-    if orcamento is None:
+    tratamento_id = (
+        request.GET.get("tratamento")
+        or request.POST.get("tratamento")
+    )
 
-        # -----------------------------------------
-        # BUSCA TRATAMENTO ATIVO
-        # -----------------------------------------
+    tratamento = None
 
-        tratamento = paciente.tratamentos.filter(
-            status="ATIVO"
-        ).first()
+    # =========================================
+    # BUSCA TRATAMENTO INFORMADO
+    # =========================================
 
-        # -----------------------------------------
-        # SE NÃO EXISTIR, CRIA TRATAMENTO
-        # -----------------------------------------
+    if tratamento_id:
 
-        if tratamento is None:
-
-            tratamento = Tratamento.objects.create(
-                paciente=paciente,
-                dentista=request.user,
-                titulo="Tratamento Inicial"
+        tratamento = (
+            tratamentos
+            .filter(
+                id=tratamento_id
             )
+            .first()
+        )
 
-        # -----------------------------------------
-        # CRIA O ORÇAMENTO
-        # -----------------------------------------
+    # =========================================
+    # TRATAMENTO PADRÃO
+    # =========================================
+    #
+    # Se nenhum tratamento foi selecionado,
+    # prioriza o tratamento ATIVO mais recente.
+    # =========================================
 
-        orcamento = Orcamento.objects.create(
+    if tratamento is None:
+
+        tratamento = (
+            tratamentos
+            .filter(
+                status="ATIVO"
+            )
+            .first()
+        )
+
+    # =========================================
+    # SE NÃO EXISTIR TRATAMENTO ATIVO
+    # =========================================
+
+    if tratamento is None:
+
+        tratamento = (
+            tratamentos
+            .first()
+        )
+
+    # =========================================
+    # SE O PACIENTE NÃO POSSUI TRATAMENTO
+    # =========================================
+
+    if tratamento is None:
+
+        tratamento = Tratamento.objects.create(
+
             paciente=paciente,
-            tratamento=tratamento
+
+            dentista=request.user,
+
+            titulo="Tratamento Inicial",
+
+            status="ATIVO"
+
+        )
+
+        tratamentos = (
+            paciente.tratamentos
+            .select_related(
+                "dentista"
+            )
+            .order_by(
+                "-id"
+            )
         )
 
     # =========================================
-    # BUSCA OS ITENS DO ORÇAMENTO
+    # ORÇAMENTO DO TRATAMENTO SELECIONADO
     # =========================================
 
-    itens_orcamento = (
-        ItemOrcamento.objects
-        .filter(
-            orcamento=orcamento
+    orcamento, created = (
+        Orcamento.objects.get_or_create(
+
+            paciente=paciente,
+
+            tratamento=tratamento,
+
+            defaults={
+                "tratamento": tratamento
+            }
+
         )
-        .select_related(
-            'procedimento'
-        )
-        .order_by('id')
     )
 
     # =========================================
@@ -5672,6 +6013,10 @@ def orcamento(request, id):
         if "salvar_financeiro" in request.POST:
 
             print("=" * 60)
+            print("SALVAR FINANCEIRO")
+            print("PACIENTE:", paciente.id)
+            print("TRATAMENTO:", tratamento.id)
+            print("ORÇAMENTO:", orcamento.id)
             print(request.POST)
             print("=" * 60)
 
@@ -5714,20 +6059,18 @@ def orcamento(request, id):
                     "pix"
                 )
 
-                # =====================================
+                # =================================
                 # VALORES
-                # =====================================
+                # =================================
 
                 orcamento.entrada = Decimal(
                     entrada or "0"
                 )
 
-                # Desconto em percentual
                 orcamento.desconto = Decimal(
                     desconto or "0"
                 )
 
-                # Acréscimo em percentual
                 orcamento.acrescimo = Decimal(
                     acrescimo or "0"
                 )
@@ -5741,9 +6084,9 @@ def orcamento(request, id):
                     forma_pagamento
                 )
 
-                # =====================================
+                # =================================
                 # VALIDAÇÕES
-                # =====================================
+                # =================================
 
                 if orcamento.desconto < 0:
 
@@ -5753,8 +6096,8 @@ def orcamento(request, id):
                     )
 
                     return redirect(
-                        "orcamento",
-                        id=paciente.id
+                        f"/pacientes/{paciente.id}/orcamento/"
+                        f"?tratamento={tratamento.id}"
                     )
 
                 if orcamento.desconto > 100:
@@ -5765,8 +6108,8 @@ def orcamento(request, id):
                     )
 
                     return redirect(
-                        "orcamento",
-                        id=paciente.id
+                        f"/pacientes/{paciente.id}/orcamento/"
+                        f"?tratamento={tratamento.id}"
                     )
 
                 if orcamento.acrescimo < 0:
@@ -5777,8 +6120,8 @@ def orcamento(request, id):
                     )
 
                     return redirect(
-                        "orcamento",
-                        id=paciente.id
+                        f"/pacientes/{paciente.id}/orcamento/"
+                        f"?tratamento={tratamento.id}"
                     )
 
                 if orcamento.entrada < 0:
@@ -5789,13 +6132,13 @@ def orcamento(request, id):
                     )
 
                     return redirect(
-                        "orcamento",
-                        id=paciente.id
+                        f"/pacientes/{paciente.id}/orcamento/"
+                        f"?tratamento={tratamento.id}"
                     )
 
-                # =====================================
+                # =================================
                 # VALIDA ENTRADA X TOTAL
-                # =====================================
+                # =================================
 
                 if orcamento.entrada > orcamento.total:
 
@@ -5805,15 +6148,26 @@ def orcamento(request, id):
                     )
 
                     return redirect(
-                        "orcamento",
-                        id=paciente.id
+                        f"/pacientes/{paciente.id}/orcamento/"
+                        f"?tratamento={tratamento.id}"
                     )
 
-                # =====================================
+                # =================================
                 # DEBUG
-                # =====================================
+                # =================================
 
                 print("=" * 50)
+                print(
+                    "TRATAMENTO:",
+                    tratamento.id,
+                    tratamento.titulo
+                )
+                print(
+                    "DENTISTA:",
+                    tratamento.dentista.username
+                    if tratamento.dentista
+                    else None
+                )
                 print(
                     "ORÇAMENTO:",
                     orcamento.id
@@ -5840,9 +6194,9 @@ def orcamento(request, id):
                 )
                 print("=" * 50)
 
-                # =====================================
+                # =================================
                 # SALVA
-                # =====================================
+                # =================================
 
                 orcamento.save()
 
@@ -5871,8 +6225,8 @@ def orcamento(request, id):
                 )
 
             return redirect(
-                "orcamento",
-                id=paciente.id
+                f"/pacientes/{paciente.id}/orcamento/"
+                f"?tratamento={tratamento.id}"
             )
 
         # =====================================
@@ -5892,7 +6246,7 @@ def orcamento(request, id):
                 )
 
                 # =================================
-                # VINCULA AO ORÇAMENTO
+                # VINCULA AO ORÇAMENTO CORRETO
                 # =================================
 
                 item.orcamento = orcamento
@@ -5939,8 +6293,8 @@ def orcamento(request, id):
                 )
 
                 return redirect(
-                    "orcamento",
-                    id=paciente.id
+                    f"/pacientes/{paciente.id}/orcamento/"
+                    f"?tratamento={tratamento.id}"
                 )
 
             messages.error(
@@ -5949,7 +6303,7 @@ def orcamento(request, id):
             )
 
     # =========================================
-    # ATUALIZA OS ITENS
+    # ITENS DO ORÇAMENTO SELECIONADO
     # =========================================
 
     itens_orcamento = (
@@ -5958,9 +6312,11 @@ def orcamento(request, id):
             orcamento=orcamento
         )
         .select_related(
-            'procedimento'
+            "procedimento"
         )
-        .order_by('id')
+        .order_by(
+            "id"
+        )
     )
 
     # =========================================
@@ -5969,13 +6325,23 @@ def orcamento(request, id):
 
     context = {
 
-        'paciente': paciente,
+        "paciente":
+            paciente,
 
-        'orcamento': orcamento,
+        "tratamentos":
+            tratamentos,
 
-        'item_form': item_form,
+        "tratamento":
+            tratamento,
 
-        'itens_orcamento': itens_orcamento,
+        "orcamento":
+            orcamento,
+
+        "itens_orcamento":
+            itens_orcamento,
+
+        "item_form":
+            item_form,
 
     }
 
@@ -5985,7 +6351,7 @@ def orcamento(request, id):
 
     return render(
         request,
-        'accounts/orcamento.html',
+        "accounts/orcamento.html",
         context
     )
 

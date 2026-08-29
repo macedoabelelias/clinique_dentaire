@@ -29,6 +29,47 @@
 
     {% include 'accounts/components/menu_paciente.html' %}
 
+    <!-- =========================================
+    SELEÇÃO DO TRATAMENTO
+    ========================================= -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        <i class="fas fa-tooth me-2 text-primary"></i>
+                        Tratamento
+                    </h5>
+                    <small class="text-muted">
+                        Selecione o tratamento para visualizar o orçamento correspondente.
+                    </small>
+                </div>
+                {% if tratamento %}
+                    <span class="badge bg-success rounded-pill px-3 py-2">
+                        {{ tratamento.get_status_display }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <form method="GET" action="{% url 'orcamento' paciente.id %}" class="mt-3">
+                <select name="tratamento" id="tratamento" class="form-select rounded-3" onchange="this.form.submit()">
+                    {% for item in tratamentos %}
+                        <option value="{{ item.id }}" {% if tratamento and item.id == tratamento.id %}selected{% endif %}>
+                            {{ item.titulo }}
+                            {% if item.dentista %}
+                                — {% if item.dentista.get_full_name %}{{ item.dentista.get_full_name }}{% else %}{{ item.dentista.username }}{% endif %}
+                            {% endif %}
+                            — {{ item.get_status_display }}
+                        </option>
+                    {% empty %}
+                        <option value="">Nenhum tratamento cadastrado</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
     <!-- CARD ADICIONAR PROCEDIMENTO -->
 
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -58,6 +99,8 @@
 <form method="POST">
 
     {% csrf_token %}
+
+    <input type="hidden" name="tratamento" value="{{ tratamento.id }}">
 
     <div class="row g-2 align-items-end">
 
@@ -317,6 +360,8 @@ FORMULÁRIO FINANCEIRO
 
     {% csrf_token %}
 
+    <input type="hidden" name="tratamento" value="{{ tratamento.id }}">
+
     <!-- =========================================
 TABELA
 ========================================= -->
@@ -324,6 +369,18 @@ TABELA
 <div class="card border-0 shadow-sm rounded-4">
 
 <div class="card-body p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <div class="fw-bold">{{ tratamento.titulo }}</div>
+            <small class="text-muted">
+                {% if tratamento.dentista %}
+                    Dentista: {% if tratamento.dentista.get_full_name %}{{ tratamento.dentista.get_full_name }}{% else %}{{ tratamento.dentista.username }}{% endif %}
+                {% endif %}
+            </small>
+        </div>
+        <span class="badge bg-primary rounded-pill px-3 py-2">Orçamento #{{ orcamento.id }}</span>
+    </div>
 
     <table class="table align-middle">
 
@@ -509,7 +566,7 @@ TABELA
 
                     <i class="fas fa-info-circle me-2"></i>
 
-                    Nenhum procedimento ativo neste orçamento.
+                    Nenhum procedimento ativo neste orçamento do tratamento selecionado.
 
                 </td>
 

@@ -1660,52 +1660,58 @@ LAYOUT
 
 
                 <!-- =========================================
-                PROCEDIMENTOS GERAIS
-                ========================================= -->
+     PROCEDIMENTOS GERAIS
+     ========================================= -->
 
-                <div class="procedimentos-header">
+<div class="procedimentos-header">
 
-                    <h6>
+    <h6>
+        Procedimentos Gerais
+    </h6>
 
-                        Procedimentos Gerais
+    <button
+        type="button"
+        class="btn-add-geral"
+        data-bs-toggle="modal"
+        data-bs-target="#modalProcedimentoGeral"
+    >
+        <i class="fa-solid fa-plus"></i>
+        Novo
+    </button>
 
-                    </h6>
+</div>
 
-                    <button type="button" class="btn-add-geral" data-bs-toggle="modal"
-                        data-bs-target="#modalProcedimentoGeral">
-                        <i class="fa-solid fa-plus"></i>
-                        Novo
-                    </button>
+<div class="procedimentos-gerais-wrapper">
 
-                </div>
+    {% for item in itens_orcamento %}
 
-                <div class="procedimentos-gerais-wrapper">
+        {% if item.procedimento.tipo == 'geral' or item.procedimento.tipo == 'hemiarcada' %}
 
-                    {% for item in itens_orcamento %}
+            <div
+                class="procedimento-geral-chip status-{{ item.status_visual|default:item.status }}"
+                data-id="{{ item.id }}"
+            >
 
-                    {% if item.procedimento.tipo == 'geral' or item.procedimento.tipo == 'hemiarcada' %}
+                <img
+                    src="{% static 'img/procedimentos/full/' %}{{ item.procedimento.arquivo_icone|default:'default.png' }}"
+                    class="icone-geral"
+                    alt="{{ item.procedimento.nome }}"
+                >
 
-                    <div class="procedimento-geral-chip status-{{ item.status }}" data-id="{{ item.id }}">
+                <span>
+                    {{ item.procedimento.nome }}
+                </span>
 
-                        <img src="{% static 'img/procedimentos/full/' %}{{ item.procedimento.arquivo_icone|default:'default.png' }}"
-                            class="icone-geral" alt="{{ item.procedimento.nome }}">
+            </div>
 
-                        <span>
+        {% endif %}
 
-                            {{ item.procedimento.nome }}
+    {% endfor %}
 
-                        </span>
-
-                    </div>
-
-                    {% endif %}
-
-                    {% endfor %}
-
-                </div>
+</div>
 
 
-                <!-- =========================================
+<!-- =========================================
      DENTIÇÃO PERMANENTE
      ========================================= -->
 
@@ -1752,58 +1758,54 @@ LAYOUT
                     alt="Dente {{ dente.numero }}"
                 >
 
-                <!-- PROCEDIMENTOS DO DENTE -->
+            {% endif %}
 
-                <div class="procedimentos-dente">
 
-                    {% for item in itens_orcamento %}
+            <!-- =====================================
+                 PROCEDIMENTOS DO DENTE
+                 
+                 FORA DO IF/ELSE DO DENTE
+                 ===================================== -->
 
-                        {% if item.dente == dente.numero %}
+            <div class="procedimentos-dente">
 
-                            {% if item.procedimento.tipo == 'dente' %}
+                {% for item in procedimentos_odontograma %}
 
-                                <!--
-                                Dente ausente cancelado:
-                                não exibe o ícone.
-                                -->
+                    {% if item.dente == dente.numero %}
 
-                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+                        {% if item.procedimento.tipo == 'dente' %}
 
-                                    <img
-                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                                        class="
-                                            icone-procedimento-dente
-                                            status-{{ item.status }}
-                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                            <img
+                                src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                class="
+                                    icone-procedimento-dente
+                                     status-{{ item.status_visual }}
+                                    posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
 
-                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                                sem-rotacao
-                                            {% endif %}
-                                        "
-                                        data-id="{{ item.id }}"
-                                        data-status="{{ item.status }}"
-                                        title="{{ item.procedimento.nome }}"
-                                    >
-
-                                    {% if item.face %}
-
-                                        <span class="face-badge status-{{ item.status }}">
-                                            {{ item.face }}
-                                        </span>
-
+                                    {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                        sem-rotacao
                                     {% endif %}
+                                "
+                                data-id="{{ item.id }}"
+                                data-status="{{ item.status }}"
+                                title="{{ item.procedimento.nome }}"
+                            >
 
-                                {% endif %}
+                            {% if item.face %}
+
+                                <span class="face-badge status-{{ item.status_visual }}">
+                                    {{ item.face }}
+                                </span>
 
                             {% endif %}
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endif %}
 
-                </div>
+                {% endfor %}
 
-            {% endif %}
+            </div>
 
         </div>
 
@@ -1851,53 +1853,52 @@ LAYOUT
                     alt="Dente {{ dente.numero }}"
                 >
 
-                <!-- PROCEDIMENTOS DO DENTE -->
+            {% endif %}
 
-                <div class="procedimentos-dente">
 
-                    {% for item in itens_orcamento %}
+            <!-- =====================================
+                 PROCEDIMENTOS DO DENTE
+                 ===================================== -->
 
-                        {% if item.dente == dente.numero %}
+            <div class="procedimentos-dente">
 
-                            {% if item.procedimento.tipo == 'dente' %}
+                {% for item in procedimentos_odontograma %}
 
-                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+                    {% if item.dente == dente.numero %}
 
-                                    <img
-                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                                        class="
-                                            icone-procedimento-dente
-                                            status-{{ item.status }}
-                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                        {% if item.procedimento.tipo == 'dente' %}
 
-                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                                sem-rotacao
-                                            {% endif %}
-                                        "
-                                        data-id="{{ item.id }}"
-                                        data-status="{{ item.status }}"
-                                        title="{{ item.procedimento.nome }}"
-                                    >
+                            <img
+                                src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                class="
+                                    icone-procedimento-dente
+                                    status-{{ item.status_visual|default:item.status }}
+                                    posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
 
-                                    {% if item.face %}
-
-                                        <span class="face-badge status-{{ item.status }}">
-                                            {{ item.face }}
-                                        </span>
-
+                                    {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                        sem-rotacao
                                     {% endif %}
+                                "
+                                data-id="{{ item.id }}"
+                                data-status="{{ item.status }}"
+                                title="{{ item.procedimento.nome }}"
+                            >
 
-                                {% endif %}
+                            {% if item.face %}
+
+                                <span class="face-badge status-{{ item.status_visual|default:item.status }}">
+                                    {{ item.face }}
+                                </span>
 
                             {% endif %}
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endif %}
 
-                </div>
+                {% endfor %}
 
-            {% endif %}
+            </div>
 
         </div>
 
@@ -1905,6 +1906,10 @@ LAYOUT
 
 </div>
 
+
+<!-- =========================================
+     DIVISÃO
+     ========================================= -->
 
 <div class="linha-divisao"></div>
 
@@ -1956,53 +1961,52 @@ LAYOUT
                     alt="Dente {{ dente.numero }}"
                 >
 
-                <!-- PROCEDIMENTOS DO DENTE -->
+            {% endif %}
 
-                <div class="procedimentos-dente">
 
-                    {% for item in itens_orcamento %}
+            <!-- =====================================
+                 PROCEDIMENTOS DO DENTE
+                 ===================================== -->
 
-                        {% if item.dente == dente.numero %}
+            <div class="procedimentos-dente">
 
-                            {% if item.procedimento.tipo == 'dente' %}
+                {% for item in procedimentos_odontograma %}
 
-                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+                    {% if item.dente == dente.numero %}
 
-                                    <img
-                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                                        class="
-                                            icone-procedimento-dente
-                                            status-{{ item.status }}
-                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                        {% if item.procedimento.tipo == 'dente' %}
 
-                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                                sem-rotacao
-                                            {% endif %}
-                                        "
-                                        data-id="{{ item.id }}"
-                                        data-status="{{ item.status }}"
-                                        title="{{ item.procedimento.nome }}"
-                                    >
+                            <img
+                                src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                class="
+                                    icone-procedimento-dente
+                                    status-{{ item.status_visual|default:item.status }}
+                                    posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
 
-                                    {% if item.face %}
-
-                                        <span class="face-badge status-{{ item.status }}">
-                                            {{ item.face }}
-                                        </span>
-
+                                    {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                        sem-rotacao
                                     {% endif %}
+                                "
+                                data-id="{{ item.id }}"
+                                data-status="{{ item.status }}"
+                                title="{{ item.procedimento.nome }}"
+                            >
 
-                                {% endif %}
+                            {% if item.face %}
+
+                                <span class="face-badge status-{{ item.status_visual|default:item.status }}">
+                                    {{ item.face }}
+                                </span>
 
                             {% endif %}
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endif %}
 
-                </div>
+                {% endfor %}
 
-            {% endif %}
+            </div>
 
         </div>
 
@@ -2050,53 +2054,52 @@ LAYOUT
                     alt="Dente {{ dente.numero }}"
                 >
 
-                <!-- PROCEDIMENTOS DO DENTE -->
+            {% endif %}
 
-                <div class="procedimentos-dente">
 
-                    {% for item in itens_orcamento %}
+            <!-- =====================================
+                 PROCEDIMENTOS DO DENTE
+                 ===================================== -->
 
-                        {% if item.dente == dente.numero %}
+            <div class="procedimentos-dente">
 
-                            {% if item.procedimento.tipo == 'dente' %}
+                {% for item in procedimentos_odontograma %}
 
-                                {% if item.procedimento.nome != "Dente ausente" or item.status != "cancelado" %}
+                    {% if item.dente == dente.numero %}
 
-                                    <img
-                                        src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
-                                        class="
-                                            icone-procedimento-dente
-                                            status-{{ item.status }}
-                                            posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
+                        {% if item.procedimento.tipo == 'dente' %}
 
-                                            {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
-                                                sem-rotacao
-                                            {% endif %}
-                                        "
-                                        data-id="{{ item.id }}"
-                                        data-status="{{ item.status }}"
-                                        title="{{ item.procedimento.nome }}"
-                                    >
+                            <img
+                                src="{% static 'img/procedimentos/mini/' %}{{ item.procedimento.arquivo_icone }}"
+                                class="
+                                    icone-procedimento-dente
+                                    status-{{ item.status_visual|default:item.status }}
+                                    posicao-{{ item.posicao_icone|default:item.procedimento.posicao_icone }}
 
-                                    {% if item.face %}
-
-                                        <span class="face-badge status-{{ item.status }}">
-                                            {{ item.face }}
-                                        </span>
-
+                                    {% if item.procedimento.arquivo_icone == 'ausente.png' or item.procedimento.arquivo_icone == 'rx_dente.png' %}
+                                        sem-rotacao
                                     {% endif %}
+                                "
+                                data-id="{{ item.id }}"
+                                data-status="{{ item.status }}"
+                                title="{{ item.procedimento.nome }}"
+                            >
 
-                                {% endif %}
+                            {% if item.face %}
+
+                                <span class="face-badge status-{{ item.status_visual|default:item.status }}">
+                                    {{ item.face }}
+                                </span>
 
                             {% endif %}
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endif %}
 
-                </div>
+                {% endfor %}
 
-            {% endif %}
+            </div>
 
         </div>
 
@@ -2314,234 +2317,103 @@ LAYOUT
 
         <div class="tratamento-body">
 
-            {% if tratamento %}
+    {% if tratamento %}
 
-            <h6 class="tratamento-titulo">
+        <!-- ========================================= -->
+        <!-- TRATAMENTO ATUAL -->
+        <!-- ========================================= -->
 
-                {{ tratamento.titulo }}
+        <h6 class="tratamento-titulo">
+            {{ tratamento.titulo }}
+        </h6>
 
-            </h6>
+        <!-- ========================================= -->
+        <!-- SELETOR DE TRATAMENTOS -->
+        <!-- ========================================= -->
 
-            <div class="tratamento-info">
+        {% if tratamentos_ativos|length > 1 %}
 
-                <i class="fa-solid fa-calendar-days"></i>
+        <div class="mb-3">
 
-                <strong>Início:</strong>
+            <label
+                for="seletorTratamento"
+                class="form-label"
+                style="font-weight:600;"
+            >
+                Tratamento em visualização
+            </label>
 
-                {{ tratamento.data_inicio|date:"d/m/Y" }}
-
-            </div>
-
-            <div class="tratamento-status ativo">
-
-                <i class="fa-solid fa-circle"></i>
-
-                <strong>Status:</strong>
-
-                {{ tratamento.get_status_display }}
-
-            </div>
-
-            <div class="d-flex gap-2 mt-3">
-
-                <!-- ENCERRAR -->
-
-                <div class="w-50">
-
-                    <button
-                        type="button"
-                        class="btn btn-danger w-100 btn-tratamento"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalEncerrarTratamento"
-                    >
-
-                        <i class="fa-solid fa-lock"></i>
-
-                        Encerrar
-
-                    </button>
-
-                </div>
-
-                <!-- CANCELAR -->
-
-                <div class="w-50">
-
-                    <form
-                        method="POST"
-                        action="{% url 'cancelar_tratamento' tratamento.id %}"
-                    >
-
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="btn btn-outline-danger w-100 btn-tratamento"
-                            onclick="return confirm('Deseja realmente cancelar este tratamento?')"
-                        >
-
-                            <i class="fa-solid fa-ban"></i>
-
-                            Cancelar
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-            <div class="mt-2">
-
-                <button
-                    type="button"
-                    class="btn btn-primary w-100 btn-tratamento"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalNovoTratamento"
-                >
-
-                    <i class="fa-solid fa-plus"></i>
-
-                    Novo Tratamento
-
-                </button>
-
-            </div>
-
-            <!-- ========================================= -->
-            <!-- MODAL ENCERRAR TRATAMENTO -->
-            <!-- ========================================= -->
-
-            <div
-                class="modal fade"
-                id="modalEncerrarTratamento"
-                tabindex="-1"
-                aria-labelledby="modalEncerrarTratamentoLabel"
-                aria-hidden="true"
+            <select
+                id="seletorTratamento"
+                class="form-select"
+                onchange="alterarTratamento(this.value)"
             >
 
-                <div class="modal-dialog modal-dialog-centered">
+                {% for tratamento_item in tratamentos_ativos %}
 
-                    <div class="modal-content">
+                    <option
+                        value="{{ tratamento_item.id }}"
+                        {% if tratamento_item.id == tratamento.id %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ tratamento_item.titulo }}
+                    </option>
 
-                        <form
-                            method="POST"
-                            action="{% url 'encerrar_tratamento' tratamento.id %}"
-                        >
+                {% endfor %}
 
-                            {% csrf_token %}
+            </select>
 
-                            <div class="modal-header">
+        </div>
 
-                                <h5
-                                    class="modal-title"
-                                    id="modalEncerrarTratamentoLabel"
-                                >
+        {% endif %}
 
-                                    <i class="fa-solid fa-calendar-check me-2"></i>
+        <!-- ========================================= -->
+        <!-- INFORMAÇÕES DO TRATAMENTO -->
+        <!-- ========================================= -->
 
-                                    Encerrar Tratamento
+        <div class="tratamento-info">
 
-                                </h5>
+            <i class="fa-solid fa-calendar-days"></i>
 
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Fechar"
-                                ></button>
+            <strong>Início:</strong>
 
-                            </div>
+            {{ tratamento.data_inicio|date:"d/m/Y" }}
 
-                            <div class="modal-body">
+        </div>
 
-                                <p class="mb-3">
+        <div class="tratamento-status ativo">
 
-                                    O tratamento será encerrado e o
-                                    Pós-Tratamento será criado.
+            <i class="fa-solid fa-circle"></i>
 
-                                </p>
+            <strong>Status:</strong>
 
-                                <label
-                                    for="intervalo_retorno"
-                                    class="form-label fw-semibold"
-                                >
+            {{ tratamento.get_status_display }}
 
-                                    Prazo para retorno
+        </div>
 
-                                </label>
+        <!-- ========================================= -->
+        <!-- BOTÕES -->
+        <!-- ========================================= -->
 
-                                <select
-                                    name="intervalo_retorno"
-                                    id="intervalo_retorno"
-                                    class="form-select"
-                                    required
-                                >
+        <div class="d-flex gap-2 mt-3">
 
-                                    <option value="3">
-                                        3 meses
-                                    </option>
+            <button
+                type="button"
+                class="btn btn-danger flex-fill btn-tratamento"
+                data-bs-toggle="modal"
+                data-bs-target="#modalEncerrarTratamento"
+            >
 
-                                    <option value="6" selected>
-                                        6 meses
-                                    </option>
+                <i class="fa-solid fa-lock"></i>
 
-                                    <option value="12">
-                                        12 meses
-                                    </option>
+                Encerrar
 
-                                </select>
+            </button>
 
-                                <div class="form-text mt-2">
+        </div>
 
-                                    A data prevista para o retorno será
-                                    calculada automaticamente.
-
-                                </div>
-
-                            </div>
-
-                            <div class="modal-footer">
-
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                >
-
-                                    Cancelar
-
-                                </button>
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger"
-                                >
-
-                                    <i class="fa-solid fa-lock me-1"></i>
-
-                                    Encerrar Tratamento
-
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% else %}
-
-            <div class="alert alert-warning mb-3">
-
-                Nenhum tratamento ativo.
-
-            </div>
+        <div class="mt-2">
 
             <button
                 type="button"
@@ -2556,10 +2428,165 @@ LAYOUT
 
             </button>
 
-            {% endif %}
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- MODAL ENCERRAR TRATAMENTO -->
+        <!-- ========================================= -->
+
+        <div
+            class="modal fade"
+            id="modalEncerrarTratamento"
+            tabindex="-1"
+            aria-labelledby="modalEncerrarTratamentoLabel"
+            aria-hidden="true"
+        >
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <form
+                        method="POST"
+                        action="{% url 'encerrar_tratamento' tratamento.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <div class="modal-header">
+
+                            <h5
+                                class="modal-title"
+                                id="modalEncerrarTratamentoLabel"
+                            >
+
+                                <i class="fa-solid fa-calendar-check me-2"></i>
+
+                                Encerrar Tratamento
+
+                            </h5>
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Fechar"
+                            ></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <p class="mb-3">
+
+                                O tratamento será encerrado e o
+                                Pós-Tratamento será criado.
+
+                            </p>
+
+                            <label
+                                for="intervalo_retorno"
+                                class="form-label fw-semibold"
+                            >
+
+                                Prazo para retorno
+
+                            </label>
+
+                            <select
+                                name="intervalo_retorno"
+                                id="intervalo_retorno"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="3">
+                                    3 meses
+                                </option>
+
+                                <option value="6" selected>
+                                    6 meses
+                                </option>
+
+                                <option value="12">
+                                    12 meses
+                                </option>
+
+                            </select>
+
+                            <div class="form-text mt-2">
+
+                                A data prevista para o retorno será
+                                calculada automaticamente.
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+
+                                Cancelar
+
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+
+                                <i class="fa-solid fa-lock me-1"></i>
+
+                                Encerrar Tratamento
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
 
         </div>
-        <!-- tratamento-body -->
+
+
+    {% else %}
+
+        <!-- ========================================= -->
+        <!-- NENHUM TRATAMENTO ATIVO -->
+        <!-- ========================================= -->
+
+        <div class="alert alert-warning mb-3">
+
+            Nenhum tratamento ativo.
+
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-primary w-100 btn-tratamento"
+            data-bs-toggle="modal"
+            data-bs-target="#modalNovoTratamento"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Novo Tratamento
+
+        </button>
+
+    {% endif %}
+
+</div>
+<!-- tratamento-body -->
 
     </div>
     <!-- tratamento-card -->
@@ -4446,6 +4473,24 @@ document.addEventListener(
         );
 
     });
+
+function alterarTratamento(tratamentoId) {
+
+    if (!tratamentoId) {
+        return;
+    }
+
+    const url = new URL(
+        window.location.href
+    );
+
+    url.searchParams.set(
+        "tratamento",
+        tratamentoId
+    );
+
+    window.location.href = url.toString();
+}    
 
 </script>
 
