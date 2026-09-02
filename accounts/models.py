@@ -1346,13 +1346,14 @@ def save(self, *args, **kwargs):
 
     super().save(*args, **kwargs)
 
-    # =========================================
-    # STRING
-    # =========================================
 
-    def __str__(self):
+# =========================================
+# STRING
+# =========================================
 
-        return f"{self.paciente.nome} - {self.titulo}"
+def __str__(self):
+
+    return f"{self.paciente.nome} - {self.titulo}"
 
 # =========================================
 # POSIÇÕES CLÍNICAS DO DENTE

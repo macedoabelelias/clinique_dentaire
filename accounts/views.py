@@ -3156,8 +3156,15 @@ def pacientes_view(request):
     if perfil == 'dentista':
 
         pacientes = Paciente.objects.filter(
+
             Q(dentista=request.user) |
-            Q(tratamentos__dentista=request.user)
+
+            Q(tratamentos__dentista=request.user) |
+
+            Q(
+                agendamentos__profissional__usuario=request.user
+            )
+
         ).distinct()
 
     else:
@@ -3844,18 +3851,16 @@ def odontograma(request, id):
     # =====================================
     # TRATAMENTO INICIAL
     #
-    # IMPORTANTE:
-    # Não usamos ID fixo.
+    # O tratamento inicial é sempre o primeiro
+    # tratamento criado para o paciente.
     #
-    # O primeiro tratamento ativo do paciente
-    # é considerado o tratamento inicial.
+    # IMPORTANTE:
+    # Mesmo depois de encerrado, ele continua
+    # sendo considerado o tratamento inicial.
     # =====================================
 
     tratamento_inicial = (
         paciente.tratamentos
-        .filter(
-            status="ATIVO"
-        )
         .order_by("id")
         .first()
     )
@@ -3865,64 +3870,6 @@ def odontograma(request, id):
         if tratamento_inicial
         else None
     )
-
-    # =====================================
-    # DEBUG TRATAMENTOS
-    # =====================================
-
-    print("")
-    print("=========================================")
-    print("DEBUG TRATAMENTOS ODONTOGRAMA")
-    print("=========================================")
-
-    print(
-        "PACIENTE:",
-        paciente.id
-    )
-
-    print(
-        "PERFIL:",
-        perfil_usuario
-    )
-
-    print(
-        "TRATAMENTO SOLICITADO:",
-        tratamento_id
-    )
-
-    print(
-        "TRATAMENTO SELECIONADO:",
-        tratamento.id
-        if tratamento
-        else None
-    )
-
-    print(
-        "TRATAMENTO INICIAL:",
-        tratamento_inicial.id
-        if tratamento_inicial
-        else None
-    )
-
-    print(
-        "TOTAL TRATAMENTOS ATIVOS:",
-        tratamentos_ativos.count()
-    )
-
-    for t in tratamentos_ativos:
-
-        print(
-            "TRATAMENTO:",
-            t.id,
-            "| TITULO:",
-            repr(t.titulo),
-            "| DENTISTA:",
-            t.dentista.username
-            if t.dentista
-            else None
-        )
-
-    print("=========================================")
 
     # =====================================
     # HISTÓRICO DE TRATAMENTOS
@@ -3961,22 +3908,6 @@ def odontograma(request, id):
     # =====================================
 
     if request.method == "POST":
-
-        print(
-            "========================================="
-        )
-
-        print(
-            "POST ODONTOGRAMA"
-        )
-
-        print(
-            request.POST
-        )
-
-        print(
-            "========================================="
-        )
 
         # =================================
         # TRATAMENTO OBRIGATÓRIO
@@ -4070,21 +4001,6 @@ def odontograma(request, id):
 
         posicao_icone = request.POST.get(
             "posicao_icone"
-        )
-
-        print(
-            "DENTE:",
-            dente
-        )
-
-        print(
-            "FACE:",
-            face
-        )
-
-        print(
-            "POSIÇÃO DO ÍCONE:",
-            posicao_icone
         )
 
         # =================================
@@ -4229,24 +4145,18 @@ def odontograma(request, id):
     # =====================================
     # ITENS DO TRATAMENTO ATUAL
     #
-    # REGRA:
-    #
     # TRATAMENTO INICIAL:
     #   mostra tudo que pertence a ele,
     #   inclusive RX, ausências e exodontias.
     #
     # TRATAMENTOS POSTERIORES:
-    #   não mostram RX do tratamento anterior
-    #   e não mostram dentes ausentes cancelados.
+    #   não mostram RX pertencente ao próprio
+    #   tratamento posterior.
     # =====================================
 
     itens_para_odontograma = []
 
     for item in itens_orcamento:
-
-        # =================================
-        # TRATAMENTO POSTERIOR
-        # =================================
 
         if (
             tratamento
@@ -4289,7 +4199,8 @@ def odontograma(request, id):
     # PROCEDIMENTOS DE OUTROS TRATAMENTOS
     #
     # SOMENTE PROCEDIMENTOS REALIZADOS
-    # QUE PODEM SER HERDADOS COMO EXISTENTE.
+    # QUE PODEM SER VISUALIZADOS COMO
+    # EXISTENTE.
     #
     # NÃO HERDAR:
     # - RX
@@ -4366,28 +4277,19 @@ def odontograma(request, id):
         status_visual = item.status
 
         # =================================
-        # REALIZADO
+        # PROCEDIMENTO REALIZADO EM
+        # OUTRO TRATAMENTO
         # =================================
 
-        if item.status == "realizado":
+        if (
+            item.status == "realizado"
+            and
+            orcamento
+            and
+            item.orcamento_id != orcamento.id
+        ):
 
-            tratamento_item = getattr(
-                item.orcamento,
-                "tratamento",
-                None
-            )
-
-            # =================================
-            # PROCEDIMENTO DE OUTRO TRATAMENTO
-            # =================================
-
-            if (
-                orcamento
-                and
-                item.orcamento_id != orcamento.id
-            ):
-
-                status_visual = "existente"
+            status_visual = "existente"
 
         # =================================
         # GUARDA STATUS VISUAL
@@ -4411,25 +4313,6 @@ def odontograma(request, id):
             tratamento_item.dentista
             if tratamento_item
             else None
-        )
-
-        print(
-            "DEBUG STATUS VISUAL:",
-            "ITEM=", item.id,
-            "| DENTE=", item.dente,
-            "| PROCEDIMENTO=",
-            item.procedimento.nome
-            if item.procedimento
-            else None,
-            "| STATUS=", item.status,
-            "| STATUS_VISUAL=",
-            item.status_visual,
-            "| DENTISTA_REALIZADOR=",
-            item.dentista_realizador.username
-            if item.dentista_realizador
-            else None,
-            "| USUARIO_ATUAL=",
-            request.user.username
         )
 
         procedimentos_odontograma.append(
@@ -4532,17 +4415,26 @@ def odontograma(request, id):
     # =====================================
     # DENTES AUSENTES / EXTRAÍDOS
     #
-    # REGRA DEFINITIVA:
+    # TRATAMENTO ATUAL:
+    #   considera as ausências registradas
+    #   no próprio tratamento.
     #
-    # TRATAMENTO INICIAL:
-    #   somente os dentes ausentes
-    #   registrados no próprio tratamento.
+    # DENTE AUSENTE:
+    #   tratamentos posteriores herdam
+    #   a ausência registrada anteriormente.
     #
-    # TRATAMENTO POSTERIOR:
-    #   mantém os dentes ausentes dos
-    #   tratamentos anteriores;
-    #   mantém também dentes extraídos
-    #   anteriormente.
+    # EXTRAÇÕES / CIRURGIAS:
+    #   quando REALIZADAS, tornam o dente
+    #   ausente de forma permanente.
+    #
+    #   Portanto, são consideradas em TODOS
+    #   os tratamentos do paciente,
+    #   independentemente da ordem em que
+    #   os tratamentos foram criados.
+    #
+    # IMPORTANTE:
+    #   os demais procedimentos continuam
+    #   independentes entre tratamentos.
     # =====================================
 
     dentes_ausentes = set()
@@ -4572,11 +4464,16 @@ def odontograma(request, id):
         )
 
         # =================================
-        # 2. SOMENTE TRATAMENTOS POSTERIORES
+        # 2. DENTES AUSENTES DE TRATAMENTOS
+        #    ANTERIORES
         # =================================
         #
-        # O tratamento inicial não deve
-        # receber nenhuma herança.
+        # Mantemos a regra existente para
+        # "Dente ausente".
+        #
+        # Somente tratamentos posteriores
+        # recebem as ausências registradas
+        # anteriormente.
         # =================================
 
         if (
@@ -4592,10 +4489,6 @@ def odontograma(request, id):
                     id__lt=tratamento.id
                 )
             )
-
-            # =============================
-            # 3. DENTES AUSENTES ANTERIORES
-            # =============================
 
             dentes_ausentes.update(
 
@@ -4616,30 +4509,45 @@ def odontograma(request, id):
                 )
             )
 
-            # =============================
-            # 4. DENTES EXTRAÍDOS ANTERIORMENTE
-            # =============================
-            #
-            # A exodontia permanente realizada
-            # anteriormente transforma o dente
-            # em ausente nos tratamentos seguintes.
-            #
-            # Usamos o arquivo do ícone e não
-            # somente o nome, tornando a regra
-            # mais resistente.
-            # =============================
+        # =================================
+        # 3. EXTRAÇÕES / CIRURGIAS REALIZADAS
+        # =================================
+        #
+        # ATENÇÃO:
+        #
+        # Aqui NÃO usamos tratamento_inicial_id.
+        #
+        # Também NÃO usamos id__lt.
+        #
+        # Uma extração ou cirurgia realizada
+        # representa a remoção física do dente.
+        #
+        # Portanto, procuramos em TODOS os
+        # tratamentos do paciente.
+        # =================================
 
-            dentes_ausentes.update(
+        dentes_ausentes.update(
 
-                str(item.dente)
+            str(item.dente)
 
-                for item in (
-                    ItemOrcamento.objects
-                    .filter(
-                        orcamento__tratamento__in=
-                            tratamentos_anteriores,
-                        dente__isnull=False,
-                        status="realizado",
+            for item in (
+                ItemOrcamento.objects
+                .filter(
+                    orcamento__paciente=paciente,
+                    dente__isnull=False,
+                    status="realizado"
+                )
+                .filter(
+                    Q(
+                        procedimento__nome__in=[
+                            "Exodontia permanente",
+                            "Exodontia a retalho",
+                            "Exodontia simples de decíduo",
+                            "Cirurgia dente incluso/impactado",
+                        ]
+                    )
+                    |
+                    Q(
                         procedimento__arquivo_icone__in=[
                             "extracao.png",
                             "exodontia_retalho.png",
@@ -4648,41 +4556,7 @@ def odontograma(request, id):
                     )
                 )
             )
-
-    # =====================================
-    # DEBUG DENTES AUSENTES
-    # =====================================
-
-    print(
-        "========================================="
-    )
-
-    print(
-        "DEBUG DENTES AUSENTES"
-    )
-
-    print(
-        "TRATAMENTO:",
-        tratamento.id
-        if tratamento
-        else None
-    )
-
-    print(
-        "TRATAMENTO INICIAL:",
-        tratamento_inicial_id
-    )
-
-    print(
-        "DENTES AUSENTES:",
-        sorted(
-            dentes_ausentes
         )
-    )
-
-    print(
-        "========================================="
-    )
 
     # =====================================
     # DICIONÁRIO DAS POSIÇÕES
@@ -4818,6 +4692,26 @@ def odontograma(request, id):
     )
 
     # =====================================
+    # DENTISTAS DISPONÍVEIS
+    #
+    # Utilizado pelo Administrador para
+    # escolher o responsável pelo novo
+    # tratamento.
+    # =====================================
+
+    dentistas = (
+        User.objects
+        .filter(
+            perfil__tipo_usuario="dentista",
+            perfil__ativo=True
+        )
+        .order_by(
+            "first_name",
+            "last_name"
+        )
+    )
+
+    # =====================================
     # CONTEXT
     # =====================================
 
@@ -4888,6 +4782,9 @@ def odontograma(request, id):
 
         "dec_inferiores":
             dec_inferiores,
+
+        "dentistas":
+            dentistas,
 
     }
 
@@ -7742,6 +7639,25 @@ def alterar_status_procedimento(request, id):
     paciente = item.orcamento.paciente
 
     # =====================================
+    # IDENTIFICA O TRATAMENTO DO ITEM
+    # =====================================
+    #
+    # O tratamento é a unidade de
+    # responsabilidade clínica.
+    #
+    # Portanto, para saber quem pode
+    # alterar o procedimento e quem recebe
+    # a comissão, usamos o dentista do
+    # tratamento ao qual o orçamento pertence.
+    # =====================================
+
+    tratamento = getattr(
+        item.orcamento,
+        "tratamento",
+        None
+    )
+
+    # =====================================
     # VERIFICA PERFIL DO USUÁRIO
     # =====================================
 
@@ -7768,14 +7684,36 @@ def alterar_status_procedimento(request, id):
     # =====================================
     #
     # O dentista somente pode alterar
-    # procedimentos de seus próprios pacientes.
+    # procedimentos pertencentes a um
+    # tratamento pelo qual ele é responsável.
+    #
+    # NÃO usamos mais:
+    #
+    #     paciente.dentista
+    #
+    # porque um mesmo paciente pode possuir
+    # tratamentos com dentistas diferentes.
+    #
+    # Exemplo:
+    #
+    # Tratamento A -> Joaquim
+    # Tratamento B -> Priscila
+    #
+    # Joaquim pode alterar A.
+    # Priscila pode alterar B.
+    # Nenhum dos dois pode alterar o tratamento
+    # do outro.
     #
     # Administrador continua com acesso total.
     # =====================================
 
     if perfil_nome == "Dentista":
 
-        if paciente.dentista_id != request.user.id:
+        if (
+            tratamento is None
+            or
+            tratamento.dentista_id != request.user.id
+        ):
 
             return JsonResponse(
                 {
@@ -7809,8 +7747,8 @@ def alterar_status_procedimento(request, id):
         )
 
     novo_status = data.get(
-        'status',
-        'planejado'
+        "status",
+        "planejado"
     )
 
     # =====================================
@@ -7831,28 +7769,30 @@ def alterar_status_procedimento(request, id):
     # GERA COMISSÃO DO DENTISTA
     # =====================================
     #
-    # A comissão é gerada SOMENTE quando
+    # A comissão é gerada somente quando
     # o procedimento passa para REALIZADO.
     #
-    # A comissão pertence ao DENTISTA
-    # VINCULADO AO PACIENTE.
+    # A comissão pertence ao dentista
+    # responsável pelo TRATAMENTO.
     #
-    # O valor da comissão é calculado sobre
-    # o valor do procedimento realizado.
-    #
+    # Não utilizamos mais o dentista
+    # principal do paciente.
     # =====================================
 
     if (
         novo_status == "realizado"
-        and status_anterior != "realizado"
+        and
+        status_anterior != "realizado"
+        and
+        tratamento is not None
     ):
 
         # =====================================
-        # IDENTIFICA O DENTISTA DO PACIENTE
+        # IDENTIFICA O DENTISTA DO TRATAMENTO
         # =====================================
 
         dentista = getattr(
-            paciente,
+            tratamento,
             "dentista",
             None
         )
@@ -7879,7 +7819,8 @@ def alterar_status_procedimento(request, id):
 
             if (
                 perfil_dentista
-                and perfil_dentista.tipo_usuario == "dentista"
+                and
+                perfil_dentista.tipo_usuario == "dentista"
             ):
 
                 # =====================================
@@ -7969,6 +7910,8 @@ def alterar_status_procedimento(request, id):
                                 f"ItemOrcamento #{item.id}. "
                                 f"Paciente: "
                                 f"{paciente.nome}. "
+                                f"Tratamento: "
+                                f"{tratamento.titulo}. "
                                 f"Dentista: "
                                 f"{dentista.get_full_name() or dentista.username}. "
                                 f"Valor do procedimento: "
@@ -7981,10 +7924,27 @@ def alterar_status_procedimento(request, id):
                         )
 
     # =====================================
-    # CONDIÇÃO ODONTOLÓGICA PERMANENTE
+    # PROCEDIMENTOS QUE TORNAM O DENTE AUSENTE
+    # =====================================
     #
-    # PROCEDIMENTOS QUE TORNAM O DENTE
-    # AUSENTE
+    # Estes procedimentos representam
+    # remoção física do dente.
+    #
+    # Quando REALIZADOS:
+    #
+    # - o dente fica ausente;
+    # - a ausência deve ser respeitada
+    #   pelos demais tratamentos;
+    # - o procedimento não deve ser
+    #   simplesmente herdado como "Existente".
+    #
+    # Quando CANCELADOS ou deixam de ser
+    # realizados:
+    #
+    # - somente removemos a condição de
+    #   ausência se NÃO existir outro
+    #   procedimento de remoção realizado
+    #   para aquele mesmo dente.
     # =====================================
 
     procedimentos_remocao_dente = [
@@ -7995,15 +7955,74 @@ def alterar_status_procedimento(request, id):
         "Cirurgia dente incluso/impactado",
     ]
 
+    # =====================================
+    # ÍCONES DE PROCEDIMENTOS DE REMOÇÃO
+    # =====================================
+    #
+    # Usamos também os arquivos dos ícones
+    # para garantir que a regra funcione mesmo
+    # que o nome cadastrado do procedimento
+    # tenha alguma variação.
+    # =====================================
+
+    icones_remocao_dente = [
+        "extracao.png",
+        "exodontia_retalho.png",
+        "cirurgia_incluso.png",
+    ]
+
+    # =====================================
+    # VERIFICA SE É PROCEDIMENTO DE REMOÇÃO
+    # =====================================
+
+    eh_remocao = False
+
     if (
         item.dente
-        and item.procedimento
-        and item.procedimento.nome
-        in procedimentos_remocao_dente
+        and
+        item.procedimento
     ):
 
+        nome_procedimento = (
+            item.procedimento.nome
+            or ""
+        ).strip()
+
+        arquivo_icone = (
+            getattr(
+                item.procedimento,
+                "arquivo_icone",
+                ""
+            )
+            or ""
+        ).strip()
+
+        if (
+            nome_procedimento
+            in procedimentos_remocao_dente
+        ):
+
+            eh_remocao = True
+
+        elif (
+            arquivo_icone
+            in icones_remocao_dente
+        ):
+
+            eh_remocao = True
+
+    # =====================================
+    # ATUALIZA CONDIÇÃO ODONTOLÓGICA
+    # =====================================
+
+    if eh_remocao:
+
+        dente_str = str(
+            item.dente
+        )
+
         # =====================================
-        # DENTE EFETIVAMENTE AUSENTE
+        # PROCEDIMENTO REALIZADO
         # =====================================
 
         if novo_status == "realizado":
@@ -8012,30 +8031,77 @@ def alterar_status_procedimento(request, id):
 
                 paciente=paciente,
 
-                dente=str(item.dente),
+                dente=dente_str,
 
                 tipo="ausente"
             )
 
         # =====================================
-        # SE DEIXAR DE SER REALIZADO
-        # O DENTE VOLTA AO ODONTOGRAMA
+        # PROCEDIMENTO DEIXOU DE SER REALIZADO
+        # =====================================
+        #
+        # NÃO apagamos automaticamente a
+        # condição de ausência.
+        #
+        # Antes verificamos se existe outro
+        # procedimento de remoção REALIZADO
+        # para o mesmo paciente e dente.
+        #
+        # Isso evita:
+        #
+        # Tratamento A -> Exodontia -> Realizado
+        # Tratamento B -> outro registro
+        #
+        # e depois cancelar A fazer o dente
+        # voltar indevidamente.
         # =====================================
 
         else:
 
-            CondicaoOdontologica.objects.filter(
+            outra_remocao_realizada = (
+                ItemOrcamento.objects
+                .filter(
+                    orcamento__paciente=paciente,
+                    dente=item.dente,
+                    status="realizado"
+                )
+                .exclude(
+                    id=item.id
+                )
+                .filter(
+                    Q(
+                        procedimento__nome__in=(
+                            procedimentos_remocao_dente
+                        )
+                    )
+                    |
+                    Q(
+                        procedimento__arquivo_icone__in=(
+                            icones_remocao_dente
+                        )
+                    )
+                )
+                .exists()
+            )
 
-                paciente=paciente,
+            if not outra_remocao_realizada:
 
-                dente=str(item.dente),
+                CondicaoOdontologica.objects.filter(
 
-                tipo="ausente"
+                    paciente=paciente,
 
-            ).delete()
+                    dente=dente_str,
+
+                    tipo="ausente"
+
+                ).delete()
 
         # =====================================
         # ATUALIZA EVOLUÇÃO EXISTENTE
+        # =====================================
+        #
+        # Mantemos a lógica existente para
+        # preservar o histórico clínico.
         # =====================================
 
         evolucao = (
@@ -12063,6 +12129,95 @@ def editar_perfil(request, perfil_id):
     )
 
 # =========================================
+# EXCLUIR PERFIL
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("perfis", "excluir")
+def excluir_perfil(request, perfil_id):
+
+    perfil = get_object_or_404(
+        Perfil,
+        id=perfil_id
+    )
+
+    # =========================================
+    # NÃO PERMITE EXCLUSÃO POR GET
+    # =========================================
+
+    if request.method != "POST":
+
+        return redirect(
+            "perfis"
+        )
+
+    # =========================================
+    # VERIFICA USUÁRIOS VINCULADOS
+    # =========================================
+
+    usuarios_vinculados = (
+        PerfilUsuario.objects
+        .filter(
+            perfil_acesso=perfil
+        )
+        .count()
+    )
+
+    # =========================================
+    # NÃO PERMITE EXCLUIR PERFIL EM USO
+    # =========================================
+
+    if usuarios_vinculados > 0:
+
+        messages.warning(
+            request,
+            (
+                f"Não é possível excluir o perfil "
+                f"'{perfil.nome}' porque existem "
+                f"{usuarios_vinculados} usuário(s) "
+                f"vinculado(s) a ele."
+            )
+        )
+
+        return redirect(
+            "perfis"
+        )
+
+    # =========================================
+    # GUARDA O NOME ANTES DA EXCLUSÃO
+    # =========================================
+
+    nome_perfil = perfil.nome
+
+    # =========================================
+    # EXCLUI O PERFIL
+    # =========================================
+    #
+    # As permissões vinculadas ao perfil
+    # serão excluídas automaticamente pelo
+    # on_delete=models.CASCADE do modelo
+    # Permissao.
+    # =========================================
+
+    perfil.delete()
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
+
+    messages.success(
+        request,
+        (
+            f"Perfil '{nome_perfil}' "
+            f"excluído com sucesso."
+        )
+    )
+
+    return redirect(
+        "perfis"
+    )
+
+# =========================================
 # DETALHES DO PERFIL
 # =========================================
 
@@ -14423,53 +14578,8 @@ def receber_conta(request, conta_id):
     # LOCALIZA A CONTA
     # =========================================
 
-    contas_permitidas = (
-        ContaReceber.objects
-        .select_related(
-            "paciente",
-            "orcamento",
-            "orcamento__tratamento",
-        )
-    )
-
-    # =========================================
-    # PERFIL DO USUÁRIO
-    # =========================================
-
-    perfil_usuario = getattr(
-        request.user,
-        "perfil",
-        None
-    )
-
-    perfil_acesso = getattr(
-        perfil_usuario,
-        "perfil_acesso",
-        None
-    )
-
-    perfil_nome = (
-        perfil_acesso.nome
-        if perfil_acesso
-        else ""
-    )
-
-    # =========================================
-    # ESCOPO DO DENTISTA
-    # =========================================
-
-    if perfil_nome == "Dentista":
-
-        contas_permitidas = contas_permitidas.filter(
-            orcamento__tratamento__dentista=request.user
-        )
-
-    # =========================================
-    # LOCALIZA A CONTA DENTRO DO ESCOPO
-    # =========================================
-
     conta = get_object_or_404(
-        contas_permitidas,
+        ContaReceber,
         id=conta_id
     )
 
@@ -14484,11 +14594,161 @@ def receber_conta(request, conta_id):
             (
                 f"A competência {hoje.month:02d}/{hoje.year} "
                 "está fechada. "
-                "Reabra o mês antes de realizar um recebimento."
+                "Reabra o mês antes de realizar este recebimento."
             )
         )
 
         return redirect("contas_receber")
+
+    # =========================================
+    # VERIFICA O CAIXA DIÁRIO
+    # =========================================
+
+    caixa_aberto = (
+        CaixaDiario.objects
+        .filter(status="ABERTO")
+        .order_by("-data", "-id")
+        .first()
+    )
+
+    # =========================================
+    # NÃO EXISTE CAIXA ABERTO
+    # =========================================
+
+    if not caixa_aberto:
+
+        messages.error(
+            request,
+            "Não existe um Caixa aberto. "
+            "Abra o Caixa antes de realizar um recebimento."
+        )
+
+        return redirect("caixa")
+
+    # =========================================
+    # EXISTE CAIXA ABERTO DE OUTRO DIA
+    # =========================================
+
+    if caixa_aberto.data < hoje:
+
+        messages.error(
+            request,
+            f"Existe um Caixa aberto do dia "
+            f"{caixa_aberto.data.strftime('%d/%m/%Y')}. "
+            f"Feche-o antes de continuar."
+        )
+
+        return redirect("caixa")
+
+    # =========================================
+    # EVITA RECEBIMENTO DUPLICADO
+    # =========================================
+
+    if conta.status == "RECEBIDO":
+
+        messages.warning(
+            request,
+            "Esta conta já foi recebida."
+        )
+
+        return redirect("contas_receber")
+
+    # =========================================
+    # RECEBE A CONTA
+    # =========================================
+
+    conta.status = "RECEBIDO"
+
+    conta.data_recebimento = hoje
+
+    conta.save(
+        update_fields=[
+            "status",
+            "data_recebimento"
+        ]
+    )
+
+    # =========================================
+    # LANÇA NO CAIXA
+    # =========================================
+
+    if not Caixa.objects.filter(
+        conta_receber=conta
+    ).exists():
+
+        Caixa.objects.create(
+
+            data=conta.data_recebimento,
+
+            descricao=(
+                f"{conta.paciente.nome} • "
+                f"{conta.descricao} "
+                f"(Parcela {conta.numero_parcela})"
+            ),
+
+            tipo="ENTRADA",
+
+            valor=conta.valor,
+
+            conta_receber=conta,
+
+            usuario=request.user
+
+        )
+
+    # =========================================
+    # LANÇA NO LIVRO CAIXA
+    # =========================================
+
+    registrar_livro_caixa(
+
+        data=conta.data_recebimento,
+
+        tipo="ENTRADA",
+
+        origem="CONTA_RECEBER",
+
+        descricao=conta.descricao,
+
+        valor=conta.valor,
+
+        paciente=conta.paciente,
+
+        profissional=conta.dentista,
+
+        conta_receber=conta,
+
+        observacao=(
+            f"Recebimento da parcela "
+            f"{conta.numero_parcela}"
+        )
+
+    )
+
+    # =========================================
+    # COMISSÃO DO DENTISTA
+    # =========================================
+    #
+    # A comissão NÃO é gerada no recebimento.
+    #
+    # Ela será calculada posteriormente,
+    # quando cada ItemOrcamento for marcado
+    # como "realizado".
+    #
+    # =========================================
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
+
+    messages.success(
+        request,
+        "Conta recebida com sucesso."
+    )
+
+    return redirect(
+        "contas_receber"
+    )
     
 # =========================================
 # CAIXA
@@ -16586,22 +16846,77 @@ def novo_tratamento(request, paciente_id):
             id=paciente.id
         )
 
-    # Verifica se já existe tratamento ativo
-    tratamento_ativo = paciente.tratamentos.filter(
-        status="ATIVO"
-    ).first()
+    # =========================================
+    # PERFIL DO USUÁRIO
+    # =========================================
 
-    if tratamento_ativo:
+    perfil_usuario = getattr(
+        getattr(
+            request.user,
+            "perfil",
+            None
+        ),
+        "tipo_usuario",
+        ""
+    )
 
-        messages.warning(
-            request,
-            "Já existe um tratamento ativo para este paciente."
+    # =========================================
+    # DENTISTA RESPONSÁVEL
+    # =========================================
+
+    if perfil_usuario == "admin":
+
+        dentista_id = request.POST.get(
+            "dentista"
         )
 
-        return redirect(
-            "odontograma",
-            id=paciente.id
+        if not dentista_id:
+
+            messages.error(
+                request,
+                "Selecione o dentista responsável pelo tratamento."
+            )
+
+            return redirect(
+                "odontograma",
+                id=paciente.id
+            )
+
+        dentista = get_object_or_404(
+            User,
+            id=dentista_id,
+            perfil__tipo_usuario="dentista",
+            perfil__ativo=True
         )
+
+    elif perfil_usuario == "dentista":
+
+        # O próprio dentista será o responsável.
+
+        dentista = request.user
+
+    else:
+
+        # Para os demais perfis, utiliza o dentista
+        # principal cadastrado para o paciente.
+
+        dentista = paciente.dentista
+
+        if not dentista:
+
+            messages.error(
+                request,
+                "Não foi possível criar o tratamento porque o paciente não possui dentista responsável."
+            )
+
+            return redirect(
+                "odontograma",
+                id=paciente.id
+            )
+
+    # =========================================
+    # DADOS DO TRATAMENTO
+    # =========================================
 
     titulo = request.POST.get(
         "titulo",
@@ -16617,11 +16932,15 @@ def novo_tratamento(request, paciente_id):
 
         titulo = "Novo Tratamento"
 
+    # =========================================
+    # CRIA TRATAMENTO
+    # =========================================
+
     tratamento = Tratamento.objects.create(
 
         paciente=paciente,
 
-        dentista=request.user,
+        dentista=dentista,
 
         titulo=titulo,
 
@@ -16630,6 +16949,10 @@ def novo_tratamento(request, paciente_id):
         status="ATIVO"
 
     )
+
+    # =========================================
+    # CRIA ORÇAMENTO
+    # =========================================
 
     Orcamento.objects.get_or_create(
 
@@ -16643,14 +16966,22 @@ def novo_tratamento(request, paciente_id):
 
     )
 
+    # =========================================
+    # MENSAGEM
+    # =========================================
+
     messages.success(
         request,
         "Novo tratamento criado com sucesso."
     )
 
+    # =========================================
+    # RETORNA AO TRATAMENTO CRIADO
+    # =========================================
+
     return redirect(
-        "odontograma",
-        id=paciente.id
+        f"/pacientes/{paciente.id}/odontograma/"
+        f"?tratamento={tratamento.id}"
     )
 
 # =========================================

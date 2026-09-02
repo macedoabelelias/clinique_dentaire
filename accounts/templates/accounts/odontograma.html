@@ -3313,98 +3313,187 @@ CARD RADIOGRAFIAS E FOTOS
     </div>
 
     <!-- =========================================
-MODAL - NOVO TRATAMENTO
-========================================= -->
+    MODAL - NOVO TRATAMENTO
+    ========================================= -->
 
-    <div class="modal fade" id="modalNovoTratamento" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalNovoTratamento" tabindex="-1" aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-content">
+        <div class="modal-content">
 
-                <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-primary text-white">
 
-                    <h5 class="modal-title">
+                <h5 class="modal-title">
 
-                        <i class="fa-solid fa-notes-medical"></i>
+                    <i class="fa-solid fa-notes-medical"></i>
 
-                        Novo Tratamento
+                    Novo Tratamento
 
-                    </h5>
+                </h5>
 
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <form
+                method="POST"
+                action="{% url 'novo_tratamento' paciente.id %}">
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <!-- =========================================
+                        NOME DO TRATAMENTO
+                        ========================================= -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Nome do Tratamento
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="titulo"
+                            class="form-control"
+                            placeholder="Ex.: Implantes Superiores"
+                            required>
+
+                    </div>
+
+
+                    <!-- =========================================
+                        DENTISTA RESPONSÁVEL
+                        SOMENTE PARA ADMINISTRADOR
+                        ========================================= -->
+
+                    {% if request.user.perfil.tipo_usuario == "admin" %}
+
+                    <div class="mb-3">
+
+                        <label
+                            for="dentistaTratamento"
+                            class="form-label">
+
+                            Dentista responsável
+
+                        </label>
+
+                        <select
+                            name="dentista"
+                            id="dentistaTratamento"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+
+                                Selecione o dentista
+
+                            </option>
+
+                            {% for dentista in dentistas %}
+
+                            <option value="{{ dentista.id }}">
+
+                                {{ dentista.get_full_name|default:dentista.username }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="form-text">
+
+                            Selecione o profissional que será responsável
+                            pelo tratamento.
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- =========================================
+                        OBSERVAÇÕES
+                        ========================================= -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Observações
+
+                        </label>
+
+                        <textarea
+                            name="observacoes"
+                            rows="4"
+                            class="form-control"
+                            placeholder="Descrição inicial do tratamento..."></textarea>
+
+                    </div>
+
+
+                    <!-- =========================================
+                        INFORMAÇÃO
+                        ========================================= -->
+
+                    <div class="alert alert-info mb-0">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        Ao salvar, este tratamento será definido como
+                        <strong>ATIVO</strong> e um novo orçamento será criado automaticamente.
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                    RODAPÉ
+                    ========================================= -->
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Salvar Tratamento
+
                     </button>
 
                 </div>
 
-                <form method="POST" action="{% url 'novo_tratamento' paciente.id %}">
-
-                    {% csrf_token %}
-
-                    <div class="modal-body">
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Nome do Tratamento
-
-                            </label>
-
-                            <input type="text" name="titulo" class="form-control"
-                                placeholder="Ex.: Implantes Superiores" required>
-
-                        </div>
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Observações
-
-                            </label>
-
-                            <textarea name="observacoes" rows="4" class="form-control"
-                                placeholder="Descrição inicial do tratamento..."></textarea>
-
-                        </div>
-
-                        <div class="alert alert-info mb-0">
-
-                            <i class="fa-solid fa-circle-info"></i>
-
-                            Ao salvar, este tratamento será definido como
-                            <strong>ATIVO</strong> e um novo orçamento será criado automaticamente.
-
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-
-                            Cancelar
-
-                        </button>
-
-                        <button type="submit" class="btn btn-primary">
-
-                            <i class="fa-solid fa-floppy-disk"></i>
-
-                            Salvar Tratamento
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
+            </form>
 
         </div>
 
     </div>
+
+</div>
 
     <script>
 

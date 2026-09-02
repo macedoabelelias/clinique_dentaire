@@ -1388,6 +1388,16 @@ path(
     name="editar_perfil",
 ),
 
+# =========================================
+# EXCLUIR PERFIL
+# =========================================
+
+path(
+    "perfis/<int:perfil_id>/excluir/",
+    views.excluir_perfil,
+    name="excluir_perfil",
+),
+
 path(
     "criar-modulos/",
     views.criar_modulos,
