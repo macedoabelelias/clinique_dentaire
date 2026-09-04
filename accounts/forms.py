@@ -294,7 +294,7 @@ class ItemOrcamentoForm(forms.ModelForm):
 
         }
         
- # =========================================
+# =========================================
 # FORM CONVÊNIO
 # =========================================
 
@@ -309,6 +309,8 @@ class ConvenioForm(forms.ModelForm):
             'nome',
             'indice',
             'telefone',
+            'whatsapp',
+            'telefone_0800',
             'observacoes',
             'ativo'
 
@@ -347,6 +349,26 @@ class ConvenioForm(forms.ModelForm):
 
             ),
 
+            'whatsapp': forms.TextInput(
+
+                attrs={
+
+                    'class': 'form-control shadow-sm'
+
+                }
+
+            ),
+
+            'telefone_0800': forms.TextInput(
+
+                attrs={
+
+                    'class': 'form-control shadow-sm'
+
+                }
+
+            ),
+
             'observacoes': forms.Textarea(
 
                 attrs={
@@ -368,8 +390,7 @@ class ConvenioForm(forms.ModelForm):
 
             )
 
-        }  
-
+        }
 
 # =========================================
 # FORM PERFIL

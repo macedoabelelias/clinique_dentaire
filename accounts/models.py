@@ -2118,53 +2118,53 @@ class ConfiguracaoClinica(models.Model):
 class Convenio(models.Model):
 
     nome = models.CharField(
-
         max_length=150
-
     )
 
     indice = models.DecimalField(
-
         max_digits=5,
         decimal_places=2,
         default=1.00
-
     )
 
     telefone = models.CharField(
-
         max_length=20,
         blank=True,
         null=True
+    )
 
+    whatsapp = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    telefone_0800 = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
     )
 
     observacoes = models.TextField(
-
         blank=True,
         null=True
-
     )
 
     ativo = models.BooleanField(
-
         default=True
-
     )
 
     criado_em = models.DateTimeField(
-
         auto_now_add=True
-
     )
 
     def __str__(self):
 
         return self.nome
-  
+
 
 # =========================================
-# ITEM ORÇAMENTO
+# TIPOS DE LOCALIZAÇÃO DO ITEM
 # =========================================
 
 TIPO_LOCAL = (
@@ -2186,7 +2186,12 @@ HEMI_CHOICES = (
 )
 
 
+# =========================================
+# ITEM ORÇAMENTO
+# =========================================
+
 class ItemOrcamento(models.Model):
+
     STATUS_CHOICES = (
 
         ('existente', 'Existente'),

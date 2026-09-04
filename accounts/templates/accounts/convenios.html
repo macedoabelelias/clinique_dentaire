@@ -23,70 +23,92 @@
 
                 <div class="row g-3">
 
-                    <!-- NOME -->
-                    <div class="col-md-4">
+    <!-- NOME -->
+    <div class="col-md-3">
 
-                        <label class="form-label fw-semibold">
-                            Nome
-                        </label>
+        <label class="form-label fw-semibold">
+            Nome
+        </label>
 
-                        {{ form.nome }}
+        {{ form.nome }}
 
-                    </div>
+    </div>
 
-                    <!-- ÍNDICE -->
-                    <div class="col-md-2">
+    <!-- ÍNDICE -->
+    <div class="col-md-2">
 
-                        <label class="form-label fw-semibold">
-                            Índice
-                        </label>
+        <label class="form-label fw-semibold">
+            Índice
+        </label>
 
-                        {{ form.indice }}
+        {{ form.indice }}
 
-                    </div>
+    </div>
 
-                    <!-- TELEFONE -->
-                    <div class="col-md-3">
+    <!-- TELEFONE -->
+    <div class="col-md-2">
 
-                        <label class="form-label fw-semibold">
-                            Telefone
-                        </label>
+        <label class="form-label fw-semibold">
+            Telefone
+        </label>
 
-                        {{ form.telefone }}
+        {{ form.telefone }}
 
-                    </div>
+    </div>
 
-                    <!-- STATUS -->
-                    <div class="col-md-3">
+    <!-- WHATSAPP -->
+    <div class="col-md-2">
 
-                        <label class="form-label fw-semibold d-block">
-                            Status
-                        </label>
+        <label class="form-label fw-semibold">
+            WhatsApp
+        </label>
 
-                        <div class="form-check mt-2">
+        {{ form.whatsapp }}
 
-                            {{ form.ativo }}
+    </div>
 
-                            <label class="form-check-label">
-                                Convênio ativo
-                            </label>
+    <!-- 0800 -->
+    <div class="col-md-2">
 
-                        </div>
+        <label class="form-label fw-semibold">
+            Telefone 0800
+        </label>
 
-                    </div>
+        {{ form.telefone_0800 }}
 
-                    <!-- OBSERVAÇÕES -->
-                    <div class="col-12">
+    </div>
 
-                        <label class="form-label fw-semibold">
-                            Observações
-                        </label>
+    <!-- STATUS -->
+    <div class="col-md-1">
 
-                        {{ form.observacoes }}
+        <label class="form-label fw-semibold d-block">
+            Status
+        </label>
 
-                    </div>
+        <div class="form-check mt-2">
 
-                </div>
+            {{ form.ativo }}
+
+            <label class="form-check-label">
+                Ativo
+            </label>
+
+        </div>
+
+    </div>
+
+    <!-- OBSERVAÇÕES -->
+    <div class="col-12">
+
+        <label class="form-label fw-semibold">
+            Observações
+        </label>
+
+        {{ form.observacoes }}
+
+    </div>
+
+</div>
 
                 <button class="btn btn-primary rounded-pill px-4 mt-4">
 
@@ -109,120 +131,135 @@
 
                 <table class="table align-middle">
 
-                    <thead>
+    <thead>
 
-                        <tr>
+        <tr>
 
-                            <th>Nome</th>
-                            <th>Índice</th>
-                            <th>Telefone</th>
-                            <th>Status</th>
-                             <th width="140">Ações</th>
+            <th>Nome</th>
+            <th>Índice</th>
+            <th>Telefone</th>
+            <th>WhatsApp</th>
+            <th>Telefone 0800</th>
+            <th>Status</th>
+            <th width="140">Ações</th>
 
-                        </tr>
+        </tr>
 
-                    </thead>
+    </thead>
 
-                   <tbody>
+    <tbody>
 
-    {% for convenio in convenios %}
+        {% for convenio in convenios %}
 
-    <tr>
+        <tr>
 
-        <!-- NOME -->
-        <td>
+            <!-- NOME -->
+            <td>
 
-            <strong>
-                {{ convenio.nome }}
-            </strong>
+                <strong>
+                    {{ convenio.nome }}
+                </strong>
 
-        </td>
+            </td>
 
-        <!-- ÍNDICE -->
-        <td>
+            <!-- ÍNDICE -->
+            <td>
 
-            {{ convenio.indice }}
+                {{ convenio.indice }}
 
-        </td>
+            </td>
 
-        <!-- TELEFONE -->
-        <td>
+            <!-- TELEFONE -->
+            <td class="text-nowrap">
 
-            {{ convenio.telefone }}
+                {{ convenio.telefone|default:"—" }}
 
-        </td>
+            </td>
 
-        <!-- STATUS -->
-        <td>
+            <!-- WHATSAPP -->
+            <td class="text-nowrap">
 
-            {% if convenio.ativo %}
+                {{ convenio.whatsapp|default:"—" }}
 
-                <span class="badge bg-success">
+            </td>
 
-                    Ativo
+            <!-- TELEFONE 0800 -->
+            <td class="text-nowrap">
 
-                </span>
+                {{ convenio.telefone_0800|default:"—" }}
 
-            {% else %}
+            </td>
 
-                <span class="badge bg-secondary">
+            <!-- STATUS -->
+            <td>
 
-                    Inativo
+                {% if convenio.ativo %}
 
-                </span>
+                    <span class="badge bg-success">
+                        Ativo
+                    </span>
 
-            {% endif %}
+                {% else %}
 
-        </td>
+                    <span class="badge bg-secondary">
+                        Inativo
+                    </span>
 
-        <!-- AÇÕES -->
-        <td>
+                {% endif %}
 
-            <div class="d-flex gap-2">
+            </td>
 
-                <!-- EDITAR -->
-                <a
-                    href="{% url 'editar_convenio' convenio.id %}"
-                    class="btn btn-sm btn-light border"
-                >
+            <!-- AÇÕES -->
+            <td>
 
-                    <i class="fa-solid fa-pen"></i>
+                <div class="d-flex gap-2">
 
-                </a>
+                    <!-- EDITAR -->
+                    <a
+                        href="{% url 'editar_convenio' convenio.id %}"
+                        class="btn btn-sm btn-light border"
+                        title="Editar"
+                    >
 
-                <!-- EXCLUIR -->
-                <a
-                    href="{% url 'excluir_convenio' convenio.id %}"
-                    class="btn btn-sm btn-light border"
-                    onclick="return confirm('Deseja excluir este convênio?')"
-                >
+                        <i class="fa-solid fa-pen"></i>
 
-                    <i class="fa-solid fa-trash"></i>
+                    </a>
 
-                </a>
+                    <!-- EXCLUIR -->
+                    <a
+                        href="{% url 'excluir_convenio' convenio.id %}"
+                        class="btn btn-sm btn-light border"
+                        title="Excluir"
+                        onclick="return confirm('Deseja excluir este convênio?')"
+                    >
 
-            </div>
+                        <i class="fa-solid fa-trash"></i>
 
-        </td>
+                    </a>
 
-    </tr>
+                </div>
 
-    {% empty %}
+            </td>
 
-    <tr>
+        </tr>
 
-        <td colspan="5">
+        {% empty %}
 
-            Nenhum convênio cadastrado.
+        <tr>
 
-        </td>
+            <td colspan="7" class="text-center text-muted py-4">
 
-    </tr>
+                Nenhum convênio cadastrado.
 
-    {% endfor %}
+            </td>
 
-</tbody>
-                </table>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
 
             </div>
 
@@ -231,5 +268,121 @@
     </div>
 
 </div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const telefone = document.getElementById("id_telefone");
+    const whatsapp = document.getElementById("id_whatsapp");
+    const telefone0800 = document.getElementById("id_telefone_0800");
+
+
+    // =========================================
+// MÁSCARA TELEFONE FIXO
+// =========================================
+
+if (telefone) {
+
+    telefone.addEventListener("input", function () {
+
+        let valor = telefone.value.replace(/\D/g, "");
+
+        // Telefone fixo = 10 dígitos
+        valor = valor.substring(0, 10);
+
+        if (valor.length <= 2) {
+
+            telefone.value = valor;
+
+        } else if (valor.length <= 6) {
+
+            telefone.value =
+                "(" + valor.substring(0, 2) + ") " +
+                valor.substring(2);
+
+        } else {
+
+            telefone.value =
+                "(" + valor.substring(0, 2) + ") " +
+                valor.substring(2, 6) + "-" +
+                valor.substring(6);
+
+        }
+
+    });
+
+}
+
+
+// =========================================
+// MÁSCARA WHATSAPP / CELULAR
+// =========================================
+
+if (whatsapp) {
+
+    whatsapp.addEventListener("input", function () {
+
+        let valor = whatsapp.value.replace(/\D/g, "");
+
+        // Celular = 11 dígitos
+        valor = valor.substring(0, 11);
+
+        if (valor.length <= 2) {
+
+            whatsapp.value = valor;
+
+        } else if (valor.length <= 7) {
+
+            whatsapp.value =
+                "(" + valor.substring(0, 2) + ") " +
+                valor.substring(2);
+
+        } else {
+
+            whatsapp.value =
+                "(" + valor.substring(0, 2) + ") " +
+                valor.substring(2, 7) + "-" +
+                valor.substring(7);
+
+        }
+
+    });
+
+}
+
+    // =========================================
+    // MÁSCARA 0800
+    // =========================================
+
+    if (telefone0800) {
+
+        telefone0800.addEventListener("input", function () {
+
+            let valor = telefone0800.value.replace(/\D/g, "");
+
+            // Limita a 11 dígitos
+            valor = valor.substring(0, 11);
+
+            if (valor.length > 4) {
+
+                valor =
+                    valor.substring(0, 4) +
+                    " " +
+                    valor.substring(4, 7) +
+                    " " +
+                    valor.substring(7, 11);
+
+            }
+
+            telefone0800.value = valor;
+
+        });
+
+    }
+
+});
+
+</script>
 
 {% endblock %}

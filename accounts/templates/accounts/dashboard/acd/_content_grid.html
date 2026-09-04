@@ -106,19 +106,41 @@ CONTENT GRID - ACD
 
             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
 
-                <div>
+    <div>
 
-                    <strong>{{ aniversariante.nome }}</strong><br>
+        <strong>{{ aniversariante.nome }}</strong><br>
 
-                    <small class="text-muted">
-                        {{ aniversariante.nascimento|date:"d/m" }}
-                    </small>
+        <small class="text-muted">
+            {{ aniversariante.nascimento|date:"d/m" }}
+        </small>
 
-                </div>
+    </div>
 
-                <i class="bi bi-cake2-fill text-warning"></i>
+    <div class="d-flex align-items-center gap-2">
 
-            </div>
+        <i class="bi bi-cake2-fill text-warning"></i>
+
+        {% if aniversariante.whatsapp or aniversariante.telefone %}
+
+            <a
+                href="#"
+                onclick="abrirWhatsAppAniversario(
+                    '{{ aniversariante.whatsapp|default:aniversariante.telefone|cut:' '|cut:'('|cut:')'|cut:'-' }}',
+                    '{{ aniversariante.nome|escapejs }}'
+                ); return false;"
+                class="btn btn-success btn-sm"
+                title="Enviar mensagem de aniversário pelo WhatsApp"
+            >
+
+                <i class="bi bi-whatsapp"></i>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
 
             {% endfor %}
 
@@ -135,3 +157,31 @@ CONTENT GRID - ACD
     </div>
 
 </div>
+
+<script>
+
+function abrirWhatsAppAniversario(numero, nome) {
+
+    const mensagem =
+        "Olá, " + nome + "!\n\n" +
+        "A equipe da Clinique Dentaire deseja a você um feliz aniversário!\n\n" +
+        "Que este novo ciclo seja repleto de saúde, felicidade e muitos momentos especiais.\n\n" +
+        "Um grande abraço de toda a nossa equipe!";
+
+    const mensagemCodificada =
+        encodeURIComponent(mensagem);
+
+    const url =
+        "https://wa.me/" +
+        numero +
+        "?text=" +
+        mensagemCodificada;
+
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+</script>

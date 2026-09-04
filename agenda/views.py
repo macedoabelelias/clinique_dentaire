@@ -44,7 +44,24 @@ def novo_agendamento_paciente(request, paciente_id):
     )
 
     # =========================================
-    # PROFISSIONAL RESPONSÁVEL PELO PACIENTE
+    # PROFISSIONAIS DISPONÍVEIS PARA AGENDAMENTO
+    # =========================================
+
+    profissionais_disponiveis = (
+        Profissional.objects
+        .filter(
+            ativo=True
+        )
+        .select_related(
+            "usuario"
+        )
+        .order_by(
+            "nome"
+        )
+    )
+
+    # =========================================
+    # PROFISSIONAL INICIAL
     # =========================================
 
     profissional_responsavel = None
@@ -52,10 +69,9 @@ def novo_agendamento_paciente(request, paciente_id):
     if paciente.dentista:
 
         profissional_responsavel = (
-            Profissional.objects
+            profissionais_disponiveis
             .filter(
-                usuario=paciente.dentista,
-                ativo=True
+                usuario=paciente.dentista
             )
             .first()
         )
@@ -64,9 +80,13 @@ def novo_agendamento_paciente(request, paciente_id):
     # TRATAMENTO ATIVO
     # =========================================
 
-    tratamento = paciente.tratamentos.filter(
-        status="ATIVO"
-    ).first()
+    tratamento = (
+        paciente.tratamentos
+        .filter(
+            status="ATIVO"
+        )
+        .first()
+    )
 
     # =========================================
     # CRIA TRATAMENTO SE NÃO EXISTIR
@@ -129,12 +149,24 @@ def novo_agendamento_paciente(request, paciente_id):
         )
 
         # -----------------------------------------
+        # PROFISSIONAIS DISPONÍVEIS
+        # -----------------------------------------
+
+        form.fields[
+            "profissional"
+        ].queryset = (
+            profissionais_disponiveis
+        )
+
+        # -----------------------------------------
         # PROCEDIMENTOS DO ORÇAMENTO
         # -----------------------------------------
 
         if orcamento:
 
-            form.fields["procedimento"].queryset = (
+            form.fields[
+                "procedimento"
+            ].queryset = (
                 Procedimento.objects
                 .filter(
                     id__in=procedimentos_ids
@@ -144,7 +176,9 @@ def novo_agendamento_paciente(request, paciente_id):
 
         else:
 
-            form.fields["procedimento"].queryset = (
+            form.fields[
+                "procedimento"
+            ].queryset = (
                 Procedimento.objects.all()
             )
 
@@ -183,12 +217,24 @@ def novo_agendamento_paciente(request, paciente_id):
         )
 
         # -----------------------------------------
+        # PROFISSIONAIS DISPONÍVEIS
+        # -----------------------------------------
+
+        form.fields[
+            "profissional"
+        ].queryset = (
+            profissionais_disponiveis
+        )
+
+        # -----------------------------------------
         # PROCEDIMENTOS
         # -----------------------------------------
 
         if orcamento:
 
-            form.fields["procedimento"].queryset = (
+            form.fields[
+                "procedimento"
+            ].queryset = (
                 Procedimento.objects
                 .filter(
                     id__in=procedimentos_ids
@@ -198,7 +244,9 @@ def novo_agendamento_paciente(request, paciente_id):
 
         else:
 
-            form.fields["procedimento"].queryset = (
+            form.fields[
+                "procedimento"
+            ].queryset = (
                 Procedimento.objects.all()
             )
 

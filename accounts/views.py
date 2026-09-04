@@ -52,6 +52,7 @@ from reportlab.lib.styles import (
     ParagraphStyle,
 )
 from reportlab.lib.units import mm
+from reportlab.lib.utils import ImageReader
 
 from reportlab.platypus import (
     HRFlowable,
@@ -1380,17 +1381,26 @@ def dashboard_view(request):
     # =========================================
     # BUSCA OS ORÇAMENTOS
     # =========================================
+    #
+    # O dentista responsável pela produção é o
+    # dentista do TRATAMENTO.
+    #
+    # Isso permite que um mesmo paciente tenha
+    # tratamentos com dentistas diferentes.
+    # =========================================
 
     orcamentos = (
         Orcamento.objects
         .filter(
             status__in=status_validos,
-            paciente__dentista__isnull=False,
+            tratamento__isnull=False,
+            tratamento__dentista__isnull=False,
         )
         .select_related(
             "paciente",
-            "paciente__dentista",
-            "paciente__dentista__perfil",
+            "tratamento",
+            "tratamento__dentista",
+            "tratamento__dentista__perfil",
         )
     )
 
@@ -1401,17 +1411,100 @@ def dashboard_view(request):
     for orcamento in orcamentos:
 
         # -----------------------------------------
-        # Dentista responsável pelo paciente
+        # TRATAMENTO DO ORÇAMENTO
         # -----------------------------------------
 
-        dentista = orcamento.paciente.dentista
+        tratamento = getattr(
+            orcamento,
+            "tratamento",
+            None
+        )
+
+        if not tratamento:
+            continue
+
+        # -----------------------------------------
+        # DENTISTA RESPONSÁVEL PELO TRATAMENTO
+        # -----------------------------------------
+
+        dentista = getattr(
+            tratamento,
+            "dentista",
+            None
+        )
 
         if not dentista:
             continue
 
         # -----------------------------------------
-        # Somente usuários com perfil de dentista
+        # PERFIL DO DENTISTA
         # -----------------------------------------
+
+        perfil = getattr(
+            dentista,
+            "perfil",
+            None
+        )
+
+        if not perfil:
+            continue
+
+        tipo_usuario = str(
+            getattr(
+                perfil,
+                "tipo_usuario",
+                ""
+            )
+        ).strip().lower()
+
+        # -----------------------------------------
+        # SOMENTE USUÁRIOS DENTISTAS
+        # -----------------------------------------
+
+        if tipo_usuario != "dentista":
+            continue
+
+        # -----------------------------------------
+        # VALOR DA PRODUÇÃO
+        # -----------------------------------------
+
+        valor_producao = (
+            orcamento.total
+            or Decimal("0.00")
+        )
+
+        valor_producao = Decimal(
+            str(valor_producao)
+        )
+
+        ranking_dict[dentista] += valor_producao
+
+
+    # =========================================
+    # ORDENA DO MAIOR PARA O MENOR
+    # =========================================
+
+    ranking_dentistas_completo = sorted(
+        ranking_dict.items(),
+        key=lambda item: item[1],
+        reverse=True,
+    )
+
+
+    # =========================================
+    # DESEMPENHO DOS DENTISTAS
+    # =========================================
+
+    desempenho_dentistas = []
+
+
+    # =========================================
+    # FILTRA SOMENTE DENTISTAS
+    # =========================================
+
+    ranking_dentistas_filtrado = []
+
+    for dentista, producao in ranking_dentistas_completo:
 
         perfil = getattr(
             dentista,
@@ -1433,75 +1526,21 @@ def dashboard_view(request):
         if tipo_usuario != "dentista":
             continue
 
-        # -----------------------------------------
-        # Soma a produção
-        # -----------------------------------------
-
-        ranking_dict[dentista] += (
-            orcamento.total
-            or Decimal("0.00")
-        )
-
-
-    # =========================================
-    # ORDENA DO MAIOR PARA O MENOR
-    # =========================================
-
-    ranking_dentistas = sorted(
-        ranking_dict.items(),
-        key=lambda item: item[1],
-        reverse=True,
-    )
-    
-    # =========================================
-    # DESEMPENHO DOS DENTISTAS
-    # =========================================
-
-    desempenho_dentistas = []
-
-    # =========================================
-    # FILTRA SOMENTE USUÁRIOS DENTISTAS
-    # =========================================
-
-    ranking_dentistas_filtrado = []
-
-    for dentista, producao in ranking_dentistas:
-
-        perfil = getattr(
-            dentista,
-            "perfil",
-            None
-        )
-
-        if not perfil:
-            continue
-
-        tipo_usuario = str(
-            getattr(perfil, "tipo_usuario", "")
-        ).strip().lower()
-
-        # Somente usuários cujo perfil é dentista
-        if tipo_usuario != "dentista":
-            continue
-
         ranking_dentistas_filtrado.append(
             (dentista, producao)
         )
 
 
     # =========================================
-    # LIMITA RANKING DO ADMINISTRADOR / GESTOR
+    # MONTA O DESEMPENHO
     # =========================================
-
-    if dashboard_tipo != "dentista":
-
-        ranking_dentistas_filtrado = (
-            ranking_dentistas_filtrado[:5]
-        )
-
-
-    # =========================================
-    # MONTA DESEMPENHO
+    #
+    # IMPORTANTE:
+    #
+    # Aqui utilizamos o ranking COMPLETO.
+    #
+    # Não limitamos aos 5 primeiros antes de
+    # calcular a comissão do dentista.
     # =========================================
 
     for posicao, (dentista, producao) in enumerate(
@@ -1512,10 +1551,15 @@ def dashboard_view(request):
         # =========================================
         # DASHBOARD DO DENTISTA
         # =========================================
+        #
+        # O dentista visualiza somente seus próprios
+        # dados, mas sua posição é preservada.
+        # =========================================
 
         if (
             dashboard_tipo == "dentista"
-            and dentista != request.user
+            and
+            dentista != request.user
         ):
             continue
 
@@ -1531,96 +1575,162 @@ def dashboard_view(request):
 
         if perfil:
 
-            # Meta mensal
+            # -----------------------------------------
+            # META MENSAL
+            # -----------------------------------------
+
             meta = (
-                perfil.meta_mensal
+                getattr(
+                    perfil,
+                    "meta_mensal",
+                    None
+                )
                 or Decimal("0.00")
             )
 
-            # Percentual de comissão
+            meta = Decimal(
+                str(meta)
+            )
+
+            # -----------------------------------------
+            # PERCENTUAL DE COMISSÃO
+            # -----------------------------------------
+
             percentual_comissao = (
-                perfil.percentual_comissao
+                getattr(
+                    perfil,
+                    "percentual_comissao",
+                    None
+                )
                 or Decimal("0.00")
             )
 
-            # Comissão
+            percentual_comissao = Decimal(
+                str(percentual_comissao)
+            )
+
+            # -----------------------------------------
+            # COMISSÃO
+            # -----------------------------------------
+
             comissao = (
-                producao * percentual_comissao
+                producao
+                * percentual_comissao
             ) / Decimal("100")
 
             comissao = comissao.quantize(
                 Decimal("0.01")
             )
 
-            # Percentual da meta
+            # -----------------------------------------
+            # PERCENTUAL DA META
+            # -----------------------------------------
+
             if meta > 0:
 
                 percentual = int(
                     min(
-                        (producao / meta) * 100,
+                        (
+                            producao
+                            / meta
+                        ) * 100,
                         100
                     )
                 )
 
+        # =========================================
+        # ADICIONA AO DESEMPENHO
+        # =========================================
+
         desempenho_dentistas.append({
 
             "posicao": posicao,
+
             "dentista": dentista,
+
             "producao": producao,
+
             "meta": meta,
+
             "percentual": percentual,
+
             "comissao": comissao,
 
         })
 
 
     # =========================================
-    # ATUALIZA O RANKING PARA USAR SOMENTE
-    # DENTISTAS
+    # RANKING EXIBIDO
+    # =========================================
+    #
+    # ADMINISTRADOR / GESTOR:
+    # mostra os 5 primeiros.
+    #
+    # DENTISTA:
+    # mostra somente o próprio dentista.
     # =========================================
 
-    ranking_dentistas = ranking_dentistas_filtrado
+    if dashboard_tipo == "dentista":
+
+        ranking_dentistas = [
+            item
+            for item in ranking_dentistas_filtrado
+            if item[0] == request.user
+        ]
+
+    else:
+
+        ranking_dentistas = (
+            ranking_dentistas_filtrado[:5]
+        )
+
 
     # =========================================
     # POSIÇÃO DO DENTISTA
     # =========================================
 
     posicao_ranking = None
+
     valor_para_proximo = Decimal("0.00")
+
 
     if dashboard_tipo == "dentista":
 
         for indice, (dentista, valor) in enumerate(
-            ranking_dentistas
+            ranking_dentistas_filtrado,
+            start=1
         ):
 
             if dentista == request.user:
 
-                posicao_ranking = indice + 1
+                posicao_ranking = indice
 
-                # Quanto falta para alcançar
-                # o dentista imediatamente acima
-                if indice > 0:
+                # -----------------------------------------
+                # VALOR PARA ALCANÇAR O DENTISTA ACIMA
+                # -----------------------------------------
+
+                if indice > 1:
+
+                    valor_dentista_acima = (
+                        ranking_dentistas_filtrado[
+                            indice - 2
+                        ][1]
+                    )
 
                     valor_para_proximo = (
-                        ranking_dentistas[indice - 1][1] - valor
+                        valor_dentista_acima
+                        - valor
                     )
 
                 break
 
-    # =========================================
-    # ADMINISTRADOR / GESTOR
-    # =========================================
-
-    if dashboard_tipo != "dentista":
-
-        ranking_dentistas = ranking_dentistas[:5]
 
     # =========================================
     # MINHA PRODUÇÃO
     # =========================================
 
     minha_producao = Decimal("0.00")
+
 
     if dashboard_tipo == "dentista":
 
@@ -1629,11 +1739,13 @@ def dashboard_view(request):
             Decimal("0.00")
         )
 
+
     # =========================================
     # MINHA COMISSÃO
     # =========================================
 
     minha_comissao = Decimal("0.00")
+
 
     if dashboard_tipo == "dentista":
 
@@ -1641,16 +1753,90 @@ def dashboard_view(request):
 
             if item["dentista"] == request.user:
 
-                minha_comissao = item["comissao"]
+                minha_comissao = (
+                    item["comissao"]
+                )
 
                 break
+
 
     # =========================================
     # MINHA META
     # =========================================
 
     minha_meta = Decimal("0.00")
+
     meu_percentual = 0
+
+    # =========================================
+    # RESUMO CLÍNICO DO DENTISTA
+    # =========================================
+
+    tratamentos_ativos = 0
+    tratamentos_concluidos = 0
+    procedimentos_realizados = 0
+    pacientes_atendidos = 0
+
+
+    if dashboard_tipo == "dentista":
+
+        # =========================================
+        # TRATAMENTOS EM ANDAMENTO
+        # =========================================
+
+        tratamentos_ativos = (
+            Tratamento.objects
+            .filter(
+                dentista=request.user,
+                status="ATIVO",
+            )
+            .count()
+        )
+
+        # =========================================
+        # TRATAMENTOS CONCLUÍDOS
+        # =========================================
+
+        tratamentos_concluidos = (
+            Tratamento.objects
+            .filter(
+                dentista=request.user,
+                status="ENCERRADO",
+            )
+            .count()
+        )
+
+        # =========================================
+        # PROCEDIMENTOS REALIZADOS
+        # =========================================
+
+        procedimentos_realizados = (
+            ItemOrcamento.objects
+            .filter(
+                orcamento__tratamento__dentista=request.user,
+                status="realizado",
+            )
+            .count()
+        )
+
+        # =========================================
+        # PACIENTES ATENDIDOS
+        # =========================================
+
+        pacientes_atendidos = (
+            ItemOrcamento.objects
+            .filter(
+                orcamento__tratamento__dentista=request.user,
+                status="realizado",
+                dente__isnull=False,
+            )
+            .values(
+                "orcamento__paciente"
+            )
+            .distinct()
+            .count()
+        )
+
 
     if dashboard_tipo == "dentista":
 
@@ -1659,39 +1845,59 @@ def dashboard_view(request):
             if item["dentista"] == request.user:
 
                 minha_meta = item["meta"]
-                meu_percentual = item["percentual"]
+
+                meu_percentual = (
+                    item["percentual"]
+                )
 
                 break
-    
+
+
     # =========================================
     # POSIÇÃO DO DENTISTA
     # =========================================
 
     minha_posicao = None
-    total_dentistas = len(ranking_dentistas)
+
+    # IMPORTANTE:
+    # usa o ranking completo, não somente os 5 primeiros.
+
+    total_dentistas = len(
+        ranking_dentistas_filtrado
+    )
+
     barra_percentual = 0
+
 
     if dashboard_tipo == "dentista":
 
         for indice, (dentista, producao) in enumerate(
-            ranking_dentistas,
+            ranking_dentistas_filtrado,
             start=1
         ):
 
             if dentista == request.user:
 
                 minha_posicao = indice
+
                 break
 
-        if minha_posicao and total_dentistas > 0:
+        if (
+            minha_posicao
+            and
+            total_dentistas > 0
+        ):
 
             barra_percentual = int(
                 (
-                    (total_dentistas - minha_posicao + 1)
+                    (
+                        total_dentistas
+                        - minha_posicao
+                        + 1
+                    )
                     / total_dentistas
                 ) * 100
             )
-
 
     # =========================================
     # STATUS DA CLÍNICA
@@ -2795,6 +3001,11 @@ def dashboard_view(request):
 
         "minha_meta": minha_meta,
         "meu_percentual": meu_percentual,
+
+        "tratamentos_ativos": tratamentos_ativos,
+        "tratamentos_concluidos": tratamentos_concluidos,
+        "procedimentos_realizados": procedimentos_realizados,
+        "pacientes_atendidos": pacientes_atendidos,
 
         "minha_posicao": minha_posicao,
         "total_dentistas": total_dentistas,
@@ -4163,19 +4374,6 @@ def odontograma(request, id):
             and
             tratamento.id != tratamento_inicial_id
         ):
-
-            # =============================
-            # RX
-            # =============================
-
-            if (
-                item.procedimento
-                and
-                str(
-                    item.procedimento.arquivo_icone
-                ) == "rx_dente.png"
-            ):
-                continue
 
             # =============================
             # DENTE AUSENTE CANCELADO
@@ -7400,6 +7598,33 @@ def gerar_pdf_orcamento(request, id):
     config = ConfiguracaoClinica.objects.first()
 
     # =========================================
+    # CNPJ DA CLÍNICA
+    # Compatível com CNPJ numérico e alfanumérico
+    # =========================================
+
+    cnpj_clinica = (
+        config.cnpj
+        if config and config.cnpj
+        else ''
+    )
+
+    cnpj_limpo = re.sub(
+        r'[^A-Za-z0-9]',
+        '',
+        str(cnpj_clinica)
+    ).upper()
+
+    if len(cnpj_limpo) == 14:
+
+        cnpj_clinica = (
+            f'{cnpj_limpo[0:2]}.'
+            f'{cnpj_limpo[2:5]}.'
+            f'{cnpj_limpo[5:8]}/'
+            f'{cnpj_limpo[8:12]}-'
+            f'{cnpj_limpo[12:14]}'
+        )
+
+    # =========================================
     # ITENS
     # =========================================
 
@@ -7557,6 +7782,10 @@ def gerar_pdf_orcamento(request, id):
 
         'config':
             config,
+
+        # CNPJ já formatado
+        'cnpj_clinica':
+            cnpj_clinica,
 
         'validade':
             validade,
@@ -8152,7 +8381,222 @@ def alterar_status_procedimento(request, id):
     })
 
 # =========================================
-# RODAPÉ PDF
+# CABEÇALHO E RODAPÉ — CONTRATO
+# =========================================
+
+def cabecalho_rodape_contrato(canvas, doc):
+
+    canvas.saveState()
+
+    # =========================================
+    # CONFIGURAÇÃO DA CLÍNICA
+    # =========================================
+
+    config = ConfiguracaoClinica.objects.first()
+
+    # =========================================
+    # DIMENSÕES DA PÁGINA
+    # =========================================
+
+    largura_pagina = 210 * mm
+
+    # =========================================
+    # CABEÇALHO
+    # =========================================
+
+    logo_path = os.path.join(
+        settings.BASE_DIR,
+        'static',
+        'img',
+        'logo_odonto2.png'
+    )
+
+    if os.path.exists(logo_path):
+
+        logo = ImageReader(logo_path)
+
+        canvas.drawImage(
+            logo,
+            20 * mm,
+            268 * mm,
+            width=45 * mm,
+            height=17 * mm,
+            preserveAspectRatio=True,
+            mask='auto'
+        )
+
+    # =========================================
+    # DADOS DA CLÍNICA
+    # =========================================
+
+    nome_clinica = (
+        config.nome_clinica
+        if config and config.nome_clinica
+        else ''
+    )
+
+    cnpj_clinica = (
+        config.cnpj
+        if config and config.cnpj
+        else ''
+    )
+
+    cro_clinica = (
+        config.cro
+        if config and config.cro
+        else ''
+    )
+
+    # =========================================
+    # TEXTO DO CABEÇALHO
+    # =========================================
+
+    canvas.setFont(
+        "Helvetica-Bold",
+        10
+    )
+
+    canvas.drawRightString(
+        largura_pagina - 20 * mm,
+        279 * mm,
+        nome_clinica
+    )
+
+    canvas.setFont(
+        "Helvetica",
+        8
+    )
+
+    linha_clinica = ''
+
+    if cnpj_clinica:
+
+        linha_clinica += (
+            f'CNPJ: {cnpj_clinica}'
+        )
+
+    if cro_clinica:
+
+        if linha_clinica:
+
+            linha_clinica += '    '
+
+        linha_clinica += (
+            f'CRO: {cro_clinica}'
+        )
+
+    canvas.drawRightString(
+        largura_pagina - 20 * mm,
+        273 * mm,
+        linha_clinica
+    )
+
+    # =========================================
+    # LINHA DO CABEÇALHO
+    # =========================================
+
+    canvas.setStrokeColor(
+        colors.HexColor('#1e40af')
+    )
+
+    canvas.setLineWidth(0.8)
+
+    canvas.line(
+        20 * mm,
+        266 * mm,
+        largura_pagina - 20 * mm,
+        266 * mm
+    )
+
+    # =========================================
+    # RODAPÉ
+    # =========================================
+
+    canvas.setStrokeColor(
+        colors.lightgrey
+    )
+
+    canvas.setLineWidth(0.6)
+
+    canvas.line(
+        20 * mm,
+        17 * mm,
+        largura_pagina - 20 * mm,
+        17 * mm
+    )
+
+    # =========================================
+    # DADOS DE CONTATO
+    # =========================================
+
+    telefone = (
+        config.telefone
+        if config and config.telefone
+        else ''
+    )
+
+    whatsapp = (
+        config.whatsapp
+        if config and config.whatsapp
+        else ''
+    )
+
+    email = (
+        config.email
+        if config and config.email
+        else ''
+    )
+
+    canvas.setFont(
+        "Helvetica",
+        7.5
+    )
+
+    contato = ''
+
+    if telefone:
+
+        contato += f'Tel: {telefone}'
+
+    if whatsapp:
+
+        if contato:
+
+            contato += '   |   '
+
+        contato += f'WhatsApp: {whatsapp}'
+
+    if email:
+
+        if contato:
+
+            contato += '   |   '
+
+        contato += email
+
+    canvas.drawString(
+        20 * mm,
+        12 * mm,
+        contato
+    )
+
+    # =========================================
+    # NÚMERO DA PÁGINA
+    # =========================================
+
+    pagina = canvas.getPageNumber()
+
+    canvas.drawRightString(
+        largura_pagina - 20 * mm,
+        12 * mm,
+        f'Página {pagina}'
+    )
+
+    canvas.restoreState()
+
+
+# =========================================
+# RODAPÉ PDF — DOCUMENTOS EXISTENTES
 # =========================================
 
 def adicionar_rodape(canvas, doc):
@@ -8173,7 +8617,6 @@ def adicionar_rodape(canvas, doc):
     )
 
     canvas.restoreState()
-
 
 # =========================================
 # PDF PRONTUÁRIO
@@ -8574,6 +9017,8 @@ def novo_documento(request, id):
         # TEMPLATE SELECIONADO
         # =========================================
 
+        template = None
+
         if template_id:
 
             template = get_object_or_404(
@@ -8581,10 +9026,16 @@ def novo_documento(request, id):
                 id=template_id
             )
 
-            # Usa o tipo do template
+            # =========================================
+            # TIPO DO DOCUMENTO
+            # =========================================
+
             tipo_documento = template.tipo
 
-            # Usa o conteúdo do template
+            # =========================================
+            # CONTEÚDO DO TEMPLATE
+            # =========================================
+
             conteudo = template.conteudo
 
             # =========================================
@@ -8601,8 +9052,92 @@ def novo_documento(request, id):
                 paciente.cpf or ''
             )
 
+            conteudo = conteudo.replace(
+                '{{ paciente_rg }}',
+                paciente.rg or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_estado_civil }}',
+                paciente.estado_civil or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_profissao }}',
+                paciente.profissao or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_telefone }}',
+                paciente.telefone or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_whatsapp }}',
+                paciente.whatsapp or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_email }}',
+                paciente.email or ''
+            )
+
             # =========================================
-            # DATAS
+            # ENDEREÇO DO PACIENTE
+            # =========================================
+
+            conteudo = conteudo.replace(
+                '{{ paciente_endereco }}',
+                paciente.endereco or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_numero }}',
+                paciente.numero or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_complemento }}',
+                paciente.complemento or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_bairro }}',
+                paciente.bairro or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_cidade }}',
+                paciente.cidade or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_estado }}',
+                paciente.estado or ''
+            )
+
+            conteudo = conteudo.replace(
+                '{{ paciente_cep }}',
+                paciente.cep or ''
+            )
+
+            # =========================================
+            # NACIONALIDADE
+            # =========================================
+            #
+            # O modelo Paciente ainda não possui
+            # campo de nacionalidade.
+            #
+            # Portanto, deixamos vazio para que possa
+            # ser preenchido manualmente no documento.
+
+            conteudo = conteudo.replace(
+                '{{ paciente_nacionalidade }}',
+                ''
+            )
+
+            # =========================================
+            # DATA ATUAL
             # =========================================
 
             data_atual = timezone.now().strftime(
@@ -8625,8 +9160,7 @@ def novo_documento(request, id):
 
             if paciente.nascimento:
 
-                conteudo = conteudo.replace(
-                    '{{ paciente_nascimento }}',
+                data_nascimento = (
                     paciente.nascimento.strftime(
                         '%d/%m/%Y'
                     )
@@ -8634,20 +9168,187 @@ def novo_documento(request, id):
 
             else:
 
-                conteudo = conteudo.replace(
-                    '{{ paciente_nascimento }}',
-                    ''
-                )
+                data_nascimento = ''
 
-                        # =========================================
+            conteudo = conteudo.replace(
+                '{{ paciente_nascimento }}',
+                data_nascimento
+            )
+
+            # =========================================
             # CONFIGURAÇÃO DA CLÍNICA
             # =========================================
 
-            config = ConfiguracaoClinica.objects.first()
+            config = (
+                ConfiguracaoClinica.objects.first()
+            )
+
+            clinica_nome = (
+                config.nome_clinica
+                if config and config.nome_clinica
+                else ''
+            )
+
+            # =========================================
+            # CNPJ DA CLÍNICA
+            # =========================================
+
+            clinica_cnpj = (
+                config.cnpj
+                if config and config.cnpj
+                else ''
+            )
+
+            # =========================================
+            # FORMATA CNPJ
+            # Compatível com CNPJ numérico e alfanumérico
+            # =========================================
+
+            cnpj_limpo = re.sub(
+                r'[^A-Za-z0-9]',
+                '',
+                clinica_cnpj
+            ).upper()
+
+            if len(cnpj_limpo) == 14:
+
+                clinica_cnpj = (
+                    f'{cnpj_limpo[0:2]}.'
+                    f'{cnpj_limpo[2:5]}.'
+                    f'{cnpj_limpo[5:8]}/'
+                    f'{cnpj_limpo[8:12]}-'
+                    f'{cnpj_limpo[12:14]}'
+                )
+
+            clinica_cro = (
+                config.cro
+                if config and config.cro
+                else ''
+            )
+
+            clinica_telefone = (
+                config.telefone
+                if config and config.telefone
+                else ''
+            )
+
+            clinica_whatsapp = (
+                config.whatsapp
+                if config and config.whatsapp
+                else ''
+            )
+
+            clinica_email = (
+                config.email
+                if config and config.email
+                else ''
+            )
+
+            clinica_endereco = (
+                config.endereco
+                if config and config.endereco
+                else ''
+            )
+
+            clinica_numero = (
+                config.numero
+                if config and config.numero
+                else ''
+            )
+
+            clinica_bairro = (
+                config.bairro
+                if config and config.bairro
+                else ''
+            )
+
+            clinica_cidade = (
+                config.cidade
+                if config and config.cidade
+                else ''
+            )
+
+            clinica_estado = (
+                config.estado
+                if config and config.estado
+                else ''
+            )
+
+            clinica_cep = (
+                config.cep
+                if config and config.cep
+                else ''
+            )
+
+            # =========================================
+            # SUBSTITUIR DADOS DA CLÍNICA
+            # =========================================
+
+            conteudo = conteudo.replace(
+                '{{ clinica_nome }}',
+                clinica_nome
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_cnpj }}',
+                clinica_cnpj
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_cro }}',
+                clinica_cro
+            )
+
+            # Compatibilidade com campo antigo
 
             conteudo = conteudo.replace(
                 '{{ cro_clinica }}',
-                config.cro if config and config.cro else ''
+                clinica_cro
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_telefone }}',
+                clinica_telefone
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_whatsapp }}',
+                clinica_whatsapp
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_email }}',
+                clinica_email
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_endereco }}',
+                clinica_endereco
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_numero }}',
+                clinica_numero
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_bairro }}',
+                clinica_bairro
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_cidade }}',
+                clinica_cidade
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_estado }}',
+                clinica_estado
+            )
+
+            conteudo = conteudo.replace(
+                '{{ clinica_cep }}',
+                clinica_cep
             )
 
             # =========================================
@@ -8655,9 +9356,21 @@ def novo_documento(request, id):
             # =========================================
 
             dentista_nome = ''
+            dentista_cpf = ''
             dentista_cro = ''
+            dentista_telefone = ''
+            dentista_email = ''
 
-            # Dentista vinculado ao paciente
+            dentista_endereco = ''
+            dentista_numero = ''
+            dentista_bairro = ''
+            dentista_cidade = ''
+            dentista_uf = ''
+
+            # =========================================
+            # DENTISTA VINCULADO AO PACIENTE
+            # =========================================
+
             dentista = getattr(
                 paciente,
                 'dentista',
@@ -8666,13 +9379,19 @@ def novo_documento(request, id):
 
             if dentista:
 
-                # Nome completo do dentista
+                # =====================================
+                # NOME
+                # =====================================
+
                 dentista_nome = (
                     dentista.get_full_name()
                     or dentista.username
                 )
 
-                # Perfil profissional do dentista
+                # =====================================
+                # PERFIL
+                # =====================================
+
                 perfil_dentista = getattr(
                     dentista,
                     'perfil',
@@ -8681,13 +9400,90 @@ def novo_documento(request, id):
 
                 if perfil_dentista:
 
+                    dentista_cpf = (
+                        getattr(
+                            perfil_dentista,
+                            'cpf',
+                            ''
+                        )
+                        or ''
+                    )
+
                     dentista_cro = (
-                        perfil_dentista.cro
+                        getattr(
+                            perfil_dentista,
+                            'cro',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_telefone = (
+                        getattr(
+                            perfil_dentista,
+                            'telefone',
+                            ''
+                        )
+                        or getattr(
+                            perfil_dentista,
+                            'celular',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_email = (
+                        dentista.email
+                        or ''
+                    )
+
+                    dentista_endereco = (
+                        getattr(
+                            perfil_dentista,
+                            'logradouro',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_numero = (
+                        getattr(
+                            perfil_dentista,
+                            'numero',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_bairro = (
+                        getattr(
+                            perfil_dentista,
+                            'bairro',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_cidade = (
+                        getattr(
+                            perfil_dentista,
+                            'cidade',
+                            ''
+                        )
+                        or ''
+                    )
+
+                    dentista_uf = (
+                        getattr(
+                            perfil_dentista,
+                            'uf',
+                            ''
+                        )
                         or ''
                     )
 
             # =========================================
-            # SUBSTITUIR DADOS DO DENTISTA NO DOCUMENTO
+            # SUBSTITUIR DADOS DO DENTISTA
             # =========================================
 
             conteudo = conteudo.replace(
@@ -8696,8 +9492,48 @@ def novo_documento(request, id):
             )
 
             conteudo = conteudo.replace(
+                '{{ dentista_cpf }}',
+                dentista_cpf
+            )
+
+            conteudo = conteudo.replace(
                 '{{ dentista_cro }}',
                 dentista_cro
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_telefone }}',
+                dentista_telefone
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_email }}',
+                dentista_email
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_endereco }}',
+                dentista_endereco
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_numero }}',
+                dentista_numero
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_bairro }}',
+                dentista_bairro
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_cidade }}',
+                dentista_cidade
+            )
+
+            conteudo = conteudo.replace(
+                '{{ dentista_uf }}',
+                dentista_uf
             )
 
             # =========================================
@@ -8705,6 +9541,7 @@ def novo_documento(request, id):
             # =========================================
 
             if not titulo:
+
                 titulo = template.nome
 
         # =========================================
@@ -8714,6 +9551,8 @@ def novo_documento(request, id):
         documento = DocumentoClinico.objects.create(
 
             paciente=paciente,
+
+            template=template,
 
             titulo=titulo,
 
@@ -8734,9 +9573,15 @@ def novo_documento(request, id):
     # MODELOS DISPONÍVEIS
     # =========================================
 
-    templates = TemplateDocumento.objects.filter(
-        ativo=True
-    ).order_by('nome')
+    templates = (
+        TemplateDocumento.objects
+        .filter(
+            ativo=True
+        )
+        .order_by(
+            'nome'
+        )
+    )
 
     return render(
 
@@ -8841,101 +9686,126 @@ def imprimir_documento(request, id):
         'Content-Disposition'
     ] = f'inline; filename="documento_{documento.id}.pdf"'
 
-    doc = SimpleDocTemplate(
-        response,
-        topMargin=30,
-        bottomMargin=30,
-        leftMargin=40,
-        rightMargin=40
-    )
+    # =========================================
+    # CONFIGURAÇÃO DO PDF
+    # =========================================
+
+    if documento.tipo == 'contrato':
+
+        doc = SimpleDocTemplate(
+            response,
+            topMargin=105,
+            bottomMargin=45,
+            leftMargin=40,
+            rightMargin=40
+        )
+
+    else:
+
+        doc = SimpleDocTemplate(
+            response,
+            topMargin=30,
+            bottomMargin=30,
+            leftMargin=40,
+            rightMargin=40
+        )
 
     styles = getSampleStyleSheet()
 
     elementos = []
 
     # =========================================
-    # LOGO
+    # CABEÇALHO ANTIGO
+    # Somente para documentos que não são contrato
     # =========================================
 
-    logo_path = os.path.join(
-        settings.BASE_DIR,
-        'static',
-        'img',
-        'logo_odonto2.png'
-    )
+    if documento.tipo != 'contrato':
 
-    if os.path.exists(logo_path):
+        # =========================================
+        # LOGO
+        # =========================================
 
-        logo = Image(
-            logo_path,
-            width=240,
-            height=90
+        logo_path = os.path.join(
+            settings.BASE_DIR,
+            'static',
+            'img',
+            'logo_odonto2.png'
         )
 
-        logo.hAlign = 'CENTER'
+        if os.path.exists(logo_path):
 
-        elementos.append(logo)
+            logo = Image(
+                logo_path,
+                width=240,
+                height=90
+            )
 
-        elementos.append(
-            Spacer(1, 8)
+            logo.hAlign = 'CENTER'
+
+            elementos.append(
+                logo
+            )
+
+            elementos.append(
+                Spacer(1, 8)
+            )
+
+        # =========================================
+        # NOME DA CLÍNICA
+        # =========================================
+
+        if config and config.nome_clinica:
+
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    <b>{config.nome_clinica}</b>
+                    </para>
+                    ''',
+                    styles['Heading2']
+                )
+            )
+
+        # =========================================
+        # TÍTULO
+        # =========================================
+
+        estilo_titulo = ParagraphStyle(
+            'TituloDocumento',
+            parent=styles['Title'],
+            fontSize=16,
+            leading=20,
+            alignment=1,
+            spaceBefore=8,
+            spaceAfter=10,
         )
-
-    # =========================================
-    # NOME DA CLÍNICA
-    # =========================================
-
-    if config and config.nome_clinica:
 
         elementos.append(
             Paragraph(
-                f'''
-                <para align="center">
-                <b>{config.nome_clinica}</b>
-                </para>
-                ''',
-                styles['Heading2']
+                documento.titulo.upper(),
+                estilo_titulo
             )
         )
 
-    # =========================================
-    # TÍTULO
-    # =========================================
+        # =========================================
+        # LINHA
+        # =========================================
 
-    estilo_titulo = ParagraphStyle(
-        'TituloDocumento',
-        parent=styles['Title'],
-        fontSize=16,
-        leading=20,
-        alignment=1,  # Centralizado
-        spaceBefore=8,
-        spaceAfter=10,
-    )
-
-    elementos.append(
-        Paragraph(
-            documento.titulo.upper(),
-            estilo_titulo
+        elementos.append(
+            HRFlowable(
+                width="100%",
+                thickness=1.2,
+                color=colors.HexColor('#1e40af')
+            )
         )
-    )
 
-    # =========================================
-    # LINHA
-    # =========================================
-
-    elementos.append(
-        HRFlowable(
-            width="100%",
-            thickness=1.2,
-            color=colors.HexColor('#1e40af')
+        elementos.append(
+            Spacer(1, 20)
         )
-    )
-
-    elementos.append(
-        Spacer(1, 20)
-    )
 
     # =========================================
-    # CONTEÚDO
+    # ESTILO DO CONTEÚDO
     # =========================================
 
     estilo_conteudo = ParagraphStyle(
@@ -8943,15 +9813,23 @@ def imprimir_documento(request, id):
         parent=styles['BodyText'],
         fontSize=11,
         leading=20,
-        alignment=4,  # Justificado
+        alignment=4,
         spaceBefore=0,
         spaceAfter=12,
     )
 
-    conteudo = documento.conteudo
+    # =========================================
+    # CONTEÚDO ORIGINAL
+    # =========================================
+
+    conteudo = (
+        documento.conteudo
+        or ''
+    )
 
     # =========================================
     # DEIXAR DENTISTA E CRO EM NEGRITO
+    # Somente para atestado
     # =========================================
 
     if documento.tipo == 'atestado':
@@ -8978,6 +9856,7 @@ def imprimir_documento(request, id):
             dentista_cro = ''
 
             if perfil_dentista:
+
                 dentista_cro = (
                     perfil_dentista.cro
                     or ''
@@ -8998,46 +9877,382 @@ def imprimir_documento(request, id):
                 )
 
     # =========================================
-    # QUEBRAS DE LINHA
+    # FORMATAR CONTRATO
     # =========================================
 
-    conteudo = conteudo.replace(
-        '\n\n',
-        '<br/><br/>'
-    )
+    if documento.tipo == 'contrato':
 
-    conteudo = conteudo.replace(
-        '\n',
-        '<br/>'
-    )
+        import re
 
-    elementos.append(
-        Paragraph(
-            conteudo,
-            estilo_conteudo
+        # =========================================
+        # CORRIGIR CARACTERES ESCAPADOS
+        # =========================================
+
+        def corrigir_escape(match):
+
+            codigo = match.group(1)
+
+            try:
+
+                return chr(
+                    int(
+                        codigo[1:],
+                        16
+                    )
+                )
+
+            except ValueError:
+
+                return match.group(0)
+
+        conteudo = re.sub(
+            r'\\(u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2})',
+            corrigir_escape,
+            conteudo
         )
-    )
+
+        # =========================================
+        # LOCALIZAR PARÁGRAFOS E TÍTULOS
+        # =========================================
+
+        blocos = re.findall(
+            r'<(p|h[1-6])(?:\s+([^>]*))?>(.*?)</\1>',
+            conteudo,
+            flags=re.IGNORECASE | re.DOTALL
+        )
+
+        # =========================================
+        # PROCESSAR CADA BLOCO
+        # =========================================
+
+        for tag, atributos, texto in blocos:
+
+            atributos = atributos or ''
+            texto = texto.strip()
+
+            if not texto:
+                continue
+
+            # =====================================
+            # CONVERTER FORMATAÇÃO HTML
+            # =====================================
+
+            texto = re.sub(
+                r'<strong[^>]*>',
+                '<b>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'</strong>',
+                '</b>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'<em[^>]*>',
+                '<i>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'</em>',
+                '</i>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            # =====================================
+            # TEXTO SEM TAGS
+            # Usado somente para identificar
+            # o tipo do bloco
+            # =====================================
+
+            texto_sem_html = re.sub(
+                r'<[^>]+>',
+                ' ',
+                texto
+            )
+
+            texto_sem_html = texto_sem_html.replace(
+                '&nbsp;',
+                ' '
+            )
+
+            texto_sem_html = re.sub(
+                r'\s+',
+                ' ',
+                texto_sem_html
+            ).strip()
+
+            texto_upper = texto_sem_html.upper()
+
+            # =====================================
+            # ALINHAMENTO PADRÃO
+            # 4 = JUSTIFICADO
+            # =====================================
+
+            alinhamento = 4
+
+            # =====================================
+            # TÍTULOS
+            # =====================================
+
+            if tag.lower().startswith('h'):
+
+                alinhamento = 1
+
+            # =====================================
+            # DATA DO CONTRATO
+            # =====================================
+
+            elif (
+                '______ DE' in texto_upper
+                and 'DE __________' in texto_upper
+            ):
+
+                alinhamento = 1
+
+            # =====================================
+            # ASSINATURA DO PACIENTE
+            # =====================================
+
+            elif (
+                'CONTRATANTE – PACIENTE'
+                in texto_upper
+            ):
+
+                alinhamento = 1
+
+            # =====================================
+            # ASSINATURA DA CLÍNICA
+            # =====================================
+
+            elif (
+                'CONTRATADO – PROFISSIONAL/CLÍNICA'
+                in texto_upper
+            ):
+
+                alinhamento = 1
+
+            # =====================================
+            # RESPONSÁVEL TÉCNICO
+            # =====================================
+
+            elif (
+                'RESPONSÁVEL TÉCNICO'
+                in texto_upper
+            ):
+
+                alinhamento = 1
+
+                # =================================
+                # GARANTIR LINHA DE ASSINATURA
+                # =================================
+
+                if (
+                    '_______________________________________________'
+                    not in texto
+                ):
+
+                    texto = (
+                        '_______________________________________________'
+                        '<br/><br/>'
+                        + texto
+                    )
+
+            # =====================================
+            # RESPEITAR ALINHAMENTO ORIGINAL
+            # Caso exista
+            # =====================================
+
+            else:
+
+                atributos_lower = atributos.lower()
+
+                if (
+                    'text-align: center'
+                    in atributos_lower
+                    or
+                    'text-align:center'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 1
+
+                elif (
+                    'text-align: left'
+                    in atributos_lower
+                    or
+                    'text-align:left'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 0
+
+                elif (
+                    'text-align: right'
+                    in atributos_lower
+                    or
+                    'text-align:right'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 2
+
+            # =====================================
+            # TÍTULOS
+            # =====================================
+
+            if tag.lower().startswith('h'):
+
+                texto = re.sub(
+                    r'<br\s*/?>',
+                    ' ',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                texto = re.sub(
+                    r'\s+',
+                    ' ',
+                    texto
+                ).strip()
+
+                estilo_titulo_contrato = ParagraphStyle(
+                    'TituloContrato',
+                    parent=styles['BodyText'],
+                    fontSize=11,
+                    leading=16,
+                    alignment=1,
+                    spaceBefore=10,
+                    spaceAfter=8,
+                )
+
+                elementos.append(
+                    Paragraph(
+                        texto,
+                        estilo_titulo_contrato
+                    )
+                )
+
+                continue
+
+            # =====================================
+            # PRESERVAR <BR>
+            # =====================================
+
+            partes = re.split(
+                r'(<br\s*/?>)',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            partes_formatadas = []
+
+            for parte in partes:
+
+                if re.match(
+                    r'<br\s*/?>',
+                    parte,
+                    flags=re.IGNORECASE
+                ):
+
+                    partes_formatadas.append(
+                        '<br/>'
+                    )
+
+                else:
+
+                    parte = re.sub(
+                        r'[ \t\r\n]+',
+                        ' ',
+                        parte
+                    ).strip()
+
+                    if parte:
+
+                        partes_formatadas.append(
+                            parte
+                        )
+
+            texto = ''.join(
+                partes_formatadas
+            )
+
+            if not texto:
+                continue
+
+            # =====================================
+            # ESTILO DO PARÁGRAFO
+            # =====================================
+
+            estilo_paragrafo_contrato = ParagraphStyle(
+                'ParagrafoContrato',
+                parent=styles['BodyText'],
+                fontSize=11,
+                leading=18,
+                alignment=alinhamento,
+                spaceBefore=0,
+                spaceAfter=12,
+            )
+
+            elementos.append(
+                Paragraph(
+                    texto,
+                    estilo_paragrafo_contrato
+                )
+            )
+
+    # =========================================
+    # OUTROS DOCUMENTOS
+    # =========================================
+
+    else:
+
+        conteudo = conteudo.replace(
+            '\n\n',
+            '<br/><br/>'
+        )
+
+        conteudo = conteudo.replace(
+            '\n',
+            '<br/>'
+        )
+
+        elementos.append(
+            Paragraph(
+                conteudo,
+                estilo_conteudo
+            )
+        )
 
     # =========================================
     # ASSINATURA
+    # Somente para documentos que não são contrato
     # =========================================
 
-    elementos.append(
-        Spacer(1, 35)
-    )
+    if documento.tipo != 'contrato':
 
-    elementos.append(
-        Paragraph(
-            '''
-            <para align="center">
-            ____________________________________
-            <br/>
-            Assinatura e Carimbo
-            </para>
-            ''',
-            styles['Normal']
+        elementos.append(
+            Spacer(1, 35)
         )
-    )
+
+        elementos.append(
+            Paragraph(
+                '''
+                <para align="center">
+                ____________________________________
+                <br/>
+                Assinatura e Carimbo
+                </para>
+                ''',
+                styles['Normal']
+            )
+        )
 
     # =========================================
     # DADOS DA CLÍNICA
@@ -9068,71 +10283,86 @@ def imprimir_documento(request, id):
     )
 
     # =========================================
-    # RODAPÉ
+    # RODAPÉ ANTIGO
+    # Somente para documentos que não são contrato
     # =========================================
 
-    elementos.append(
-        Spacer(1, 20)
-    )
-
-    elementos.append(
-        HRFlowable(
-            width="100%",
-            thickness=0.8,
-            color=colors.grey
-        )
-    )
-
-    elementos.append(
-        Spacer(1, 8)
-    )
-
-    if nome_clinica:
+    if documento.tipo != 'contrato':
 
         elementos.append(
-            Paragraph(
-                f'''
-                <para align="center">
-                <b>{nome_clinica}</b>
-                </para>
-                ''',
-                styles['Normal']
+            Spacer(1, 20)
+        )
+
+        elementos.append(
+            HRFlowable(
+                width="100%",
+                thickness=0.8,
+                color=colors.grey
             )
         )
 
-    if telefone_clinica or whatsapp_clinica:
-
         elementos.append(
-            Paragraph(
-                f'''
-                <para align="center">
-                Tel: {telefone_clinica}
-                &nbsp;&nbsp;&nbsp;
-                WhatsApp: {whatsapp_clinica}
-                </para>
-                ''',
-                styles['BodyText']
-            )
+            Spacer(1, 8)
         )
 
-    if email_clinica:
+        if nome_clinica:
 
-        elementos.append(
-            Paragraph(
-                f'''
-                <para align="center">
-                {email_clinica}
-                </para>
-                ''',
-                styles['BodyText']
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    <b>{nome_clinica}</b>
+                    </para>
+                    ''',
+                    styles['Normal']
+                )
             )
-        )
+
+        if telefone_clinica or whatsapp_clinica:
+
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    Tel: {telefone_clinica}
+                    &nbsp;&nbsp;&nbsp;
+                    WhatsApp: {whatsapp_clinica}
+                    </para>
+                    ''',
+                    styles['BodyText']
+                )
+            )
+
+        if email_clinica:
+
+            elementos.append(
+                Paragraph(
+                    f'''
+                    <para align="center">
+                    {email_clinica}
+                    </para>
+                    ''',
+                    styles['BodyText']
+                )
+            )
 
     # =========================================
     # GERAR PDF
     # =========================================
 
-    doc.build(elementos)
+    if documento.tipo == 'contrato':
+
+        doc.build(
+            elementos,
+            onFirstPage=cabecalho_rodape_contrato,
+            onLaterPages=cabecalho_rodape_contrato
+        )
+
+    else:
+
+        doc.build(
+            elementos
+        )
 
     return response
 
@@ -12404,28 +13634,102 @@ def fornecedores(request):
 
 import re
 
+
 def validar_cnpj(cnpj):
 
-    cnpj = re.sub(r'\D', '', cnpj)
+    if not cnpj:
+        return False
+
+    # =========================================
+    # NORMALIZAÇÃO
+    # =========================================
+    # Mantém letras e números.
+    # Remove apenas pontuação, espaços e outros
+    # caracteres que não fazem parte do CNPJ.
+
+    cnpj = re.sub(r'[^A-Za-z0-9]', '', str(cnpj)).upper()
+
+    # =========================================
+    # CNPJ DEVE TER 14 POSIÇÕES
+    # =========================================
 
     if len(cnpj) != 14:
         return False
 
-    if cnpj == cnpj[0] * 14:
+    # =========================================
+    # EVITA CNPJ COM TODOS OS CARACTERES IGUAIS
+    # =========================================
+
+    if len(set(cnpj)) == 1:
         return False
 
-    peso1 = [5,4,3,2,9,8,7,6,5,4,3,2]
-    soma = sum(int(cnpj[i]) * peso1[i] for i in range(12))
+    # =========================================
+    # CONVERSÃO OFICIAL DOS CARACTERES
+    # =========================================
+    #
+    # Para o CNPJ alfanumérico:
+    #
+    # A = 17
+    # B = 18
+    # ...
+    # Z = 42
+    #
+    # O valor utilizado no cálculo é:
+    #
+    # valor_ascii - 48
+    #
+    # Assim:
+    #
+    # 0 = 0
+    # 9 = 9
+    # A = 17
+    # B = 18
+    # ...
+    # Z = 42
 
-    dig1 = 0 if soma % 11 < 2 else 11 - (soma % 11)
+    def valor_caractere(caractere):
+
+        return ord(caractere) - 48
+
+    # =========================================
+    # PRIMEIRO DÍGITO VERIFICADOR
+    # =========================================
+
+    peso1 = [
+        5, 4, 3, 2,
+        9, 8, 7, 6,
+        5, 4, 3, 2
+    ]
+
+    soma = sum(
+        valor_caractere(cnpj[i]) * peso1[i]
+        for i in range(12)
+    )
+
+    resto = soma % 11
+
+    dig1 = 0 if resto < 2 else 11 - resto
 
     if dig1 != int(cnpj[12]):
         return False
 
-    peso2 = [6,5,4,3,2,9,8,7,6,5,4,3,2]
-    soma = sum(int(cnpj[i]) * peso2[i] for i in range(13))
+    # =========================================
+    # SEGUNDO DÍGITO VERIFICADOR
+    # =========================================
 
-    dig2 = 0 if soma % 11 < 2 else 11 - (soma % 11)
+    peso2 = [
+        6, 5, 4, 3, 2,
+        9, 8, 7, 6, 5, 4, 3, 2
+    ]
+
+    soma = sum(
+        valor_caractere(cnpj[i]) * peso2[i]
+        for i in range(13)
+    )
+
+    resto = soma % 11
+
+    dig2 = 0 if resto < 2 else 11 - resto
 
     return dig2 == int(cnpj[13])
 
@@ -12578,13 +13882,7 @@ def editar_fornecedor(request, fornecedor_id):
 
         if cnpj:
 
-            cnpj_limpo = re.sub(
-                r'\D',
-                '',
-                cnpj
-            )
-
-            if not validar_cnpj(cnpj_limpo):
+            if not validar_cnpj(cnpj):
 
                 messages.error(
                     request,

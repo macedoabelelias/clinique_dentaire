@@ -7,19 +7,49 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         console.log('JS Fornecedor carregado');
+        
+function mascaraCNPJ(valor) {
 
-        function mascaraCNPJ(valor) {
+    // Mantém letras e números
+    valor = valor
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .toUpperCase()
+        .substring(0, 14);
 
-            valor = valor.replace(/\D/g, '').substring(0, 14);
+    // Formato:
+    // XX.XXX.XXX/XXXX-XX
 
-            valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
-            valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-            valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
-            valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+    if (valor.length > 2) {
+        valor =
+            valor.substring(0, 2) +
+            '.' +
+            valor.substring(2);
+    }
 
-            return valor;
+    if (valor.length > 6) {
+        valor =
+            valor.substring(0, 6) +
+            '.' +
+            valor.substring(6);
+    }
 
-        }
+    if (valor.length > 10) {
+        valor =
+            valor.substring(0, 10) +
+            '/' +
+            valor.substring(10);
+    }
+
+    if (valor.length > 15) {
+        valor =
+            valor.substring(0, 15) +
+            '-' +
+            valor.substring(15);
+    }
+
+    return valor;
+
+}
 
         function mascaraTelefone(valor) {
 

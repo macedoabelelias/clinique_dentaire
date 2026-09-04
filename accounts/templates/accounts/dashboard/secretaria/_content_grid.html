@@ -1,4 +1,237 @@
-<div class="content-grid-bottom">
+<style>
+
+/* =====================================================
+   DASHBOARD DA SECRETÁRIA
+   TRÊS CARDS NA MESMA LINHA
+   ===================================================== */
+
+.secretaria-content-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 20px;
+
+    align-items: stretch;
+
+}
+
+
+/* =====================================================
+   ALTURA PADRÃO DOS CARDS
+   ===================================================== */
+
+.secretaria-content-grid .agenda-card,
+.secretaria-content-grid .pendencias-card,
+.secretaria-aniversariantes-card {
+
+    height: 270px;
+
+    min-height: 270px;
+
+}
+
+
+/* =====================================================
+   ÁREA INTERNA DA AGENDA
+   ===================================================== */
+
+.secretaria-content-grid .dashboard-scroll {
+
+    height: 205px;
+
+    max-height: 205px;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 6px;
+
+}
+
+
+/* =====================================================
+   ÁREA INTERNA DAS PENDÊNCIAS
+   ===================================================== */
+
+.secretaria-content-grid .pendencias-scroll {
+
+    height: 205px;
+
+    max-height: 205px;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 6px;
+
+}
+
+
+/* =====================================================
+   CARD DE ANIVERSARIANTES
+   ===================================================== */
+
+.secretaria-aniversariantes-card {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.06);
+
+    overflow: hidden;
+
+}
+
+
+.secretaria-aniversariantes-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+
+}
+
+
+.secretaria-aniversariantes-header h5 {
+
+    margin: 0;
+
+    font-weight: 600;
+
+}
+
+
+.secretaria-aniversariantes-scroll {
+
+    height: 205px;
+
+    max-height: 205px;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 6px;
+
+}
+
+
+/* =====================================================
+   ITEM DE ANIVERSARIANTE
+   ===================================================== */
+
+.secretaria-aniversariante-item {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #eeeeee;
+
+}
+
+
+.secretaria-aniversariante-info {
+
+    min-width: 0;
+
+}
+
+
+.secretaria-aniversariante-nome {
+
+    font-weight: 600;
+
+    display: block;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.secretaria-aniversariante-data {
+
+    color: #6b7280;
+
+    font-size: 0.85rem;
+
+}
+
+
+/* =====================================================
+   BOTÃO WHATSAPP
+   ===================================================== */
+
+.secretaria-whatsapp-btn {
+
+    flex-shrink: 0;
+
+    width: 36px;
+
+    height: 36px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+/* =====================================================
+   RESPONSIVO
+   ===================================================== */
+
+@media (max-width: 1100px) {
+
+    .secretaria-content-grid {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .secretaria-content-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+</style>
+
+
+<div class="secretaria-content-grid">
+
 
     <!-- =========================================
     AGENDA DO DIA
@@ -16,13 +249,17 @@
 
             </h5>
 
-            <a href="{% url 'agenda' %}" class="btn btn-outline-primary btn-sm btn-agenda">
+            <a
+                href="{% url 'agenda' %}"
+                class="btn btn-outline-primary btn-sm btn-agenda"
+            >
 
                 Ver Agenda
 
             </a>
 
         </div>
+
 
         <div class="dashboard-scroll">
 
@@ -38,12 +275,15 @@
 
                         </div>
 
+
                         <div class="agenda-info">
 
                             <div class="agenda-paciente">
 
-                                <a href="{% url 'novo_agendamento' %}?paciente={{ consulta.paciente.id }}"
-                                   class="paciente-link">
+                                <a
+                                    href="{% url 'novo_agendamento' %}?paciente={{ consulta.paciente.id }}"
+                                    class="paciente-link"
+                                >
 
                                     {{ consulta.paciente.nome }}
 
@@ -51,15 +291,21 @@
 
                             </div>
 
+
                             <div class="agenda-procedimento">
 
                                 {% if consulta.procedimento %}
+
                                     {{ consulta.procedimento.nome }}
+
                                 {% else %}
+
                                     Procedimento não informado
+
                                 {% endif %}
 
                             </div>
+
 
                             <div class="agenda-profissional">
 
@@ -70,6 +316,7 @@
                             </div>
 
                         </div>
+
 
                         <div class="agenda-status">
 
@@ -123,7 +370,7 @@
 
             {% else %}
 
-                <div class="text-center text-muted py-5">
+                <div class="text-center text-muted py-4">
 
                     <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
 
@@ -136,6 +383,7 @@
         </div>
 
     </div>
+
 
     <!-- =========================================
     PENDÊNCIAS
@@ -155,6 +403,7 @@
 
         </div>
 
+
         <div class="pendencias-scroll">
 
             {% if consultas_confirmar %}
@@ -169,6 +418,7 @@
 
                         </div>
 
+
                         <div class="pendencia-horario">
 
                             <i class="bi bi-clock"></i>
@@ -177,6 +427,7 @@
 
                         </div>
 
+
                         <div class="pendencia-profissional">
 
                             <i class="bi bi-person-badge-fill"></i>
@@ -184,6 +435,7 @@
                             {{ consulta.profissional.nome }}
 
                         </div>
+
 
                         <div class="pendencia-status">
 
@@ -195,11 +447,15 @@
 
                         </div>
 
+
                         {% if consulta.paciente.whatsapp %}
 
-                            <a href="https://wa.me/55{{ consulta.paciente.whatsapp }}"
-                               target="_blank"
-                               class="btn btn-success btn-sm w-100">
+                            <a
+                                href="https://wa.me/55{{ consulta.paciente.whatsapp }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-success btn-sm w-100"
+                            >
 
                                 <i class="bi bi-whatsapp"></i>
 
@@ -209,13 +465,14 @@
 
                         {% endif %}
 
+
                     </div>
 
                 {% endfor %}
 
             {% else %}
 
-                <div class="text-center text-muted py-5">
+                <div class="text-center text-muted py-4">
 
                     <i class="bi bi-check-circle-fill text-success fs-2 d-block mb-2"></i>
 
@@ -229,4 +486,120 @@
 
     </div>
 
+
+    <!-- =========================================
+    ANIVERSARIANTES DO MÊS
+    ========================================= -->
+
+    <div class="secretaria-aniversariantes-card">
+
+        <div class="secretaria-aniversariantes-header">
+
+            <h5>
+
+                <i class="bi bi-cake2-fill text-warning"></i>
+
+                Aniversariantes do Mês
+
+            </h5>
+
+        </div>
+
+
+        <div class="secretaria-aniversariantes-scroll">
+
+            {% if aniversariantes %}
+
+                {% for aniversariante in aniversariantes %}
+
+                    <div class="secretaria-aniversariante-item">
+
+
+                        <div class="secretaria-aniversariante-info">
+
+                            <span class="secretaria-aniversariante-nome">
+
+                                {{ aniversariante.nome }}
+
+                            </span>
+
+
+                            <span class="secretaria-aniversariante-data">
+
+                                {{ aniversariante.nascimento|date:"d/m" }}
+
+                            </span>
+
+                        </div>
+
+
+                        {% if aniversariante.whatsapp or aniversariante.telefone %}
+
+                            <a
+                                href="#"
+                                onclick="abrirWhatsAppAniversario(
+                                    '{{ aniversariante.whatsapp|default:aniversariante.telefone|cut:' '|cut:'('|cut:')'|cut:'-' }}',
+                                    '{{ aniversariante.nome|escapejs }}'
+                                ); return false;"
+                                class="btn btn-success btn-sm secretaria-whatsapp-btn"
+                                title="Enviar mensagem de aniversário pelo WhatsApp"
+                            >
+
+                                <i class="bi bi-whatsapp"></i>
+
+                            </a>
+
+                        {% endif %}
+
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="text-center text-muted py-4">
+
+                    <i class="bi bi-cake2 fs-2 d-block mb-2"></i>
+
+                    Nenhum aniversariante encontrado.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
 </div>
+
+
+<script>
+
+function abrirWhatsAppAniversario(numero, nome) {
+
+    const mensagem =
+        "Olá, " + nome + "!\n\n" +
+        "A equipe da Clinique Dentaire deseja a você um feliz aniversário!\n\n" +
+        "Que este novo ciclo seja repleto de saúde, felicidade e muitos momentos especiais.\n\n" +
+        "Um grande abraço de toda a nossa equipe!";
+
+    const mensagemCodificada =
+        encodeURIComponent(mensagem);
+
+    const url =
+        "https://wa.me/" +
+        numero +
+        "?text=" +
+        mensagemCodificada;
+
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+</script>
