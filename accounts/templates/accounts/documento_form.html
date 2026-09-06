@@ -1,18 +1,96 @@
 {% extends 'accounts/base.html' %}
+
 {% load static %}
 
 {% block content %}
 
 <style>
+
     .btn-documento {
+
         min-height: 48px;
+
         padding: 12px 22px;
+
         border-radius: 16px;
+
         display: flex;
+
         align-items: center;
+
         gap: 8px;
+
     }
+
+
+    /* =========================================
+       FINALIDADE DO ATESTADO
+       ========================================= */
+
+    #bloco-finalidade-atestado {
+
+        display: none;
+
+        margin-top: 20px;
+
+        padding: 20px;
+
+        border-radius: 16px;
+
+        background: #f8fafc;
+
+        border: 1px solid #e2e8f0;
+
+    }
+
+    #bloco-finalidade-atestado .anamnese-label {
+
+        margin-bottom: 8px;
+
+    }
+
+
+    /* =========================================
+       FINALIDADE DA DECLARAÇÃO
+       ========================================= */
+
+    #bloco-finalidade-declaracao {
+
+        display: none;
+
+        margin-top: 20px;
+
+        padding: 20px;
+
+        border-radius: 16px;
+
+        background: #f8fafc;
+
+        border: 1px solid #e2e8f0;
+
+    }
+
+    #bloco-finalidade-declaracao .anamnese-label {
+
+        margin-bottom: 8px;
+
+    }
+
+
+    /* =========================================
+       OUTRA FINALIDADE
+       ========================================= */
+
+    #bloco-finalidade-outro {
+
+        display: none;
+
+        margin-top: 15px;
+
+    }
+
 </style>
+
 
 <div class="container-fluid">
 
@@ -21,7 +99,9 @@
         <div class="section-header-premium">
 
             <div class="section-icon blue">
+
                 <i class="fa-solid fa-file-medical"></i>
+
             </div>
 
             <div>
@@ -29,156 +109,568 @@
                 <h5>
 
                     {% if documento %}
-                    Editar Documento
+
+                        Editar Documento
+
                     {% else %}
-                    Novo Documento
+
+                        Novo Documento
+
                     {% endif %}
 
                 </h5>
 
                 <p>
+
                     Documento clínico do paciente.
+
                 </p>
 
             </div>
 
         </div>
 
+
         <form method="POST">
 
             {% csrf_token %}
 
+
+            <!-- =========================================
+                 MODELO DE DOCUMENTO
+                 ========================================= -->
+
             <div class="mb-4">
 
                 <label class="anamnese-label">
+
                     Modelo de Documento
+
                 </label>
 
-                <select name="template" class="anamnese-input">
+                <select
+                    name="template"
+                    id="template"
+                    class="anamnese-input"
+                >
 
-    <option value="">
-        Documento Livre
-    </option>
+                    <option value="">
 
-    {% for template in templates %}
+                        Documento Livre
 
-    <option
-        value="{{ template.id }}"
-        {% if documento.template_id == template.id %}
-            selected
-        {% endif %}
-    >
+                    </option>
 
-        {{ template.nome }}
+                    {% for template in templates %}
 
-    </option>
+                    <option
+                        value="{{ template.id }}"
+                        data-tipo="{{ template.tipo }}"
+                        {% if documento and documento.template_id == template.id %}
+                            selected
+                        {% endif %}
+                    >
 
-    {% endfor %}
+                        {{ template.nome }}
 
-</select>
+                    </option>
+
+                    {% endfor %}
+
+                </select>
 
             </div>
 
+
+            <!-- =========================================
+                 FINALIDADE DO ATESTADO
+                 ========================================= -->
+
+            <div
+                id="bloco-finalidade-atestado"
+            >
+
+                <label class="anamnese-label">
+
+                    Finalidade do Atestado
+
+                </label>
+
+                <select
+                    name="finalidade_atestado"
+                    id="finalidade_atestado"
+                    class="anamnese-input"
+                >
+
+                    <option value="">
+
+                        Selecione a finalidade
+
+                    </option>
+
+                    {% for valor, nome in finalidades_atestado %}
+
+                    <option
+                        value="{{ valor }}"
+                        {% if documento and documento.finalidade_atestado == valor %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ nome }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- =========================================
+                     OUTRA FINALIDADE DO ATESTADO
+                     ========================================= -->
+
+                <div
+                    id="bloco-finalidade-outro-atestado"
+                    style="display: none; margin-top: 15px;"
+                >
+
+                    <label class="anamnese-label">
+
+                        Especifique a finalidade
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="finalidade_atestado_outro"
+                        id="finalidade_atestado_outro"
+                        class="anamnese-input"
+                        maxlength="255"
+                        value="{{ documento.finalidade_atestado_outro|default:'' }}"
+                        placeholder="Informe a finalidade do atestado"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 FINALIDADE DA DECLARAÇÃO
+                 ========================================= -->
+
+            <div
+                id="bloco-finalidade-declaracao"
+            >
+
+                <label class="anamnese-label">
+
+                    Finalidade da Declaração
+
+                </label>
+
+                <select
+                    name="finalidade_declaracao"
+                    id="finalidade_declaracao"
+                    class="anamnese-input"
+                >
+
+                    <option value="">
+
+                        Selecione a finalidade
+
+                    </option>
+
+                    {% for valor, nome in finalidades_declaracao %}
+
+                    <option
+                        value="{{ valor }}"
+                        {% if documento and documento.finalidade_declaracao == valor %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ nome }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- =========================================
+                     OUTRA FINALIDADE DA DECLARAÇÃO
+                     ========================================= -->
+
+                <div
+                    id="bloco-finalidade-outro-declaracao"
+                    style="display: none; margin-top: 15px;"
+                >
+
+                    <label class="anamnese-label">
+
+                        Especifique a finalidade
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="finalidade_declaracao_outro"
+                        id="finalidade_declaracao_outro"
+                        class="anamnese-input"
+                        maxlength="255"
+                        value="{{ documento.finalidade_declaracao_outro|default:'' }}"
+                        placeholder="Informe a finalidade da declaração"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 TÍTULO
+                 ========================================= -->
+
             <label class="anamnese-label">
+
                 Título
+
             </label>
 
-            <input type="text" name="titulo" class="anamnese-input" value="{{ documento.titulo|default:'' }}" required>
+            <input
+                type="text"
+                name="titulo"
+                class="anamnese-input"
+                value="{{ documento.titulo|default:'' }}"
+                required
+            >
+
+
+            <!-- =========================================
+                 CONTEÚDO
+                 ========================================= -->
 
             <div class="mt-4">
 
-                <textarea id="editor" name="conteudo">
-                    {{ documento.conteudo|default:'' }}
-                </textarea>
+                <textarea
+                    id="editor"
+                    name="conteudo"
+                >{{ documento.conteudo|default:'' }}</textarea>
 
             </div>
 
+
+            <!-- =========================================
+                 BOTÕES
+                 ========================================= -->
+
             <div class="d-flex justify-content-end gap-2 mt-4">
 
-    {% if documento.id %}
+                {% if documento.id %}
 
-        <!-- VOLTAR -->
+                    <!-- VOLTAR -->
 
-        <a href="{% url 'perfil_paciente' documento.paciente.id %}"
-            class="btn btn-outline-secondary btn-documento">
+                    <a
+                        href="{% url 'perfil_paciente' documento.paciente.id %}"
+                        class="btn btn-outline-secondary btn-documento"
+                    >
 
-            <i class="fa-solid fa-arrow-left"></i>
+                        <i class="fa-solid fa-arrow-left"></i>
 
-            Voltar
+                        Voltar
 
-        </a>
-
-
-        <!-- IMPRIMIR PDF -->
-
-        <a href="{% url 'imprimir_documento' documento.id %}"
-            target="_blank"
-            class="btn btn-outline-primary btn-documento">
-
-            <i class="fa-solid fa-print"></i>
-
-            Imprimir PDF
-
-        </a>
+                    </a>
 
 
-        <!-- EXCLUIR -->
+                    <!-- IMPRIMIR PDF -->
 
-        <a href="{% url 'excluir_documento' documento.id %}"
-            class="btn btn-outline-danger btn-documento"
-            onclick="return confirm('Tem certeza que deseja excluir este documento? Esta ação não poderá ser desfeita.');">
+                    <a
+                        href="{% url 'imprimir_documento' documento.id %}"
+                        target="_blank"
+                        class="btn btn-outline-primary btn-documento"
+                    >
 
-            <i class="fa-solid fa-trash"></i>
+                        <i class="fa-solid fa-print"></i>
 
-            Excluir Documento
+                        Imprimir PDF
 
-        </a>
-
-    {% else %}
-
-        <!-- VOLTAR — NOVO DOCUMENTO -->
-
-        <a href="{% url 'perfil_paciente' paciente.id %}"
-            class="btn btn-outline-secondary btn-documento">
-
-            <i class="fa-solid fa-arrow-left"></i>
-
-            Voltar
-
-        </a>
-
-    {% endif %}
+                    </a>
 
 
-    <!-- SALVAR -->
+                    <!-- EXCLUIR -->
 
-    <button type="submit"
-        class="btn-anamnese">
+                    <a
+                        href="{% url 'excluir_documento' documento.id %}"
+                        class="btn btn-outline-danger btn-documento"
+                        onclick="return confirm('Tem certeza que deseja excluir este documento? Esta ação não poderá ser desfeita.');"
+                    >
 
-        <i class="fa-solid fa-floppy-disk"></i>
+                        <i class="fa-solid fa-trash"></i>
 
-        Salvar Documento
+                        Excluir Documento
 
-    </button>
+                    </a>
 
-</div>
+                {% else %}
+
+                    <!-- VOLTAR — NOVO DOCUMENTO -->
+
+                    <a
+                        href="{% url 'perfil_paciente' paciente.id %}"
+                        class="btn btn-outline-secondary btn-documento"
+                    >
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Voltar
+
+                    </a>
+
+                {% endif %}
+
+
+                <!-- SALVAR -->
+
+                <button
+                    type="submit"
+                    class="btn-anamnese"
+                >
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Salvar Documento
+
+                </button>
+
+            </div>
+
         </form>
 
     </div>
 
 </div>
 
+
+<!-- =========================================
+     CKEDITOR
+     ========================================= -->
+
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
+
 <script>
+
+    let editorInstance = null;
+
 
     ClassicEditor
         .create(
             document.querySelector('#editor')
         )
+        .then(editor => {
+
+            editorInstance = editor;
+
+        })
         .catch(error => {
+
             console.error(error);
+
         });
+
+
+    // =========================================
+    // ELEMENTOS
+    // =========================================
+
+    const selectTemplate =
+        document.querySelector('#template');
+
+
+    // ATESTADO
+
+    const blocoFinalidadeAtestado =
+        document.querySelector(
+            '#bloco-finalidade-atestado'
+        );
+
+    const selectFinalidadeAtestado =
+        document.querySelector(
+            '#finalidade_atestado'
+        );
+
+    const blocoOutroAtestado =
+        document.querySelector(
+            '#bloco-finalidade-outro-atestado'
+        );
+
+    const campoOutroAtestado =
+        document.querySelector(
+            '#finalidade_atestado_outro'
+        );
+
+
+    // DECLARAÇÃO
+
+    const blocoFinalidadeDeclaracao =
+        document.querySelector(
+            '#bloco-finalidade-declaracao'
+        );
+
+    const selectFinalidadeDeclaracao =
+        document.querySelector(
+            '#finalidade_declaracao'
+        );
+
+    const blocoOutroDeclaracao =
+        document.querySelector(
+            '#bloco-finalidade-outro-declaracao'
+        );
+
+    const campoOutroDeclaracao =
+        document.querySelector(
+            '#finalidade_declaracao_outro'
+        );
+
+
+    // =========================================
+    // FINALIDADE DO ATESTADO
+    // =========================================
+
+    function atualizarFinalidadeAtestado() {
+
+        if (
+            selectFinalidadeAtestado.value === 'outro'
+        ) {
+
+            blocoOutroAtestado.style.display = 'block';
+
+        }
+
+        else {
+
+            blocoOutroAtestado.style.display = 'none';
+
+            campoOutroAtestado.value = '';
+
+        }
+
+    }
+
+
+    // =========================================
+    // FINALIDADE DA DECLARAÇÃO
+    // =========================================
+
+    function atualizarFinalidadeDeclaracao() {
+
+        if (
+            selectFinalidadeDeclaracao.value === 'outro'
+        ) {
+
+            blocoOutroDeclaracao.style.display = 'block';
+
+        }
+
+        else {
+
+            blocoOutroDeclaracao.style.display = 'none';
+
+            campoOutroDeclaracao.value = '';
+
+        }
+
+    }
+
+
+    // =========================================
+    // MOSTRAR / OCULTAR BLOCOS
+    // =========================================
+
+    function atualizarTipoDocumento() {
+
+        const opcaoSelecionada =
+            selectTemplate.options[
+                selectTemplate.selectedIndex
+            ];
+
+        const tipo =
+            opcaoSelecionada
+                ? opcaoSelecionada.dataset.tipo
+                : '';
+
+
+        // =====================================
+        // ATESTADO
+        // =====================================
+
+        if (tipo === 'atestado') {
+
+            blocoFinalidadeAtestado.style.display = 'block';
+
+        }
+
+        else {
+
+            blocoFinalidadeAtestado.style.display = 'none';
+
+        }
+
+
+        // =====================================
+        // DECLARAÇÃO
+        // =====================================
+
+        if (tipo === 'declaracao') {
+
+            blocoFinalidadeDeclaracao.style.display = 'block';
+
+        }
+
+        else {
+
+            blocoFinalidadeDeclaracao.style.display = 'none';
+
+        }
+
+
+        atualizarFinalidadeAtestado();
+
+        atualizarFinalidadeDeclaracao();
+
+    }
+
+
+    // =========================================
+    // EVENTOS
+    // =========================================
+
+    selectTemplate.addEventListener(
+        'change',
+        atualizarTipoDocumento
+    );
+
+
+    selectFinalidadeAtestado.addEventListener(
+        'change',
+        atualizarFinalidadeAtestado
+    );
+
+
+    selectFinalidadeDeclaracao.addEventListener(
+        'change',
+        atualizarFinalidadeDeclaracao
+    );
+
+
+    // =========================================
+    // INICIALIZAÇÃO
+    // =========================================
+    // Importante para edição de documentos
+
+    atualizarTipoDocumento();
 
 </script>
 

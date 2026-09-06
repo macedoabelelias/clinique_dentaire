@@ -8994,6 +8994,10 @@ def novo_documento(request, id):
 
     if request.method == 'POST':
 
+        # =========================================
+        # DADOS DO FORMULÁRIO
+        # =========================================
+
         template_id = request.POST.get(
             'template'
         )
@@ -9012,6 +9016,34 @@ def novo_documento(request, id):
             'tipo',
             'personalizado'
         )
+
+        # =========================================
+        # FINALIDADE DO ATESTADO
+        # =========================================
+
+        finalidade_atestado = request.POST.get(
+            'finalidade_atestado'
+        ) or ''
+
+        finalidade_atestado_outro = (
+            request.POST.get(
+                'finalidade_atestado_outro'
+            ) or ''
+        ).strip()
+
+        # =========================================
+        # FINALIDADE DA DECLARAÇÃO
+        # =========================================
+
+        finalidade_declaracao = request.POST.get(
+            'finalidade_declaracao'
+        ) or ''
+
+        finalidade_declaracao_outro = (
+            request.POST.get(
+                'finalidade_declaracao_outro'
+            ) or ''
+        ).strip()
 
         # =========================================
         # TEMPLATE SELECIONADO
@@ -9037,6 +9069,116 @@ def novo_documento(request, id):
             # =========================================
 
             conteudo = template.conteudo
+
+            # =========================================
+            # FINALIDADE DO ATESTADO
+            # =========================================
+
+            if tipo_documento == 'atestado':
+
+                finalidade_texto = ''
+
+                if finalidade_atestado:
+
+                    finalidade_texto = dict(
+                        DocumentoClinico.FINALIDADES_ATESTADO
+                    ).get(
+                        finalidade_atestado,
+                        ''
+                    )
+
+                # =====================================
+                # OUTRO
+                # =====================================
+
+                if (
+                    finalidade_atestado == 'outro'
+                    and finalidade_atestado_outro
+                ):
+
+                    finalidade_texto = (
+                        finalidade_atestado_outro
+                    )
+
+                # =====================================
+                # NORMALIZAÇÃO
+                # Primeira letra minúscula
+                # Somente opções do sistema
+                # =====================================
+
+                if (
+                    finalidade_texto
+                    and finalidade_atestado != 'outro'
+                ):
+
+                    finalidade_texto = (
+                        finalidade_texto[0].lower()
+                        + finalidade_texto[1:]
+                    )
+
+                # =====================================
+                # SUBSTITUIR NO TEMPLATE
+                # =====================================
+
+                conteudo = conteudo.replace(
+                    '{{ finalidade_atestado }}',
+                    finalidade_texto
+                )
+
+            # =========================================
+            # FINALIDADE DA DECLARAÇÃO
+            # =========================================
+
+            if tipo_documento == 'declaracao':
+
+                finalidade_texto = ''
+
+                if finalidade_declaracao:
+
+                    finalidade_texto = dict(
+                        DocumentoClinico.FINALIDADES_DECLARACAO
+                    ).get(
+                        finalidade_declaracao,
+                        ''
+                    )
+
+                # =====================================
+                # OUTRO
+                # =====================================
+
+                if (
+                    finalidade_declaracao == 'outro'
+                    and finalidade_declaracao_outro
+                ):
+
+                    finalidade_texto = (
+                        finalidade_declaracao_outro
+                    )
+
+                # =====================================
+                # NORMALIZAÇÃO
+                # Primeira letra minúscula
+                # Somente opções do sistema
+                # =====================================
+
+                if (
+                    finalidade_texto
+                    and finalidade_declaracao != 'outro'
+                ):
+
+                    finalidade_texto = (
+                        finalidade_texto[0].lower()
+                        + finalidade_texto[1:]
+                    )
+
+                # =====================================
+                # SUBSTITUIR NO TEMPLATE
+                # =====================================
+
+                conteudo = conteudo.replace(
+                    '{{ finalidade_declaracao }}',
+                    finalidade_texto
+                )
 
             # =========================================
             # DADOS DO PACIENTE
@@ -9124,12 +9266,6 @@ def novo_documento(request, id):
             # =========================================
             # NACIONALIDADE
             # =========================================
-            #
-            # O modelo Paciente ainda não possui
-            # campo de nacionalidade.
-            #
-            # Portanto, deixamos vazio para que possa
-            # ser preenchido manualmente no documento.
 
             conteudo = conteudo.replace(
                 '{{ paciente_nacionalidade }}',
@@ -9207,7 +9343,7 @@ def novo_documento(request, id):
             cnpj_limpo = re.sub(
                 r'[^A-Za-z0-9]',
                 '',
-                clinica_cnpj
+                str(clinica_cnpj)
             ).upper()
 
             if len(cnpj_limpo) == 14:
@@ -9558,6 +9694,14 @@ def novo_documento(request, id):
 
             tipo=tipo_documento,
 
+            finalidade_atestado=finalidade_atestado,
+
+            finalidade_atestado_outro=finalidade_atestado_outro,
+
+            finalidade_declaracao=finalidade_declaracao,
+
+            finalidade_declaracao_outro=finalidade_declaracao_outro,
+
             conteudo=conteudo,
 
             status='rascunho'
@@ -9591,7 +9735,16 @@ def novo_documento(request, id):
 
         {
             'paciente': paciente,
-            'templates': templates
+
+            'templates': templates,
+
+            'finalidades_atestado': (
+                DocumentoClinico.FINALIDADES_ATESTADO
+            ),
+
+            'finalidades_declaracao': (
+                DocumentoClinico.FINALIDADES_DECLARACAO
+            )
         }
 
     )
@@ -9669,6 +9822,8 @@ def excluir_documento(request, id):
 @login_required(login_url='/')
 def imprimir_documento(request, id):
 
+    import re
+
     documento = get_object_or_404(
         DocumentoClinico,
         id=id
@@ -9715,7 +9870,7 @@ def imprimir_documento(request, id):
     elementos = []
 
     # =========================================
-    # CABEÇALHO ANTIGO
+    # CABEÇALHO
     # Somente para documentos que não são contrato
     # =========================================
 
@@ -9742,9 +9897,7 @@ def imprimir_documento(request, id):
 
             logo.hAlign = 'CENTER'
 
-            elementos.append(
-                logo
-            )
+            elementos.append(logo)
 
             elementos.append(
                 Spacer(1, 8)
@@ -9872,8 +10025,248 @@ def imprimir_documento(request, id):
             if dentista_cro:
 
                 conteudo = conteudo.replace(
+                    f'CRO: {dentista_cro}',
+                    f'<b>CRO: {dentista_cro}</b>'
+                )
+
+                conteudo = conteudo.replace(
                     f'CRO {dentista_cro}',
                     f'<b>CRO {dentista_cro}</b>'
+                )
+
+    # =========================================
+    # FUNÇÃO AUXILIAR
+    # Converte HTML simples em elementos ReportLab
+    # =========================================
+
+    def processar_html_documento(html):
+
+        blocos = re.findall(
+            r'<(p|h[1-6])(?:\s+([^>]*))?>(.*?)</\1>',
+            html,
+            flags=re.IGNORECASE | re.DOTALL
+        )
+
+        # =====================================
+        # SE EXISTIREM BLOCOS HTML
+        # =====================================
+
+        if blocos:
+
+            for tag, atributos, texto in blocos:
+
+                atributos = atributos or ''
+                texto = texto.strip()
+
+                if not texto:
+                    continue
+
+                # =================================
+                # FORMATAÇÃO
+                # =================================
+
+                texto = re.sub(
+                    r'<strong[^>]*>',
+                    '<b>',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                texto = re.sub(
+                    r'</strong>',
+                    '</b>',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                texto = re.sub(
+                    r'<em[^>]*>',
+                    '<i>',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                texto = re.sub(
+                    r'</em>',
+                    '</i>',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                # =================================
+                # REMOVER TAGS NÃO SUPORTADAS
+                # =================================
+
+                texto = re.sub(
+                    r'<span[^>]*>',
+                    '',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                texto = re.sub(
+                    r'</span>',
+                    '',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                # =================================
+                # NORMALIZAR BR
+                # =================================
+
+                texto = re.sub(
+                    r'<br\s*/?>',
+                    '<br/>',
+                    texto,
+                    flags=re.IGNORECASE
+                )
+
+                # =================================
+                # IDENTIFICAR ALINHAMENTO
+                # =================================
+
+                alinhamento = 4
+
+                atributos_lower = atributos.lower()
+
+                if (
+                    'text-align: center'
+                    in atributos_lower
+                    or
+                    'text-align:center'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 1
+
+                elif (
+                    'text-align: left'
+                    in atributos_lower
+                    or
+                    'text-align:left'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 0
+
+                elif (
+                    'text-align: right'
+                    in atributos_lower
+                    or
+                    'text-align:right'
+                    in atributos_lower
+                ):
+
+                    alinhamento = 2
+
+                # =================================
+                # TÍTULOS
+                # =================================
+
+                if tag.lower().startswith('h'):
+
+                    texto = re.sub(
+                        r'<br\s*/?>',
+                        ' ',
+                        texto,
+                        flags=re.IGNORECASE
+                    )
+
+                    texto = re.sub(
+                        r'\s+',
+                        ' ',
+                        texto
+                    ).strip()
+
+                    estilo_titulo_documento = ParagraphStyle(
+                        'TituloDocumentoInterno',
+                        parent=styles['BodyText'],
+                        fontSize=13,
+                        leading=17,
+                        alignment=1,
+                        spaceBefore=8,
+                        spaceAfter=12,
+                    )
+
+                    elementos.append(
+                        Paragraph(
+                            texto,
+                            estilo_titulo_documento
+                        )
+                    )
+
+                    continue
+
+                # =================================
+                # TEXTO DO PARÁGRAFO
+                # =================================
+
+                estilo_paragrafo = ParagraphStyle(
+                    'ParagrafoDocumento',
+                    parent=styles['BodyText'],
+                    fontSize=11,
+                    leading=20,
+                    alignment=alinhamento,
+                    spaceBefore=0,
+                    spaceAfter=12,
+                )
+
+                elementos.append(
+                    Paragraph(
+                        texto,
+                        estilo_paragrafo
+                    )
+                )
+
+        # =====================================
+        # FALLBACK
+        # Para documentos sem HTML estruturado
+        # =====================================
+
+        else:
+
+            texto = html
+
+            texto = re.sub(
+                r'<strong[^>]*>',
+                '<b>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'</strong>',
+                '</b>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'<br\s*/?>',
+                '<br/>',
+                texto,
+                flags=re.IGNORECASE
+            )
+
+            texto = re.sub(
+                r'<[^>]+>',
+                '',
+                texto
+            )
+
+            texto = texto.replace(
+                '\n',
+                '<br/>'
+            )
+
+            if texto.strip():
+
+                elementos.append(
+                    Paragraph(
+                        texto,
+                        estilo_conteudo
+                    )
                 )
 
     # =========================================
@@ -9881,8 +10274,6 @@ def imprimir_documento(request, id):
     # =========================================
 
     if documento.tipo == 'contrato':
-
-        import re
 
         # =========================================
         # CORRIGIR CARACTERES ESCAPADOS
@@ -9967,8 +10358,6 @@ def imprimir_documento(request, id):
 
             # =====================================
             # TEXTO SEM TAGS
-            # Usado somente para identificar
-            # o tipo do bloco
             # =====================================
 
             texto_sem_html = re.sub(
@@ -9991,8 +10380,7 @@ def imprimir_documento(request, id):
             texto_upper = texto_sem_html.upper()
 
             # =====================================
-            # ALINHAMENTO PADRÃO
-            # 4 = JUSTIFICADO
+            # ALINHAMENTO
             # =====================================
 
             alinhamento = 4
@@ -10049,10 +10437,6 @@ def imprimir_documento(request, id):
 
                 alinhamento = 1
 
-                # =================================
-                # GARANTIR LINHA DE ASSINATURA
-                # =================================
-
                 if (
                     '_______________________________________________'
                     not in texto
@@ -10066,7 +10450,6 @@ def imprimir_documento(request, id):
 
             # =====================================
             # RESPEITAR ALINHAMENTO ORIGINAL
-            # Caso exista
             # =====================================
 
             else:
@@ -10142,49 +10525,15 @@ def imprimir_documento(request, id):
                 continue
 
             # =====================================
-            # PRESERVAR <BR>
+            # NORMALIZAR BR
             # =====================================
 
-            partes = re.split(
-                r'(<br\s*/?>)',
+            texto = re.sub(
+                r'<br\s*/?>',
+                '<br/>',
                 texto,
                 flags=re.IGNORECASE
             )
-
-            partes_formatadas = []
-
-            for parte in partes:
-
-                if re.match(
-                    r'<br\s*/?>',
-                    parte,
-                    flags=re.IGNORECASE
-                ):
-
-                    partes_formatadas.append(
-                        '<br/>'
-                    )
-
-                else:
-
-                    parte = re.sub(
-                        r'[ \t\r\n]+',
-                        ' ',
-                        parte
-                    ).strip()
-
-                    if parte:
-
-                        partes_formatadas.append(
-                            parte
-                        )
-
-            texto = ''.join(
-                partes_formatadas
-            )
-
-            if not texto:
-                continue
 
             # =====================================
             # ESTILO DO PARÁGRAFO
@@ -10213,29 +10562,23 @@ def imprimir_documento(request, id):
 
     else:
 
-        conteudo = conteudo.replace(
-            '\n\n',
-            '<br/><br/>'
-        )
-
-        conteudo = conteudo.replace(
-            '\n',
-            '<br/>'
-        )
-
-        elementos.append(
-            Paragraph(
-                conteudo,
-                estilo_conteudo
-            )
+        processar_html_documento(
+            conteudo
         )
 
     # =========================================
-    # ASSINATURA
-    # Somente para documentos que não são contrato
+    # ASSINATURA AUTOMÁTICA
     # =========================================
+    # Atestado e Declaração já possuem
+    # assinatura dentro do próprio template.
+    # Os demais documentos continuam recebendo
+    # a assinatura automática.
 
-    if documento.tipo != 'contrato':
+    if documento.tipo not in (
+        'contrato',
+        'atestado',
+        'declaracao'
+    ):
 
         elementos.append(
             Spacer(1, 35)
@@ -10283,7 +10626,7 @@ def imprimir_documento(request, id):
     )
 
     # =========================================
-    # RODAPÉ ANTIGO
+    # RODAPÉ
     # Somente para documentos que não são contrato
     # =========================================
 

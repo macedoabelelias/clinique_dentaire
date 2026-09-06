@@ -18,6 +18,15 @@ from django.core.validators import (
     MaxValueValidator,
 )
 
+from django.db.models import (
+    Sum,
+    Count,
+    Q,
+    Max,
+    Min,
+    F
+)
+
 # =========================================
 # PACIENTES
 # =========================================
@@ -2472,12 +2481,21 @@ class TemplateDocumento(models.Model):
 
 class DocumentoClinico(models.Model):
 
+    # =========================================
+    # STATUS DO DOCUMENTO
+    # =========================================
+
     STATUS = (
 
         ('rascunho', 'Rascunho'),
+
         ('finalizado', 'Finalizado'),
 
     )
+
+    # =========================================
+    # TIPOS DE DOCUMENTOS
+    # =========================================
 
     TIPOS = (
 
@@ -2505,11 +2523,67 @@ class DocumentoClinico(models.Model):
 
     )
 
+    # =========================================
+    # FINALIDADES DO ATESTADO
+    # =========================================
+
+    FINALIDADES_ATESTADO = (
+
+        ('trabalhista', 'fins trabalhistas'),
+
+        ('escolar', 'fins escolares'),
+
+        ('desportivo', 'fins desportivos'),
+
+        ('previdenciario', 'fins previdenciários'),
+
+        ('judicial', 'fins judiciais'),
+
+        ('militar', 'fins militares'),
+
+        ('empresa', 'apresentação junto a empresa/instituição'),
+
+        ('outro', 'outro'),
+
+    )
+
+
+    # =========================================
+    # FINALIDADES DA DECLARAÇÃO
+    # =========================================
+
+    FINALIDADES_DECLARACAO = (
+
+        ('trabalhista', 'fins trabalhistas'),
+
+        ('escolar', 'fins escolares'),
+
+        ('academico', 'fins acadêmicos'),
+
+        ('administrativo', 'fins administrativos'),
+
+        (
+            'empresa',
+            'apresentação junto a empresa/instituição'
+        ),
+
+        ('outro', 'outro'),
+
+    )
+
+    # =========================================
+    # PACIENTE
+    # =========================================
+
     paciente = models.ForeignKey(
         Paciente,
         on_delete=models.CASCADE,
         related_name='documentos'
     )
+
+    # =========================================
+    # TEMPLATE UTILIZADO
+    # =========================================
 
     template = models.ForeignKey(
         TemplateDocumento,
@@ -2517,6 +2591,10 @@ class DocumentoClinico(models.Model):
         null=True,
         blank=True
     )
+
+    # =========================================
+    # IDENTIFICAÇÃO
+    # =========================================
 
     titulo = models.CharField(
         max_length=255
@@ -2528,7 +2606,68 @@ class DocumentoClinico(models.Model):
         default='personalizado'
     )
 
+    # =========================================
+    # FINALIDADE DO ATESTADO
+    # =========================================
+
+    finalidade_atestado = models.CharField(
+        max_length=30,
+        choices=FINALIDADES_ATESTADO,
+        blank=True,
+        null=True
+    )
+
+    finalidade_atestado_outro = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    finalidade_declaracao = models.CharField(
+        max_length=30,
+        choices=FINALIDADES_DECLARACAO,
+        blank=True,
+        null=True
+    )
+
+    finalidade_declaracao_outro = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # FINALIDADES DA DECLARAÇÃO
+    # =========================================
+
+    FINALIDADES_DECLARACAO = (
+
+        ('trabalhista', 'Fins trabalhistas'),
+
+        ('escolar', 'Fins escolares'),
+
+        ('academico', 'Fins acadêmicos'),
+
+        ('administrativo', 'Fins administrativos'),
+
+        (
+            'empresa',
+            'Apresentação junto a empresa/instituição'
+        ),
+
+        ('outro', 'Outro'),
+
+    )
+
+    # =========================================
+    # CONTEÚDO
+    # =========================================
+
     conteudo = models.TextField()
+
+    # =========================================
+    # STATUS
+    # =========================================
 
     status = models.CharField(
         max_length=20,
@@ -2536,11 +2675,19 @@ class DocumentoClinico(models.Model):
         default='rascunho'
     )
 
+    # =========================================
+    # PDF
+    # =========================================
+
     pdf = models.FileField(
         upload_to='documentos/',
         blank=True,
         null=True
     )
+
+    # =========================================
+    # DATAS
+    # =========================================
 
     criado_em = models.DateTimeField(
         auto_now_add=True
@@ -2550,6 +2697,10 @@ class DocumentoClinico(models.Model):
         auto_now=True
     )
 
+    # =========================================
+    # CONFIGURAÇÕES
+    # =========================================
+
     class Meta:
 
         ordering = ['-criado_em']
@@ -2558,10 +2709,13 @@ class DocumentoClinico(models.Model):
 
         verbose_name_plural = 'Documentos Clínicos'
 
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
+
     def __str__(self):
 
-        return f'{self.titulo} - {self.paciente.nome}'
-    
+        return f'{self.titulo} - {self.paciente.nome}'    
    
 # =========================================
 # MEDICAMENTOS
