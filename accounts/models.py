@@ -2635,29 +2635,7 @@ class DocumentoClinico(models.Model):
         blank=True,
         null=True
     )
-
-    # =========================================
-    # FINALIDADES DA DECLARAÇÃO
-    # =========================================
-
-    FINALIDADES_DECLARACAO = (
-
-        ('trabalhista', 'Fins trabalhistas'),
-
-        ('escolar', 'Fins escolares'),
-
-        ('academico', 'Fins acadêmicos'),
-
-        ('administrativo', 'Fins administrativos'),
-
-        (
-            'empresa',
-            'Apresentação junto a empresa/instituição'
-        ),
-
-        ('outro', 'Outro'),
-
-    )
+    
 
     # =========================================
     # CONTEÚDO
@@ -2715,7 +2693,480 @@ class DocumentoClinico(models.Model):
 
     def __str__(self):
 
-        return f'{self.titulo} - {self.paciente.nome}'    
+        return f'{self.titulo} - {self.paciente.nome}' 
+
+ # =========================================
+# IMPLANTODONTIA
+# =========================================
+
+class Implantodontia(models.Model):
+
+    # =========================================
+    # DOCUMENTO CLÍNICO
+    # =========================================
+
+    documento = models.OneToOneField(
+        DocumentoClinico,
+        on_delete=models.CASCADE,
+        related_name='implantodontia'
+    )
+
+    # =========================================
+    # PACIENTE
+    # =========================================
+
+    paciente = models.ForeignKey(
+        Paciente,
+        on_delete=models.CASCADE,
+        related_name='tratamentos_implantodontia'
+    )
+
+    # =========================================
+    # DATA DO PROCEDIMENTO
+    # =========================================
+
+    data_procedimento = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    # =========================================
+    # RESPONSÁVEL
+    # =========================================
+
+    dentista_responsavel = models.ForeignKey(
+        'PerfilUsuario',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='implantodontias_responsavel'
+    )
+
+    # =========================================
+    # REGIÃO / OBSERVAÇÕES
+    # =========================================
+
+    regiao_observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    observacoes_clinicas = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # DATAS DO REGISTRO
+    # =========================================
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    # =========================================
+    # CONFIGURAÇÕES
+    # =========================================
+
+    class Meta:
+
+        verbose_name = 'Implantodontia'
+
+        verbose_name_plural = 'Implantodontias'
+
+        ordering = ['-data_procedimento', '-criado_em']
+
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
+
+    def __str__(self):
+
+        return (
+            f'Implantodontia - '
+            f'{self.paciente.nome}'
+        )
+
+
+# =========================================
+# IMPLANTES DO PROCEDIMENTO
+# =========================================
+
+class ImplantodontiaImplante(models.Model):
+
+    # =========================================
+    # PROCEDIMENTO
+    # =========================================
+
+    implantodontia = models.ForeignKey(
+        Implantodontia,
+        on_delete=models.CASCADE,
+        related_name='implantes'
+    )
+
+    # =========================================
+    # VÍNCULO COM O ITEM DO ORÇAMENTO
+    # =========================================
+
+    item_orcamento = models.OneToOneField(
+        'ItemOrcamento',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='implante_tecnico'
+    )
+
+    # =========================================
+    # ELEMENTO / REGIÃO
+    # =========================================
+
+    elemento = models.CharField(
+        max_length=20
+    )
+
+    # =========================================
+    # FABRICANTE
+    # =========================================
+
+    fabricante = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # MODELO / REFERÊNCIA
+    # =========================================
+
+    modelo_referencia = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # CONEXÃO
+    # =========================================
+
+    conexao = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # DIMENSÕES
+    # =========================================
+
+    diametro = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
+    )
+
+    comprimento = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # LOTE
+    # =========================================
+
+    lote = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # VALIDADE
+    # =========================================
+
+    validade = models.DateField(
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # REGISTRO ANVISA
+    # =========================================
+
+    registro_anvisa = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # DATA DA INSTALAÇÃO
+    # =========================================
+
+    data_instalacao = models.DateField(
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # OBSERVAÇÕES
+    # =========================================
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # CONFIGURAÇÕES
+    # =========================================
+
+    class Meta:
+
+        verbose_name = 'Implante'
+
+        verbose_name_plural = 'Implantes'
+
+        ordering = ['elemento', 'id']
+
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
+
+    def __str__(self):
+
+        return (
+            f'Implante {self.elemento} - '
+            f'{self.fabricante or "Fabricante não informado"}'
+        ) 
+
+ # =========================================
+# COMPONENTES DO IMPLANTE
+# =========================================
+
+class ImplantodontiaComponente(models.Model):
+
+    # =========================================
+    # TIPOS DE COMPONENTES
+    # =========================================
+
+    TIPO_CHOICES = (
+
+        ('cicatrizador', 'Cicatrizador'),
+
+        ('pilar', 'Pilar / Abutment'),
+
+        ('componente_protetico', 'Componente Protético'),
+
+        ('transferente', 'Transferente'),
+
+        ('analogo', 'Análogo'),
+
+        ('outro', 'Outro'),
+
+    )
+
+    # =========================================
+    # IMPLANTE
+    # =========================================
+
+    implante = models.ForeignKey(
+        ImplantodontiaImplante,
+        on_delete=models.CASCADE,
+        related_name='componentes'
+    )
+
+    # =========================================
+    # TIPO
+    # =========================================
+
+    tipo = models.CharField(
+        max_length=40,
+        choices=TIPO_CHOICES
+    )
+
+    # =========================================
+    # FABRICANTE
+    # =========================================
+
+    fabricante = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # MODELO / REFERÊNCIA
+    # =========================================
+
+    modelo_referencia = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # LOTE
+    # =========================================
+
+    lote = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # REGISTRO ANVISA
+    # =========================================
+
+    registro_anvisa = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # OBSERVAÇÕES
+    # =========================================
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # =========================================
+    # DATA DO REGISTRO
+    # =========================================
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    # =========================================
+    # CONFIGURAÇÕES
+    # =========================================
+
+    class Meta:
+
+        verbose_name = 'Componente de Implante'
+
+        verbose_name_plural = 'Componentes de Implantes'
+
+        ordering = ['tipo', 'id']
+
+    # =========================================
+    # REPRESENTAÇÃO
+    # =========================================
+
+    def __str__(self):
+
+        return (
+            f'{self.get_tipo_display()} - '
+            f'Implante {self.implante.elemento}'
+        )
+
+# =========================================
+# ENDODONTIA
+# =========================================
+
+class Endodontia(models.Model):
+
+    documento = models.OneToOneField(
+        "DocumentoClinico",
+        on_delete=models.CASCADE,
+        related_name="endodontia"
+    )
+
+    paciente = models.ForeignKey(
+        Paciente,
+        on_delete=models.CASCADE,
+        related_name="tratamentos_endodontia"
+    )
+
+    item_orcamento = models.OneToOneField(
+        "ItemOrcamento",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="endodontia_tecnica"
+    )
+
+    elemento = models.CharField(
+        max_length=20
+    )
+
+    dentista_responsavel = models.ForeignKey(
+        "PerfilUsuario",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="endodontias_responsavel"
+    )
+
+    data_procedimento = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    diagnostico_pulpar = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    diagnostico_periapical = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    numero_canais = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+
+    condutometria = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    tecnica_material = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True
+    )
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "Endodontia"
+        verbose_name_plural = "Endodontias"
+        ordering = [
+            "-data_procedimento",
+            "-criado_em"
+        ]
+
+    def __str__(self):
+        return (
+            f"Endodontia - "
+            f"{self.paciente.nome} - "
+            f"Dente {self.elemento}"
+        )
    
 # =========================================
 # MEDICAMENTOS

@@ -1,0 +1,390 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+
+                <i class="fa-solid fa-tooth me-2"></i>
+
+                Endodontia
+
+            </h4>
+
+            <div class="text-muted">
+
+                Paciente:
+
+                <strong>
+                    {{ paciente.nome }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'ficha_clinica' paciente.id %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="fa-solid fa-arrow-left me-1"></i>
+
+            Voltar
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         FORMULÁRIO
+         ========================================= -->
+
+    <div class="card shadow-sm border-0">
+
+
+        <!-- =========================================
+             CABEÇALHO DO CARD
+             ========================================= -->
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="fa-solid fa-file-medical me-2"></i>
+
+                Registro Técnico de Endodontia
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- =========================================
+                     DENTE / DATA / DENTISTA
+                     ========================================= -->
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- DENTE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.elemento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Dente
+                        </label>
+
+                        {{ form.elemento }}
+
+                        {% if form.elemento.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.elemento.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DATA -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.data_procedimento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Data do procedimento
+                        </label>
+
+                        {{ form.data_procedimento }}
+
+                        {% if form.data_procedimento.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.data_procedimento.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DENTISTA -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.dentista_responsavel.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Dentista responsável
+                        </label>
+
+                        {{ form.dentista_responsavel }}
+
+                        {% if form.dentista_responsavel.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.dentista_responsavel.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     DIAGNÓSTICOS
+                     ========================================= -->
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- DIAGNÓSTICO PULPAR -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.diagnostico_pulpar.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Diagnóstico pulpar
+                        </label>
+
+                        {{ form.diagnostico_pulpar }}
+
+                        {% if form.diagnostico_pulpar.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.diagnostico_pulpar.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DIAGNÓSTICO PERIAPICAL -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.diagnostico_periapical.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Diagnóstico periapical
+                        </label>
+
+                        {{ form.diagnostico_periapical }}
+
+                        {% if form.diagnostico_periapical.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.diagnostico_periapical.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     NÚMERO DE CANAIS / CONDUTOMETRIA
+                     ========================================= -->
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- NÚMERO DE CANAIS -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.numero_canais.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Número de canais
+                        </label>
+
+                        {{ form.numero_canais }}
+
+                        {% if form.numero_canais.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.numero_canais.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CONDUTOMETRIA -->
+
+                    <div class="col-md-8">
+
+                        <label
+                            for="{{ form.condutometria.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Condutometria / Comprimento de trabalho
+                        </label>
+
+                        {{ form.condutometria }}
+
+                        {% if form.condutometria.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.condutometria.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     TÉCNICA / MATERIAL
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.tecnica_material.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Técnica / Material
+                    </label>
+
+                    {{ form.tecnica_material }}
+
+                    {% if form.tecnica_material.errors %}
+
+                        <div class="text-danger small mt-1">
+
+                            {{ form.tecnica_material.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     OBSERVAÇÕES
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.observacoes.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Observações clínicas
+                    </label>
+
+                    {{ form.observacoes }}
+
+                    {% if form.observacoes.errors %}
+
+                        <div class="text-danger small mt-1">
+
+                            {{ form.observacoes.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     BOTÕES
+                     ========================================= -->
+
+                <div class="d-flex justify-content-end gap-2">
+
+
+                    <!-- CANCELAR -->
+
+                    <a
+                        href="{% url 'ficha_clinica' paciente.id %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="fa-solid fa-xmark me-1"></i>
+
+                        Cancelar
+
+                    </a>
+
+
+                    <!-- SALVAR -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+
+                        Salvar Endodontia
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

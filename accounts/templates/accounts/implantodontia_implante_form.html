@@ -1,0 +1,328 @@
+{% extends "accounts/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+                <i class="fa-solid fa-tooth"></i>
+                Novo Implante
+            </h3>
+
+            <p class="text-muted mb-0">
+                Registro técnico do implante odontológico.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'ficha_clinica' paciente.id %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Voltar
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         IDENTIFICAÇÃO
+         ========================================= -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <small class="text-muted">
+                        Paciente
+                    </small>
+
+                    <div class="fw-semibold">
+                        {{ paciente.nome }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <small class="text-muted">
+                        Procedimento
+                    </small>
+
+                    <div class="fw-semibold">
+                        Implantodontia
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         FORMULÁRIO
+         ========================================= -->
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                    Dados do Implante
+
+                </h5>
+
+
+                <div class="row g-3">
+
+
+                    <!-- ELEMENTO -->
+
+                    <div class="col-md-3">
+
+                        <label
+                            for="{{ form.elemento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Elemento dentário
+                        </label>
+
+                        {{ form.elemento }}
+
+                    </div>
+
+
+                    <!-- FABRICANTE -->
+
+                    <div class="col-md-5">
+
+                        <label
+                            for="{{ form.fabricante.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Marca / Fabricante
+                        </label>
+
+                        {{ form.fabricante }}
+
+                    </div>
+
+
+                    <!-- MODELO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.modelo_referencia.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Modelo / Referência
+                        </label>
+
+                        {{ form.modelo_referencia }}
+
+                    </div>
+
+
+                    <!-- CONEXÃO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.conexao.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Tipo / Conexão
+                        </label>
+
+                        {{ form.conexao }}
+
+                    </div>
+
+
+                    <!-- DIÂMETRO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.diametro.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Diâmetro
+                        </label>
+
+                        {{ form.diametro }}
+
+                    </div>
+
+
+                    <!-- COMPRIMENTO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.comprimento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Comprimento
+                        </label>
+
+                        {{ form.comprimento }}
+
+                    </div>
+
+
+                    <!-- LOTE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.lote.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Lote
+                        </label>
+
+                        {{ form.lote }}
+
+                    </div>
+
+
+                    <!-- VALIDADE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.validade.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Validade
+                        </label>
+
+                        {{ form.validade }}
+
+                    </div>
+
+
+                    <!-- ANVISA -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.registro_anvisa.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Registro ANVISA
+                        </label>
+
+                        {{ form.registro_anvisa }}
+
+                    </div>
+
+
+                    <!-- DATA INSTALAÇÃO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.data_instalacao.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Data da instalação
+                        </label>
+
+                        {{ form.data_instalacao }}
+
+                    </div>
+
+
+                    <!-- OBSERVAÇÕES -->
+
+                    <div class="col-12">
+
+                        <label
+                            for="{{ form.observacoes.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Observações
+                        </label>
+
+                        {{ form.observacoes }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 RODAPÉ
+                 ========================================= -->
+
+            <div class="card-footer bg-white border-0 p-4">
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a
+                        href="{% url 'ficha_clinica' paciente.id %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        Cancelar
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Salvar Implante
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

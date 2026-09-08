@@ -372,6 +372,60 @@ path(
         views.ficha_clinica,
         name='ficha_clinica'
     ),
+
+    path(
+        'pacientes/<int:id>/implantodontia/novo/',
+        views.novo_implantodontia,
+        name='novo_implantodontia'
+    ),
+
+    path(
+        'pacientes/<int:id>/endodontia/novo/',
+        views.novo_endodontia,
+        name='novo_endodontia'
+    ),
+
+    path(
+        'endodontia/<int:id>/editar/',
+        views.editar_endodontia,
+        name='editar_endodontia'
+    ),
+
+    path(
+        'implantodontia/<int:id>/implante/novo/',
+        views.novo_implante,
+        name='novo_implante'
+    ),
+
+    path(
+        'implantodontia/<int:id>/componente/novo/',
+        views.novo_componente_implante,
+        name='novo_componente_implante'
+    ),
+
+    path(
+        'implantodontia/<int:id>/componente/editar/',
+        views.editar_componente_implante,
+        name='editar_componente_implante'
+    ),
+
+    path(
+        'implantodontia/<int:id>/componente/excluir/',
+        views.excluir_componente_implante,
+        name='excluir_componente_implante'
+    ),
+
+    path(
+        'implantodontia/<int:id>/implante/editar/',
+        views.editar_implante,
+        name='editar_implante'
+    ),
+
+    path(
+        'implantodontia/<int:id>/implante/excluir/',
+        views.excluir_implante,
+        name='excluir_implante'
+    ),
     
     path(
         'pacientes/<int:id>/anexo/',

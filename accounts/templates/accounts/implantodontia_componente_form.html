@@ -1,0 +1,290 @@
+{% extends "accounts/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                Novo Componente
+
+            </h3>
+
+            <p class="text-muted mb-0">
+
+                Registro técnico do componente do implante.
+
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'ficha_clinica' paciente.id %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Voltar
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         IDENTIFICAÇÃO
+         ========================================= -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Paciente
+                    </small>
+
+                    <div class="fw-semibold">
+
+                        {{ paciente.nome }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Procedimento
+                    </small>
+
+                    <div class="fw-semibold">
+
+                        Implantodontia
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Implante
+                    </small>
+
+                    <div class="fw-semibold">
+
+                        Elemento {{ implante.elemento }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         FORMULÁRIO
+         ========================================= -->
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <div class="card shadow-sm border-0">
+
+
+            <div class="card-body">
+
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="fa-solid fa-box-open"></i>
+
+                    Dados do Componente
+
+                </h5>
+
+
+                <div class="row g-3">
+
+
+                    <!-- TIPO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.tipo.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Tipo de componente
+
+                        </label>
+
+                        {{ form.tipo }}
+
+                    </div>
+
+
+                    <!-- FABRICANTE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.fabricante.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Marca / Fabricante
+
+                        </label>
+
+                        {{ form.fabricante }}
+
+                    </div>
+
+
+                    <!-- MODELO -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.modelo_referencia.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Modelo / Referência
+
+                        </label>
+
+                        {{ form.modelo_referencia }}
+
+                    </div>
+
+
+                    <!-- LOTE -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.lote.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Lote
+
+                        </label>
+
+                        {{ form.lote }}
+
+                    </div>
+
+
+                    <!-- ANVISA -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.registro_anvisa.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Registro ANVISA
+
+                        </label>
+
+                        {{ form.registro_anvisa }}
+
+                    </div>
+
+
+                    <!-- OBSERVAÇÕES -->
+
+                    <div class="col-12">
+
+                        <label
+                            for="{{ form.observacoes.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+
+                            Observações
+
+                        </label>
+
+                        {{ form.observacoes }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 RODAPÉ
+                 ========================================= -->
+
+            <div class="card-footer bg-white border-0 p-4">
+
+                <div class="d-flex justify-content-end gap-2">
+
+
+                    <a
+                        href="{% url 'ficha_clinica' paciente.id %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        Cancelar
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Salvar Componente
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -88,6 +88,10 @@ from .forms import (
     MetaDentistaForm,
     PerfilForm,
     ProcedimentoForm,
+    ImplantodontiaForm,
+    ImplantodontiaImplanteForm,
+    ImplantodontiaComponenteForm,
+    EndodontiaForm,
 )
 
 from .models import (
@@ -105,6 +109,10 @@ from .models import (
     EvolucaoClinica,
     Exame,
     Fornecedor,
+    Implantodontia,
+    ImplantodontiaImplante,
+    ImplantodontiaComponente,
+    Endodontia,
     ItemCompra,
     ItemOrcamento,
     LivroCaixa,
@@ -4004,7 +4012,21 @@ def odontograma(request, id):
     )
 
     # =====================================
+    # TODOS OS TRATAMENTOS DO PACIENTE
+    # =====================================
+
+    todos_tratamentos = (
+        paciente.tratamentos
+        .select_related("dentista")
+        .order_by("-id")
+    )
+
+    # =====================================
     # TRATAMENTOS ATIVOS
+    #
+    # Mantemos esta lista separada porque
+    # algumas regras do sistema dependem
+    # especificamente dos tratamentos ativos.
     # =====================================
 
     if perfil_usuario == "dentista":
@@ -4041,7 +4063,7 @@ def odontograma(request, id):
     if tratamento_id:
 
         tratamento = (
-            tratamentos_ativos
+            todos_tratamentos
             .filter(
                 id=tratamento_id
             )
@@ -4263,6 +4285,140 @@ def odontograma(request, id):
             status=status
         )
 
+                # =====================================
+        # INTEGRAÇÃO COM ENDODONTIA
+        # =====================================
+
+        if (
+            procedimento
+            and procedimento.nome
+            and procedimento.nome.lower().startswith(
+                "tratamento endodôntico"
+            )
+            and dente
+        ):
+
+            documento_endodontia = (
+                DocumentoClinico.objects.create(
+                    paciente=paciente,
+
+                    titulo=(
+                        f"Endodontia - "
+                        f"Dente {dente}"
+                    ),
+
+                    tipo="personalizado",
+
+                    conteudo=(
+                        "<h2>ENDODONTIA</h2>"
+                        "<p>"
+                        f"Tratamento endodôntico "
+                        f"do dente {dente}."
+                        "</p>"
+                    ),
+
+                    status="rascunho"
+                )
+            )
+
+            dentista_responsavel = None
+
+            if tratamento:
+
+                dentista_responsavel = getattr(
+                    tratamento.dentista,
+                    "perfil",
+                    None
+                )
+
+            Endodontia.objects.create(
+
+                documento=documento_endodontia,
+
+                paciente=paciente,
+
+                item_orcamento=item,
+
+                elemento=str(dente),
+
+                dentista_responsavel=dentista_responsavel
+
+            )
+
+        # =====================================
+        # INTEGRAÇÃO COM IMPLANTODONTIA
+        # =====================================
+
+        if (
+            procedimento
+            and procedimento.nome == "Implante (fase cirúrgica)"
+            and dente
+        ):
+
+            # =================================
+            # LOCALIZA IMPLANTODONTIA DO PACIENTE
+            # =================================
+
+            implantodontia = (
+                Implantodontia.objects
+                .filter(
+                    paciente=paciente
+                )
+                .order_by("-criado_em")
+                .first()
+            )
+
+            # =================================
+            # CRIA A ESTRUTURA SE NÃO EXISTIR
+            # =================================
+
+            if not implantodontia:
+
+                documento_implantodontia = (
+                    DocumentoClinico.objects.create(
+                        paciente=paciente,
+                        titulo=f"Implantodontia - {paciente.nome}",
+                        tipo="personalizado",
+                        conteudo=(
+                            "<h2>IMPLANTODONTIA</h2>"
+                            "<p>"
+                            "Registro técnico dos "
+                            "implantes do paciente."
+                            "</p>"
+                        ),
+                        status="rascunho"
+                    )
+                )
+
+                dentista_responsavel = None
+
+                if tratamento:
+                    dentista_responsavel = getattr(
+                        tratamento.dentista,
+                        "perfil",
+                        None
+                    )
+
+                implantodontia = (
+                    Implantodontia.objects.create(
+                        documento=documento_implantodontia,
+                        paciente=paciente,
+                        dentista_responsavel=dentista_responsavel
+                    )
+                )
+
+            # =================================
+            # CRIA O REGISTRO TÉCNICO DO IMPLANTE
+            # =================================
+
+            ImplantodontiaImplante.objects.get_or_create(
+                item_orcamento=item,
+                defaults={
+                    "implantodontia": implantodontia,
+                    "elemento": str(dente),
+                }
+            )
+
         # =================================
         # REGISTRA EVOLUÇÃO CLÍNICA
         # =================================
@@ -4396,57 +4552,18 @@ def odontograma(request, id):
     # =====================================
     # PROCEDIMENTOS DE OUTROS TRATAMENTOS
     #
-    # SOMENTE PROCEDIMENTOS REALIZADOS
-    # QUE PODEM SER VISUALIZADOS COMO
-    # EXISTENTE.
+    # NÃO SÃO EXIBIDOS NO ODONTOGRAMA.
     #
-    # NÃO HERDAR:
-    # - RX
-    # - Dente ausente
-    # - Exodontias
-    # - Cirurgias
+    # O Odontograma mostra somente os
+    # procedimentos pertencentes ao orçamento
+    # do tratamento atualmente selecionado.
+    #
+    # EXCEÇÕES:
+    # - Dentes ausentes continuam seguindo
+    #   a regra de herança abaixo.
+    # - Extrações/cirurgias realizadas continuam
+    #   tornando o dente ausente.
     # =====================================
-
-    if tratamento:
-
-        procedimentos_nao_herdar = [
-            "rx_dente.png",
-            "ausente.png",
-            "extracao.png",
-            "exodontia_retalho.png",
-            "cirurgia_incluso.png",
-        ]
-
-        itens_realizados_outros = (
-            ItemOrcamento.objects
-            .filter(
-                orcamento__paciente=paciente,
-                status="realizado",
-                dente__isnull=False
-            )
-            .exclude(
-                orcamento__tratamento=tratamento
-            )
-            .exclude(
-                procedimento__arquivo_icone__in=
-                procedimentos_nao_herdar
-            )
-            .select_related(
-                "procedimento",
-                "orcamento",
-                "orcamento__tratamento",
-                "orcamento__tratamento__dentista"
-            )
-            .order_by(
-                "id"
-            )
-        )
-
-        itens_para_odontograma.extend(
-            list(
-                itens_realizados_outros
-            )
-        )
 
     # =====================================
     # PREPARA STATUS VISUAL
@@ -4611,6 +4728,33 @@ def odontograma(request, id):
     )
 
     # =====================================
+    # IMPLANTODONTIA
+    #
+    # Carrega os procedimentos de Implantodontia
+    # e seus implantes para o paciente.
+    #
+    # Nesta etapa apenas disponibilizamos os dados
+    # para o Odontograma.
+    #
+    # Não alteramos ainda a lógica dos procedimentos,
+    # status ou posicionamento dos dentes.
+    # =====================================
+
+    implantodontias = (
+        Implantodontia.objects
+        .filter(
+            paciente=paciente
+        )
+        .prefetch_related(
+            "implantes"
+        )
+        .order_by(
+            "-data_procedimento",
+            "-criado_em"
+        )
+    )
+
+    # =====================================
     # DENTES AUSENTES / EXTRAÍDOS
     #
     # TRATAMENTO ATUAL:
@@ -4755,6 +4899,29 @@ def odontograma(request, id):
                 )
             )
         )
+
+    # =====================================
+    # 4. DENTES COM IMPLANTE
+    #
+    # Um elemento que possui implante
+    # é considerado ausente no odontograma.
+    #
+    # O implante passa a representar
+    # a substituição daquele dente.
+    # =====================================
+
+    implantodontias = (
+        Implantodontia.objects
+        .filter(paciente=paciente)
+        .prefetch_related("implantes")
+    )
+
+    dentes_com_implante = set(
+        str(implante.elemento)
+        for implantodontia in implantodontias
+        for implante in implantodontia.implantes.all()
+        if implante.elemento
+    )
 
     # =====================================
     # DICIONÁRIO DAS POSIÇÕES
@@ -4918,6 +5085,15 @@ def odontograma(request, id):
         "paciente":
             paciente,
 
+        "todos_tratamentos":
+            todos_tratamentos,
+
+        "implantodontias":
+            implantodontias,
+
+        "dentes_com_implante":
+            dentes_com_implante,
+
         "tratamento":
             tratamento,
 
@@ -4950,6 +5126,9 @@ def odontograma(request, id):
 
         "condicoes_odontologicas":
             condicoes_odontologicas,
+
+        "implantodontias":
+            implantodontias,
 
         "dentes_ausentes":
             dentes_ausentes,
@@ -5015,10 +5194,13 @@ def salvar_posicionamento_dente(request, id):
 
     if request.method != "POST":
 
-        return JsonResponse({
-            "sucesso": False,
-            "erro": "Método não permitido."
-        }, status=405)
+        return JsonResponse(
+            {
+                "sucesso": False,
+                "erro": "Método não permitido."
+            },
+            status=405
+        )
 
     # =====================================
     # DADOS RECEBIDOS
@@ -5027,23 +5209,19 @@ def salvar_posicionamento_dente(request, id):
     dente = request.POST.get("dente")
     posicao = request.POST.get("posicao")
 
-    print("=========================================")
-    print("SALVAR POSICIONAMENTO DO DENTE")
-    print("PACIENTE:", paciente.id)
-    print("DENTE:", dente)
-    print("POSIÇÃO RECEBIDA:", posicao)
-    print("=========================================")
-
     # =====================================
     # VALIDAÇÃO DO DENTE
     # =====================================
 
     if not dente:
 
-        return JsonResponse({
-            "sucesso": False,
-            "erro": "Dente não informado."
-        }, status=400)
+        return JsonResponse(
+            {
+                "sucesso": False,
+                "erro": "Dente não informado."
+            },
+            status=400
+        )
 
     # =====================================
     # POSIÇÃO PADRÃO
@@ -5083,15 +5261,6 @@ def salvar_posicionamento_dente(request, id):
     elif posicao == "distal":
 
         posicao = "inclinado_distal"
-
-    # =====================================
-    # DEBUG
-    # =====================================
-
-    print(
-        "POSIÇÃO NORMALIZADA:",
-        posicao
-    )
 
     # =====================================
     # POSIÇÕES PERMITIDAS
@@ -5146,19 +5315,13 @@ def salvar_posicionamento_dente(request, id):
 
     if posicao not in posicoes_validas:
 
-        print(
-            "POSIÇÃO INVÁLIDA:",
-            posicao
+        return JsonResponse(
+            {
+                "sucesso": False,
+                "erro": "Posição do dente inválida."
+            },
+            status=400
         )
-
-        return JsonResponse({
-
-            "sucesso": False,
-
-            "erro":
-                "Posição do dente inválida."
-
-        }, status=400)
 
     # =====================================
     # SALVA / ATUALIZA
@@ -5179,32 +5342,17 @@ def salvar_posicionamento_dente(request, id):
     )
 
     # =====================================
-    # DEBUG
-    # =====================================
-
-    print("=========================================")
-    print("POSICIONAMENTO SALVO COM SUCESSO")
-    print("ID:", posicionamento.id)
-    print("DENTE:", posicionamento.dente)
-    print("POSIÇÃO:", posicionamento.posicao)
-    print("NOVO:", created)
-    print("=========================================")
-
-    # =====================================
     # RESPOSTA
     # =====================================
 
-    return JsonResponse({
-
-        "sucesso": True,
-
-        "dente": posicionamento.dente,
-
-        "posicao": posicionamento.posicao,
-
-        "novo": created
-
-    })
+    return JsonResponse(
+        {
+            "sucesso": True,
+            "dente": posicionamento.dente,
+            "posicao": posicionamento.posicao,
+            "novo": created
+        }
+    )
 
 # =========================================
 # SALVAR PROCEDIMENTO GERAL
@@ -5353,6 +5501,8 @@ def salvar_procedimento_geral(request, id):
         status=status
 
     )
+
+    
 
     # =====================================
     # REGISTRA EVOLUÇÃO
@@ -5720,6 +5870,42 @@ def ficha_clinica(request, id):
         paciente=paciente
     )
 
+        # =========================================
+    # IMPLANTODONTIA
+    # =========================================
+
+    implantodontias = (
+        Implantodontia.objects
+        .filter(
+            paciente=paciente
+        )
+        .prefetch_related(
+            'implantes__componentes'
+        )
+        .order_by(
+            '-data_procedimento',
+            '-criado_em'
+        )
+    )
+
+    # =========================================
+    # ENDODONTIA
+    # =========================================
+
+    endodontias = (
+        Endodontia.objects
+        .filter(
+            paciente=paciente
+        )
+        .select_related(
+            'dentista_responsavel'
+        )
+        .order_by(
+            '-data_procedimento',
+            '-criado_em'
+        )
+    )
+
     anexos = AnexoPaciente.objects.filter(
         paciente=paciente
     )
@@ -5735,6 +5921,7 @@ def ficha_clinica(request, id):
     solicitacoes = SolicitacaoExame.objects.filter(
         paciente=paciente
     )
+
 
     # =========================================
     # PROCEDIMENTOS DO ORÇAMENTO
@@ -5807,6 +5994,10 @@ def ficha_clinica(request, id):
 
         'documentos': documentos,
 
+        'implantodontias': implantodontias,
+
+        'endodontias': endodontias,
+
         'receitas': receitas,
 
         'exames': exames,
@@ -5835,6 +6026,678 @@ def ficha_clinica(request, id):
 
         context
 
+    )
+
+# =========================================
+# NOVO PROCEDIMENTO DE IMPLANTODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def novo_implantodontia(request, id):
+
+    paciente = get_object_or_404(
+        Paciente,
+        id=id
+    )
+
+    # =========================================
+    # FORMULÁRIO
+    # =========================================
+
+    if request.method == 'POST':
+
+        form = ImplantodontiaForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                # =========================================
+                # CRIAR DOCUMENTO CLÍNICO
+                # =========================================
+
+                documento = DocumentoClinico.objects.create(
+
+                    paciente=paciente,
+
+                    titulo=(
+                        f'Implantodontia - '
+                        f'{paciente.nome}'
+                    ),
+
+                    tipo='personalizado',
+
+                    conteudo=(
+                        '<h2>IMPLANTODONTIA</h2>'
+                        '<p>'
+                        'Registro técnico do procedimento '
+                        'de Implantodontia.'
+                        '</p>'
+                    ),
+
+                    status='rascunho'
+
+                )
+
+                # =========================================
+                # CRIAR PROCEDIMENTO
+                # =========================================
+
+                implantodontia = form.save(
+                    commit=False
+                )
+
+                implantodontia.documento = documento
+
+                implantodontia.paciente = paciente
+
+                # =========================================
+                # DENTISTA RESPONSÁVEL
+                # =========================================
+
+                if not implantodontia.dentista_responsavel:
+
+                    perfil_usuario = getattr(
+                        request.user,
+                        'perfil',
+                        None
+                    )
+
+                    if (
+                        perfil_usuario
+                        and
+                        getattr(
+                            perfil_usuario,
+                            'tipo_usuario',
+                            ''
+                        ) == PerfilUsuario.DENTISTA
+                    ):
+
+                        implantodontia.dentista_responsavel = (
+                            perfil_usuario
+                        )
+
+                implantodontia.save()
+
+            messages.success(
+                request,
+                'Procedimento de Implantodontia criado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = ImplantodontiaForm()
+
+        # =========================================
+        # DENTISTA LOGADO COMO PADRÃO
+        # =========================================
+
+        perfil_usuario = getattr(
+            request.user,
+            'perfil',
+            None
+        )
+
+        if (
+            perfil_usuario
+            and
+            getattr(
+                perfil_usuario,
+                'tipo_usuario',
+                ''
+            ) == PerfilUsuario.DENTISTA
+        ):
+
+            form.fields[
+                'dentista_responsavel'
+            ].initial = perfil_usuario
+
+    return render(
+        request,
+        'accounts/implantodontia_form.html',
+        {
+            'paciente': paciente,
+            'form': form,
+        }
+    )
+
+# =========================================
+# NOVO PROCEDIMENTO DE ENDODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def novo_endodontia(request, id):
+
+    paciente = get_object_or_404(
+        Paciente,
+        id=id
+    )
+
+    # =========================================
+    # FORMULÁRIO
+    # =========================================
+
+    if request.method == 'POST':
+
+        form = EndodontiaForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                # =========================================
+                # CRIAR DOCUMENTO CLÍNICO
+                # =========================================
+
+                documento = DocumentoClinico.objects.create(
+
+                    paciente=paciente,
+
+                    titulo=(
+                        f'Endodontia - '
+                        f'{paciente.nome}'
+                    ),
+
+                    tipo='personalizado',
+
+                    conteudo=(
+                        '<h2>ENDODONTIA</h2>'
+                        '<p>'
+                        'Registro técnico do tratamento '
+                        'endodôntico.'
+                        '</p>'
+                    ),
+
+                    status='rascunho'
+
+                )
+
+                # =========================================
+                # CRIAR PROCEDIMENTO
+                # =========================================
+
+                endodontia = form.save(
+                    commit=False
+                )
+
+                endodontia.documento = documento
+
+                endodontia.paciente = paciente
+
+                # =========================================
+                # DENTISTA RESPONSÁVEL
+                # =========================================
+
+                if not endodontia.dentista_responsavel:
+
+                    perfil_usuario = getattr(
+                        request.user,
+                        'perfil',
+                        None
+                    )
+
+                    if (
+                        perfil_usuario
+                        and
+                        getattr(
+                            perfil_usuario,
+                            'tipo_usuario',
+                            ''
+                        ) == PerfilUsuario.DENTISTA
+                    ):
+
+                        endodontia.dentista_responsavel = (
+                            perfil_usuario
+                        )
+
+                endodontia.save()
+
+            messages.success(
+                request,
+                'Procedimento de Endodontia criado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = EndodontiaForm()
+
+        # =========================================
+        # DENTISTA LOGADO COMO PADRÃO
+        # =========================================
+
+        perfil_usuario = getattr(
+            request.user,
+            'perfil',
+            None
+        )
+
+        if (
+            perfil_usuario
+            and
+            getattr(
+                perfil_usuario,
+                'tipo_usuario',
+                ''
+            ) == PerfilUsuario.DENTISTA
+        ):
+
+            form.fields[
+                'dentista_responsavel'
+            ].initial = perfil_usuario
+
+    return render(
+        request,
+        'accounts/endodontia_form.html',
+        {
+            'paciente': paciente,
+            'form': form,
+        }
+    )
+
+# =========================================
+# EDITAR PROCEDIMENTO DE ENDODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def editar_endodontia(request, id):
+
+    endodontia = get_object_or_404(
+        Endodontia,
+        id=id
+    )
+
+    paciente = endodontia.paciente
+
+    # =========================================
+    # FORMULÁRIO
+    # =========================================
+
+    if request.method == 'POST':
+
+        form = EndodontiaForm(
+            request.POST,
+            instance=endodontia
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                form.save()
+
+            messages.success(
+                request,
+                'Procedimento de Endodontia atualizado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = EndodontiaForm(
+            instance=endodontia
+        )
+
+    return render(
+        request,
+        'accounts/endodontia_form.html',
+        {
+            'paciente': paciente,
+            'form': form,
+            'endodontia': endodontia,
+        }
+    )
+
+# =========================================
+# NOVO IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def novo_implante(request, id):
+
+    implantodontia = get_object_or_404(
+        Implantodontia,
+        id=id
+    )
+
+    paciente = implantodontia.paciente
+
+    if request.method == 'POST':
+
+        form = ImplantodontiaImplanteForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                implante = form.save(
+                    commit=False
+                )
+
+                implante.implantodontia = (
+                    implantodontia
+                )
+
+                implante.save()
+
+                # =========================================
+                # VINCULA AO PROCEDIMENTO DE IMPLANTE
+                # =========================================
+
+                item_implante = (
+                    ItemOrcamento.objects
+                    .filter(
+                        orcamento__paciente=paciente,
+                        dente=implante.elemento,
+                        procedimento__nome='Implante (fase cirúrgica)',
+                        implante_tecnico__isnull=True
+                    )
+                    .order_by('-id')
+                )
+
+                # Só vincula automaticamente quando
+                # existe exatamente um item compatível.
+                if item_implante.count() == 1:
+
+                    implante.item_orcamento = (
+                        item_implante.first()
+                    )
+
+                    implante.save(
+                        update_fields=[
+                            'item_orcamento'
+                        ]
+                    )
+
+            messages.success(
+                request,
+                'Implante cadastrado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+        form = ImplantodontiaImplanteForm()
+
+    return render(
+        request,
+        'accounts/implantodontia_implante_form.html',
+        {
+            'paciente': paciente,
+            'implantodontia': implantodontia,
+            'form': form,
+        }
+    )
+
+# =========================================
+# EDITAR IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def editar_implante(request, id):
+
+    implante = get_object_or_404(
+        ImplantodontiaImplante,
+        id=id
+    )
+
+    implantodontia = implante.implantodontia
+
+    paciente = implantodontia.paciente
+
+    if request.method == 'POST':
+
+        form = ImplantodontiaImplanteForm(
+            request.POST,
+            instance=implante
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Implante atualizado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = ImplantodontiaImplanteForm(
+            instance=implante
+        )
+
+    return render(
+        request,
+        'accounts/implantodontia_implante_form.html',
+        {
+            'paciente': paciente,
+            'implantodontia': implantodontia,
+            'form': form,
+            'implante': implante,
+            'modo_edicao': True,
+        }
+    )
+
+# =========================================
+# EXCLUIR IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def excluir_implante(request, id):
+
+    implante = get_object_or_404(
+        ImplantodontiaImplante,
+        id=id
+    )
+
+    paciente = (
+        implante
+        .implantodontia
+        .paciente
+    )
+
+    if request.method == 'POST':
+
+        implante.delete()
+
+        messages.success(
+            request,
+            'Implante excluído com sucesso.'
+        )
+
+        return redirect(
+            'ficha_clinica',
+            id=paciente.id
+        )
+
+    return redirect(
+        'ficha_clinica',
+        id=paciente.id
+    )
+
+# =========================================
+# NOVO COMPONENTE DO IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def novo_componente_implante(request, id):
+
+    implante = get_object_or_404(
+        ImplantodontiaImplante,
+        id=id
+    )
+
+    implantodontia = implante.implantodontia
+
+    paciente = implantodontia.paciente
+
+    if request.method == 'POST':
+
+        form = ImplantodontiaComponenteForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            componente = form.save(
+                commit=False
+            )
+
+            componente.implante = implante
+
+            componente.save()
+
+            messages.success(
+                request,
+                'Componente cadastrado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = ImplantodontiaComponenteForm()
+
+    return render(
+        request,
+        'accounts/implantodontia_componente_form.html',
+        {
+            'paciente': paciente,
+            'implantodontia': implantodontia,
+            'implante': implante,
+            'form': form,
+        }
+    )
+
+# =========================================
+# EDITAR COMPONENTE DO IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def editar_componente_implante(request, id):
+
+    componente = get_object_or_404(
+        ImplantodontiaComponente,
+        id=id
+    )
+
+    implante = componente.implante
+
+    implantodontia = implante.implantodontia
+
+    paciente = implantodontia.paciente
+
+    if request.method == 'POST':
+
+        form = ImplantodontiaComponenteForm(
+            request.POST,
+            instance=componente
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                'Componente atualizado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = ImplantodontiaComponenteForm(
+            instance=componente
+        )
+
+    return render(
+        request,
+        'accounts/implantodontia_componente_form.html',
+        {
+            'paciente': paciente,
+            'implantodontia': implantodontia,
+            'implante': implante,
+            'form': form,
+            'componente': componente,
+            'modo_edicao': True,
+        }
+    )
+
+# =========================================
+# EXCLUIR COMPONENTE DO IMPLANTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def excluir_componente_implante(request, id):
+
+    componente = get_object_or_404(
+        ImplantodontiaComponente,
+        id=id
+    )
+
+    paciente = (
+        componente
+        .implante
+        .implantodontia
+        .paciente
+    )
+
+    if request.method == 'POST':
+
+        componente.delete()
+
+        messages.success(
+            request,
+            'Componente excluído com sucesso.'
+        )
+
+    return redirect(
+        'ficha_clinica',
+        id=paciente.id
     )
 
 # =========================================
@@ -6541,16 +7404,312 @@ def orcamento(request, id):
                 print("=" * 50)
 
                 # =================================
-                # SALVA
+                # SALVA ORÇAMENTO
                 # =================================
 
                 orcamento.save()
 
                 orcamento.refresh_from_db()
 
+
+                # =================================
+                # SINCRONIZA CONTAS A RECEBER
+                # =================================
+
+                total_orcamento = (
+                    orcamento.total or
+                    Decimal("0.00")
+                )
+
+                valor_entrada = (
+                    orcamento.entrada or
+                    Decimal("0.00")
+                )
+
+                quantidade_parcelas = max(
+                    1,
+                    int(orcamento.parcelas or 1)
+                )
+
+                saldo = (
+                    total_orcamento -
+                    valor_entrada
+                )
+
+                if saldo < Decimal("0.00"):
+                    saldo = Decimal("0.00")
+
+
+                # =================================
+                # ENTRADA
+                # =================================
+
+                conta_entrada = (
+                    ContaReceber.objects
+                    .filter(
+                        orcamento=orcamento,
+                        parcela=0
+                    )
+                    .first()
+                )
+
+                if valor_entrada > Decimal("0.00"):
+
+                    if conta_entrada:
+
+                        # ---------------------------------
+                        # PRESERVA ENTRADA JÁ RECEBIDA
+                        # ---------------------------------
+
+                        if conta_entrada.status != "RECEBIDO":
+
+                            conta_entrada.valor = (
+                                valor_entrada
+                            )
+
+                            conta_entrada.save(
+                                update_fields=[
+                                    "valor",
+                                    "atualizado_em"
+                                ]
+                            )
+
+                    else:
+
+                        # ---------------------------------
+                        # CRIA NOVA ENTRADA PENDENTE
+                        # ---------------------------------
+
+                        ContaReceber.objects.create(
+
+                            paciente=orcamento.paciente,
+
+                            orcamento=orcamento,
+
+                            descricao=(
+                                f"Entrada - Orçamento #{orcamento.id}"
+                            ),
+
+                            valor=valor_entrada,
+
+                            parcela=0,
+
+                            total_parcelas=quantidade_parcelas,
+
+                            vencimento=timezone.localdate(),
+
+                            status="PENDENTE"
+
+                        )
+
+                else:
+
+                    # ---------------------------------
+                    # REMOVE ENTRADA PENDENTE
+                    # ---------------------------------
+
+                    ContaReceber.objects.filter(
+                        orcamento=orcamento,
+                        parcela=0,
+                        status="PENDENTE"
+                    ).delete()
+
+
+                # =================================
+                # PARCELAS
+                # =================================
+
+                if saldo > Decimal("0.00"):
+
+                    # ---------------------------------
+                    # VALOR BASE
+                    # ---------------------------------
+
+                    valor_parcela_base = (
+                        saldo /
+                        Decimal(quantidade_parcelas)
+                    ).quantize(
+                        Decimal("0.01"),
+                        rounding=ROUND_DOWN
+                    )
+
+                    # ---------------------------------
+                    # DIFERENÇA DE CENTAVOS
+                    # ---------------------------------
+
+                    total_parcelas_base = (
+                        valor_parcela_base *
+                        quantidade_parcelas
+                    )
+
+                    diferenca = (
+                        saldo -
+                        total_parcelas_base
+                    )
+
+                    # ---------------------------------
+                    # CONTAS EXISTENTES
+                    # ---------------------------------
+
+                    contas_existentes = (
+                        ContaReceber.objects
+                        .filter(
+                            orcamento=orcamento,
+                            parcela__gt=0
+                        )
+                        .order_by("parcela")
+                    )
+
+                    # ---------------------------------
+                    # ATUALIZA / CRIA PARCELAS
+                    # ---------------------------------
+
+                    for numero in range(
+                        1,
+                        quantidade_parcelas + 1
+                    ):
+
+                        valor_atual = (
+                            valor_parcela_base
+                        )
+
+                        if (
+                            diferenca > Decimal("0.00")
+                            and
+                            numero <= int(
+                                diferenca * 100
+                            )
+                        ):
+                            valor_atual += Decimal("0.01")
+
+                        conta = (
+                            contas_existentes
+                            .filter(
+                                parcela=numero
+                            )
+                            .first()
+                        )
+
+                        if conta:
+
+                            # -----------------------------
+                            # PRESERVA PARCELA RECEBIDA
+                            # -----------------------------
+
+                            if conta.status == "RECEBIDO":
+
+                                conta.total_parcelas = (
+                                    quantidade_parcelas
+                                )
+
+                                conta.save(
+                                    update_fields=[
+                                        "total_parcelas",
+                                        "atualizado_em"
+                                    ]
+                                )
+
+                            else:
+
+                                # -----------------------------
+                                # ATUALIZA PARCELA PENDENTE
+                                # -----------------------------
+
+                                conta.valor = (
+                                    valor_atual
+                                )
+
+                                conta.total_parcelas = (
+                                    quantidade_parcelas
+                                )
+
+                                conta.save(
+                                    update_fields=[
+                                        "valor",
+                                        "total_parcelas",
+                                        "atualizado_em"
+                                    ]
+                                )
+
+                        else:
+
+                            # -----------------------------
+                            # NOVA PARCELA
+                            # -----------------------------
+
+                            ultimo_vencimento = (
+                                ContaReceber.objects
+                                .filter(
+                                    orcamento=orcamento,
+                                    parcela__gt=0
+                                )
+                                .order_by("-parcela")
+                                .values_list(
+                                    "vencimento",
+                                    flat=True
+                                )
+                                .first()
+                            )
+
+                            if ultimo_vencimento:
+
+                                vencimento = (
+                                    ultimo_vencimento +
+                                    timedelta(days=30)
+                                )
+
+                            else:
+
+                                vencimento = (
+                                    timezone.localdate() +
+                                    timedelta(
+                                        days=30 * numero
+                                    )
+                                )
+
+                            ContaReceber.objects.create(
+
+                                paciente=orcamento.paciente,
+
+                                orcamento=orcamento,
+
+                                descricao=(
+                                    f"Orçamento #{orcamento.id}"
+                                ),
+
+                                valor=valor_atual,
+
+                                parcela=numero,
+
+                                total_parcelas=quantidade_parcelas,
+
+                                vencimento=vencimento,
+
+                                status="PENDENTE"
+
+                            )
+
+
+                # =================================
+                # REMOVE PARCELAS PENDENTES
+                # QUE DEIXARAM DE EXISTIR
+                # =================================
+
+                ContaReceber.objects.filter(
+                    orcamento=orcamento,
+                    parcela__gt=quantidade_parcelas,
+                    status="PENDENTE"
+                ).delete()
+
+
+                # =================================
+                # MENSAGEM
+                # =================================
+
                 messages.success(
                     request,
-                    "Dados financeiros salvos com sucesso."
+                    "Dados financeiros e Contas a Receber "
+                    "atualizados com sucesso."
                 )
 
             except (
@@ -7327,6 +8486,53 @@ def excluir_item_orcamento(request, id):
             )
 
     # =========================================
+    # REGRA ESPECIAL — IMPLANTE
+    # =========================================
+
+    eh_implante = (
+        item.procedimento
+        and
+        item.procedimento.nome
+        == "Implante (fase cirúrgica)"
+    )
+
+    if eh_implante:
+
+        # =====================================
+        # IMPLANTE JÁ INICIADO
+        # =====================================
+
+        if item.status in [
+            "andamento",
+            "realizado"
+        ]:
+
+            messages.error(
+                request,
+                "Este implante já foi iniciado e "
+                "não pode ser excluído."
+            )
+
+            return redirect(
+                "orcamento",
+                id=paciente.id
+            )
+
+        # =====================================
+        # IMPLANTE PLANEJADO
+        # =====================================
+        #
+        # Se ainda está planejado, podemos
+        # remover também o registro técnico.
+        # =====================================
+
+        if item.status == "planejado":
+
+            ImplantodontiaImplante.objects.filter(
+                item_orcamento=item
+            ).delete()
+
+    # =========================================
     # REMOVE DA EVOLUÇÃO CLÍNICA
     # =========================================
 
@@ -7359,7 +8565,6 @@ def excluir_item_orcamento(request, id):
         "orcamento",
         id=paciente.id
     )
-
 
 # =========================================
 # EDITAR ITEM ORÇAMENTO

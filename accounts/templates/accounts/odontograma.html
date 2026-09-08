@@ -1551,6 +1551,125 @@
 }
 
 /* =========================================================
+   ÍCONE DE IMPLANTODONTIA
+   ========================================================= */
+
+.icone-implantodontia {
+
+    width: 24px !important;
+
+    height: 24px !important;
+
+    object-fit: contain;
+
+    z-index: 5;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   DENTE AUSENTE COM IMPLANTE
+   ========================================================= */
+
+.dente-ausente-com-implante {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    height: 100%;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   NÚMERO DO ELEMENTO
+   ========================================================= */
+
+.dente-implante-numero {
+
+    font-size: 10px;
+
+    line-height: 12px;
+
+    font-weight: 600;
+
+    color: #111827;
+
+    margin-bottom: 2px;
+
+}
+
+
+/* =========================================================
+   ÍCONE DO IMPLANTE
+   ========================================================= */
+
+.icone-implante-odontograma {
+
+    width: 24px;
+
+    height: 38px;
+
+    object-fit: contain;
+
+    display: block;
+
+}
+
+/* =========================================================
+   IMPLANTE NO ODONTOGRAMA
+   ARCADA INFERIOR
+   ========================================================= */
+
+.arcada.inferior
+.dente-box
+.icone-implante-odontograma {
+
+    width: 44px !important;
+
+    height: 68px !important;
+
+    object-fit: contain;
+
+    display: block;
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 3px;
+
+    transform: translateX(-50%);
+
+    margin: 0;
+
+    padding: 0;
+
+    z-index: 10;
+}
+
+/* =========================================================
+   ESPAÇO DO IMPLANTE
+   ========================================================= */
+
+.dente-box {
+
+    position: relative;
+
+}
+
+/* =========================================================
    RESPONSIVO
    ========================================================= */
 
@@ -1732,16 +1851,16 @@ LAYOUT
 
             {% if dente.numero in dentes_ausentes %}
 
-                <!-- DENTE AUSENTE -->
+    <!-- DENTE AUSENTE -->
 
-                <span
-                    class="dente-ausente-numero"
-                    data-dente="{{ dente.numero }}"
-                >
-                    {{ dente.numero }}
-                </span>
+    <span
+        class="dente-ausente-numero dente-ausente-inferior"
+        data-dente="{{ dente.numero }}"
+    >
+        {{ dente.numero }}
+    </span>
 
-            {% else %}
+{% else %}
 
                 <!-- DENTE NORMAL -->
 
@@ -2327,11 +2446,12 @@ LAYOUT
             {{ tratamento.titulo }}
         </h6>
 
+
         <!-- ========================================= -->
-        <!-- SELETOR DE TRATAMENTOS -->
+        <!-- SELETOR DE TODOS OS TRATAMENTOS -->
         <!-- ========================================= -->
 
-        {% if tratamentos_ativos|length > 1 %}
+        {% if todos_tratamentos|length > 1 %}
 
         <div class="mb-3">
 
@@ -2349,7 +2469,7 @@ LAYOUT
                 onchange="alterarTratamento(this.value)"
             >
 
-                {% for tratamento_item in tratamentos_ativos %}
+                {% for tratamento_item in todos_tratamentos %}
 
                     <option
                         value="{{ tratamento_item.id }}"
@@ -2357,7 +2477,24 @@ LAYOUT
                             selected
                         {% endif %}
                     >
+
                         {{ tratamento_item.titulo }}
+
+                        —
+                        {{ tratamento_item.data_inicio|date:"d/m/Y" }}
+
+                        —
+
+                        {% if tratamento_item.dentista %}
+                            {{ tratamento_item.dentista.get_full_name|default:tratamento_item.dentista.username }}
+                        {% else %}
+                            Dentista não informado
+                        {% endif %}
+
+                        —
+
+                        {{ tratamento_item.get_status_display }}
+
                     </option>
 
                 {% endfor %}
@@ -3495,7 +3632,40 @@ CARD RADIOGRAFIAS E FOTOS
 
 </div>
 
-    <script>
+<!-- =====================================================
+     DADOS DOS DENTES AUSENTES
+     ===================================================== -->
+
+<script
+    id="dentes-ausentes-data"
+    type="application/json"
+>
+[
+    {% for item in itens_orcamento %}
+
+        {% if item.procedimento and item.procedimento.nome == "Dente ausente" and item.dente and item.status != "cancelado" %}
+
+            {
+                "dente": "{{ item.dente|escapejs }}",
+                "id": "{{ item.id }}",
+                "procedimento": "{{ item.procedimento.id }}",
+                "status": "{{ item.status|escapejs }}"
+            }
+
+        {% else %}
+
+            null
+
+        {% endif %}
+
+        {% if not forloop.last %},{% endif %}
+
+    {% endfor %}
+]
+</script>
+
+
+<script>
 
 /* =========================================
    PREVIEW DOS ÍCONES
@@ -3908,7 +4078,7 @@ document.addEventListener(
 
         const dentes =
             document.querySelectorAll(
-                ".dente-img, .dente-ausente-numero"
+                ".dente-img, .dente-ausente-numero, .dente-ausente-com-implante"
             );
 
         const opcoes =
@@ -3923,21 +4093,55 @@ document.addEventListener(
 
         const dentesAusentesItens = {};
 
-        {% for item in itens_orcamento %}
+        const dadosDentesAusentes =
+            document.getElementById(
+                "dentes-ausentes-data"
+            );
 
-            {% if item.procedimento and item.procedimento.nome == "Dente ausente" and item.dente and item.status != "cancelado" %}
 
-                dentesAusentesItens[
-                    "{{ item.dente }}"
-                ] = {
-                    id: "{{ item.id }}",
-                    procedimento: "{{ item.procedimento.id }}",
-                    status: "{{ item.status }}"
-                };
+        if (dadosDentesAusentes) {
 
-            {% endif %}
+            try {
 
-        {% endfor %}
+                const listaDentesAusentes =
+                    JSON.parse(
+                        dadosDentesAusentes.textContent
+                    );
+
+
+                listaDentesAusentes
+                    .filter(Boolean)
+                    .forEach(
+                        function (item) {
+
+                            dentesAusentesItens[
+                                String(item.dente)
+                            ] = {
+
+                                id:
+                                    item.id,
+
+                                procedimento:
+                                    item.procedimento,
+
+                                status:
+                                    item.status
+
+                            };
+
+                        }
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao carregar os dentes ausentes:",
+                    error
+                );
+
+            }
+
+        }
 
 
         console.log(
@@ -3997,7 +4201,8 @@ document.addEventListener(
 
             return document.querySelector(
                 '.dente-img[data-dente="' + numero + '"], ' +
-                '.dente-ausente-numero[data-dente="' + numero + '"]'
+                '.dente-ausente-numero[data-dente="' + numero + '"], ' +
+                '.dente-ausente-com-implante[data-dente="' + numero + '"]'
             );
 
         }
@@ -4318,10 +4523,10 @@ document.addEventListener(
 
         /* =====================================================
            CLIQUE ESQUERDO NO ÍCONE DO PROCEDIMENTO
-           
+
            O ícone fica sobre o dente e, por isso,
            o clique não chega ao .dente-img.
-           
+
            Aqui redirecionamos o clique para
            a mesma função usada pelo dente.
            ===================================================== */
@@ -4563,6 +4768,7 @@ document.addEventListener(
 
     });
 
+
 function alterarTratamento(tratamentoId) {
 
     if (!tratamentoId) {
@@ -4578,8 +4784,10 @@ function alterarTratamento(tratamentoId) {
         tratamentoId
     );
 
-    window.location.href = url.toString();
-}    
+    window.location.href =
+        url.toString();
+
+}
 
 </script>
 

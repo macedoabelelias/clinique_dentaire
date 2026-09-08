@@ -1,6 +1,7 @@
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, render
 
 from .models import (
     PerfilUsuario,
@@ -13,11 +14,13 @@ from .models import (
     ModeloReceita,
     MetaDentista,
     Lead,
+    HistoricoLead,
     CampanhaMarketing,
+    Implantodontia,
+    ImplantodontiaImplante,
+    ImplantodontiaComponente,
+    Endodontia,
 )
-
-
-
 
 # =========================================
 # FORM PROCEDIMENTO
@@ -991,3 +994,503 @@ class CampanhaMarketingForm(forms.ModelForm):
                 "class": "form-select"
             }),
         }
+
+# =========================================
+# FORMULÁRIO DE IMPLANTODONTIA
+# =========================================
+
+class ImplantodontiaForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Implantodontia
+
+        fields = [
+            'data_procedimento',
+            'dentista_responsavel',
+            'regiao_observacoes',
+            'observacoes_clinicas',
+        ]
+
+        widgets = {
+
+            'data_procedimento': forms.DateInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'type': 'date',
+                }
+            ),
+
+            'dentista_responsavel': forms.Select(
+                attrs={
+                    'class': 'form-select shadow-sm',
+                }
+            ),
+
+            'regiao_observacoes': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 2,
+                    'placeholder': (
+                        'Informe a região, elementos dentários '
+                        'ou outras observações relacionadas.'
+                    ),
+                }
+            ),
+
+            'observacoes_clinicas': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 4,
+                    'placeholder': (
+                        'Descreva as observações clínicas '
+                        'do procedimento.'
+                    ),
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # =========================================
+        # DENTISTAS RESPONSÁVEIS
+        # =========================================
+
+        queryset = (
+            PerfilUsuario.objects
+            .filter(
+                tipo_usuario=PerfilUsuario.DENTISTA,
+                ativo=True,
+            )
+            .order_by(
+                'usuario__first_name',
+                'usuario__last_name',
+            )
+        )
+
+        self.fields[
+            'dentista_responsavel'
+        ].queryset = queryset
+
+        self.fields[
+            'dentista_responsavel'
+        ].label_from_instance = (
+            lambda obj:
+            obj.usuario.get_full_name()
+            or obj.usuario.username
+        )
+
+        # =========================================
+        # CAMPOS OBRIGATÓRIOS / OPCIONAIS
+        # =========================================
+
+        self.fields[
+            'data_procedimento'
+        ].required = False
+
+        self.fields[
+            'dentista_responsavel'
+        ].required = False
+
+        self.fields[
+            'regiao_observacoes'
+        ].required = False
+
+        self.fields[
+            'observacoes_clinicas'
+        ].required = False
+
+# =========================================
+# FORMULÁRIO DE ENDODONTIA
+# =========================================
+
+# =========================================
+# FORMULÁRIO DE ENDODONTIA
+# =========================================
+
+class EndodontiaForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Endodontia
+
+        fields = [
+            'elemento',
+            'data_procedimento',
+            'dentista_responsavel',
+            'diagnostico_pulpar',
+            'diagnostico_periapical',
+            'numero_canais',
+            'condutometria',
+            'tecnica_material',
+            'observacoes',
+        ]
+
+        widgets = {
+
+            'elemento': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Ex.: 16',
+                }
+            ),
+
+            'data_procedimento': forms.DateInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'type': 'date',
+                }
+            ),
+
+            'dentista_responsavel': forms.Select(
+                attrs={
+                    'class': 'form-select shadow-sm',
+                }
+            ),
+
+            'diagnostico_pulpar': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: Pulpite irreversível sintomática'
+                    ),
+                }
+            ),
+
+            'diagnostico_periapical': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: Periodontite apical sintomática'
+                    ),
+                }
+            ),
+
+            'numero_canais': forms.NumberInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'min': 1,
+                    'placeholder': 'Ex.: 3',
+                }
+            ),
+
+            'condutometria': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 3,
+                    'placeholder': (
+                        'Ex.: MV: 21 mm | DV: 20,5 mm | '
+                        'P: 22 mm'
+                    ),
+                }
+            ),
+
+            'tecnica_material': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Informe a técnica e/ou material utilizado.'
+                    ),
+                }
+            ),
+
+            'observacoes': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 4,
+                    'placeholder': (
+                        'Descreva as observações clínicas '
+                        'do tratamento endodôntico.'
+                    ),
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # =========================================
+        # DENTISTAS RESPONSÁVEIS
+        # =========================================
+
+        queryset = (
+            PerfilUsuario.objects
+            .filter(
+                tipo_usuario=PerfilUsuario.DENTISTA,
+                ativo=True,
+            )
+            .order_by(
+                'usuario__first_name',
+                'usuario__last_name',
+            )
+        )
+
+        self.fields[
+            'dentista_responsavel'
+        ].queryset = queryset
+
+        self.fields[
+            'dentista_responsavel'
+        ].label_from_instance = (
+            lambda obj:
+            obj.usuario.get_full_name()
+            or obj.usuario.username
+        )
+
+        # =========================================
+        # CAMPOS OBRIGATÓRIOS / OPCIONAIS
+        # =========================================
+
+        self.fields[
+            'elemento'
+        ].required = True
+
+        self.fields[
+            'data_procedimento'
+        ].required = False
+
+        self.fields[
+            'dentista_responsavel'
+        ].required = False
+
+        self.fields[
+            'diagnostico_pulpar'
+        ].required = False
+
+        self.fields[
+            'diagnostico_periapical'
+        ].required = False
+
+        self.fields[
+            'numero_canais'
+        ].required = False
+
+        self.fields[
+            'condutometria'
+        ].required = False
+
+        self.fields[
+            'tecnica_material'
+        ].required = False
+
+        self.fields[
+            'observacoes'
+        ].required = False
+
+# =========================================
+# FORMULÁRIO DE IMPLANTE
+# =========================================
+
+class ImplantodontiaImplanteForm(forms.ModelForm):
+
+    class Meta:
+
+        model = ImplantodontiaImplante
+
+        fields = [
+            'elemento',
+            'fabricante',
+            'modelo_referencia',
+            'conexao',
+            'diametro',
+            'comprimento',
+            'lote',
+            'validade',
+            'registro_anvisa',
+            'data_instalacao',
+            'observacoes',
+        ]
+
+        widgets = {
+
+            'elemento': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Ex.: 35',
+                }
+            ),
+
+            'fabricante': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Marca / Fabricante',
+                }
+            ),
+
+            'modelo_referencia': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Modelo ou referência',
+                }
+            ),
+
+            'conexao': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Ex.: Cone Morse, HE, HI',
+                }
+            ),
+
+            'diametro': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Ex.: 3.5 mm',
+                }
+            ),
+
+            'comprimento': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Ex.: 10 mm',
+                }
+            ),
+
+            'lote': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Número do lote',
+                }
+            ),
+
+            'validade': forms.DateInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'type': 'date',
+                }
+            ),
+
+            'registro_anvisa': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Registro ANVISA',
+                }
+            ),
+
+            'data_instalacao': forms.DateInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'type': 'date',
+                }
+            ),
+
+            'observacoes': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 3,
+                    'placeholder': (
+                        'Observações relacionadas ao implante.'
+                    ),
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # =========================================
+        # CAMPOS OPCIONAIS
+        # =========================================
+
+        for nome_campo in [
+            'fabricante',
+            'modelo_referencia',
+            'conexao',
+            'diametro',
+            'comprimento',
+            'lote',
+            'validade',
+            'registro_anvisa',
+            'data_instalacao',
+            'observacoes',
+        ]:
+
+            self.fields[
+                nome_campo
+            ].required = False
+
+
+# =========================================
+# FORMULÁRIO DE COMPONENTE DO IMPLANTE
+# =========================================
+
+class ImplantodontiaComponenteForm(forms.ModelForm):
+
+    class Meta:
+
+        model = ImplantodontiaComponente
+
+        fields = [
+            'tipo',
+            'fabricante',
+            'modelo_referencia',
+            'lote',
+            'registro_anvisa',
+            'observacoes',
+        ]
+
+        widgets = {
+
+            'tipo': forms.Select(
+                attrs={
+                    'class': 'form-select shadow-sm',
+                }
+            ),
+
+            'fabricante': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Marca / Fabricante',
+                }
+            ),
+
+            'modelo_referencia': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Modelo ou referência',
+                }
+            ),
+
+            'lote': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Número do lote',
+                }
+            ),
+
+            'registro_anvisa': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': 'Registro ANVISA',
+                }
+            ),
+
+            'observacoes': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 3,
+                    'placeholder': (
+                        'Observações relacionadas ao componente.'
+                    ),
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        for nome_campo in [
+            'fabricante',
+            'modelo_referencia',
+            'lote',
+            'registro_anvisa',
+            'observacoes',
+        ]:
+
+            self.fields[
+                nome_campo
+            ].required = False

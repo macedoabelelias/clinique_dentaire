@@ -1,0 +1,255 @@
+{% extends "accounts/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================
+         CABEÇALHO
+    ========================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                <i class="fa-solid fa-tooth text-primary me-2"></i>
+                Novo Procedimento de Implantodontia
+            </h2>
+
+            <p class="text-muted mb-0">
+                Registro técnico do procedimento odontológico.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'ficha_clinica' paciente.id %}"
+            class="btn btn-light shadow-sm"
+        >
+            <i class="fa-solid fa-arrow-left me-1"></i>
+            Voltar
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         PACIENTE
+    ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    class="rounded-circle bg-primary bg-opacity-10
+                           d-flex align-items-center justify-content-center
+                           me-3"
+                    style="width: 48px; height: 48px;"
+                >
+                    <i class="fa-solid fa-user text-primary"></i>
+                </div>
+
+                <div>
+
+                    <small class="text-muted d-block">
+                        Paciente
+                    </small>
+
+                    <h5 class="fw-bold mb-0">
+                        {{ paciente.nome }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         FORMULÁRIO
+    ========================================== -->
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-header bg-white border-0 p-4 pb-2">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="fa-solid fa-file-medical text-primary me-2"></i>
+                    Dados do Procedimento
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Informe os dados gerais do procedimento de Implantodontia.
+                </p>
+
+            </div>
+
+
+            <div class="card-body p-4">
+
+                <!-- =========================================
+                     DATA E DENTISTA
+                ========================================== -->
+
+                <div class="row g-4 mb-3">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.data_procedimento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Data do procedimento
+                        </label>
+
+                        {{ form.data_procedimento }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.dentista_responsavel.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Dentista responsável
+                        </label>
+
+                        {{ form.dentista_responsavel }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     REGIÃO / ELEMENTOS
+                ========================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.regiao_observacoes.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Região / Elementos dentários
+                    </label>
+
+                    {{ form.regiao_observacoes }}
+
+                    <div class="form-text">
+                        Informe os elementos ou a região relacionada ao procedimento.
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     OBSERVAÇÕES CLÍNICAS
+                ========================================== -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="{{ form.observacoes_clinicas.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Observações clínicas
+                    </label>
+
+                    {{ form.observacoes_clinicas }}
+
+                </div>
+
+
+                <!-- =========================================
+                     MENSAGENS DE ERRO
+                ========================================== -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger mt-4">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% for field in form %}
+
+                    {% if field.errors %}
+
+                        <div class="alert alert-danger mt-2">
+
+                            <strong>
+                                {{ field.label }}:
+                            </strong>
+
+                            {{ field.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- =========================================
+                 RODAPÉ
+            ========================================== -->
+
+            <div
+                class="card-footer bg-white border-0
+                       p-4 pt-0"
+            >
+
+                <div
+                    class="d-flex justify-content-end
+                           gap-2"
+                >
+
+                    <a
+                        href="{% url 'ficha_clinica' paciente.id %}"
+                        class="btn btn-light px-4"
+                    >
+                        <i class="fa-solid fa-xmark me-1"></i>
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                    >
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+                        Salvar Procedimento
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
