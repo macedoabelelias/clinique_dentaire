@@ -1887,12 +1887,14 @@ class Orcamento(models.Model):
 
     @property
     def subtotal(self):
-
         return sum(
             (
                 item.total
                 for item in self.itens.all()
-                if item.status != "cancelado"
+                if item.status not in [
+                    "existente",
+                    "cancelado"
+                ]
             ),
             Decimal("0.00")
         )
@@ -1904,7 +1906,6 @@ class Orcamento(models.Model):
 
     @property
     def tem_itens_ativos(self):
-
         return self.itens.exclude(
             status="cancelado"
         ).exists()
@@ -3167,6 +3168,121 @@ class Endodontia(models.Model):
             f"{self.paciente.nome} - "
             f"Dente {self.elemento}"
         )
+
+# =========================================
+# PERIODONTIA
+# =========================================
+
+class Periodontia(models.Model):
+
+    documento = models.OneToOneField(
+        "DocumentoClinico",
+        on_delete=models.CASCADE,
+        related_name="periodontia"
+    )
+
+    paciente = models.ForeignKey(
+        Paciente,
+        on_delete=models.CASCADE,
+        related_name="tratamentos_periodontia"
+    )
+
+    item_orcamento = models.OneToOneField(
+        "ItemOrcamento",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="periodontia_tecnica"
+    )
+
+    elemento = models.CharField(
+        max_length=50
+    )
+
+    dentista_responsavel = models.ForeignKey(
+        "PerfilUsuario",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="periodontias_responsavel"
+    )
+
+    data_procedimento = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    diagnostico_periodontal = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True
+    )
+
+    profundidade_sondagem = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    sangramento_sondagem = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    mobilidade = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    recessao_gengival = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    nivel_insercao_clinica = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    procedimento_terapia = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        verbose_name = "Periodontia"
+
+        verbose_name_plural = "Periodontias"
+
+        ordering = [
+            "-data_procedimento",
+            "-criado_em"
+        ]
+
+    def __str__(self):
+
+        return (
+            f"Periodontia - "
+            f"{self.paciente.nome} - "
+            f"Elemento {self.elemento}"
+        )
    
 # =========================================
 # MEDICAMENTOS
@@ -4332,6 +4448,76 @@ class ItemCompra(models.Model):
 
 
 # =========================================
+# FECHAMENTO DE COMISSÕES
+# =========================================
+
+class FechamentoComissao(models.Model):
+
+    profissional = models.ForeignKey(
+        "PerfilUsuario",
+        on_delete=models.PROTECT,
+        related_name="fechamentos_comissoes"
+    )
+
+    data_inicio = models.DateField()
+
+    data_final = models.DateField()
+
+    data_fechamento = models.DateField()
+
+    quantidade_comissoes = models.PositiveIntegerField(
+        default=0
+    )
+
+    total = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    forma_pagamento = models.CharField(
+        max_length=50
+    )
+
+    usuario = models.ForeignKey(
+        "auth.User",
+        on_delete=models.PROTECT,
+        related_name="fechamentos_comissoes_realizados"
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+
+        ordering = [
+            "-data_fechamento",
+            "-id"
+        ]
+
+        verbose_name = "Fechamento de Comissão"
+
+        verbose_name_plural = "Fechamentos de Comissões"
+
+    def __str__(self):
+
+        nome = (
+            self.profissional.usuario.get_full_name()
+            or self.profissional.usuario.username
+        )
+
+        return (
+            f"Fechamento #{self.id} - "
+            f"{nome} - "
+            f"R$ {self.total}"
+        )
+
+# =========================================
 # CONTAS A PAGAR
 # =========================================
 
@@ -4376,6 +4562,24 @@ class ContaPagar(models.Model):
         blank=True,
 
         null=True
+
+    )
+
+    # =========================================
+    # FECHAMENTO DA COMISSÃO
+    # =========================================
+
+    fechamento_comissao = models.ForeignKey(
+
+        "FechamentoComissao",
+
+        on_delete=models.SET_NULL,
+
+        blank=True,
+
+        null=True,
+
+        related_name="comissoes"
 
     )
 

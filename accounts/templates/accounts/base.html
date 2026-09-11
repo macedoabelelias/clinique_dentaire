@@ -401,6 +401,30 @@ FINANCEIRO
 
         </li>
 
+
+        <!-- =================================================
+        FECHAMENTO DE COMISSÕES
+        ================================================== -->
+
+        <li class="{% if 'fechamento-comissoes' in request.path or 'fechamento_comissoes' in request.path %}active{% endif %}">
+
+            <a href="{% url 'fechamento_comissoes' %}">
+
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+
+                <span>Fechamento de Comissões</span>
+
+            </a>
+
+        </li>
+
+        <li class="{% if 'historico-fechamentos-comissoes' in request.path %}active{% endif %}">
+            <a href="{% url 'historico_fechamentos_comissoes' %}">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Histórico de Fechamentos</span>
+            </a>
+        </li>
+
         {% endif %}
 
 

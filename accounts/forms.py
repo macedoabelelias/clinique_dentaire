@@ -20,6 +20,7 @@ from .models import (
     ImplantodontiaImplante,
     ImplantodontiaComponente,
     Endodontia,
+    Periodontia,
 )
 
 # =========================================
@@ -1274,6 +1275,205 @@ class EndodontiaForm(forms.ModelForm):
 
         self.fields[
             'tecnica_material'
+        ].required = False
+
+        self.fields[
+            'observacoes'
+        ].required = False
+
+# =========================================
+# FORMULÁRIO DE PERIODONTIA
+# =========================================
+
+class PeriodontiaForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Periodontia
+
+        fields = [
+            'elemento',
+            'data_procedimento',
+            'dentista_responsavel',
+            'diagnostico_periodontal',
+            'profundidade_sondagem',
+            'sangramento_sondagem',
+            'mobilidade',
+            'recessao_gengival',
+            'nivel_insercao_clinica',
+            'procedimento_terapia',
+            'observacoes',
+        ]
+
+        widgets = {
+
+            'elemento': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: 16, 16-17, 11-13, '
+                        'Maxila anterior'
+                    ),
+                }
+            ),
+
+            'data_procedimento': forms.DateInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'type': 'date',
+                }
+            ),
+
+            'dentista_responsavel': forms.Select(
+                attrs={
+                    'class': 'form-select shadow-sm',
+                }
+            ),
+
+            'diagnostico_periodontal': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: Periodontite estágio II, grau B'
+                    ),
+                }
+            ),
+
+            'profundidade_sondagem': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 3,
+                    'placeholder': (
+                        'Ex.: 16: MV 4 mm | V 3 mm | DV 5 mm'
+                    ),
+                }
+            ),
+
+            'sangramento_sondagem': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: Presente em 30% dos sítios'
+                    ),
+                }
+            ),
+
+            'mobilidade': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: 16 grau I; 26 grau II'
+                    ),
+                }
+            ),
+
+            'recessao_gengival': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Ex.: 13 = 2 mm; 23 = 1 mm'
+                    ),
+                }
+            ),
+
+            'nivel_insercao_clinica': forms.TextInput(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'placeholder': (
+                        'Informe os valores do nível de inserção clínica.'
+                    ),
+                }
+            ),
+
+            'procedimento_terapia': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 3,
+                    'placeholder': (
+                        'Ex.: Raspagem periodontal e '
+                        'orientação de higiene oral.'
+                    ),
+                }
+            ),
+
+            'observacoes': forms.Textarea(
+                attrs={
+                    'class': 'form-control shadow-sm',
+                    'rows': 4,
+                    'placeholder': (
+                        'Descreva as observações clínicas '
+                        'do tratamento periodontal.'
+                    ),
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        queryset = (
+            PerfilUsuario.objects
+            .filter(
+                tipo_usuario=PerfilUsuario.DENTISTA,
+                ativo=True,
+            )
+            .order_by(
+                'usuario__first_name',
+                'usuario__last_name',
+            )
+        )
+
+        self.fields[
+            'dentista_responsavel'
+        ].queryset = queryset
+
+        self.fields[
+            'dentista_responsavel'
+        ].label_from_instance = (
+            lambda obj:
+            obj.usuario.get_full_name()
+            or obj.usuario.username
+        )
+
+        self.fields[
+            'elemento'
+        ].required = True
+
+        self.fields[
+            'data_procedimento'
+        ].required = False
+
+        self.fields[
+            'dentista_responsavel'
+        ].required = False
+
+        self.fields[
+            'diagnostico_periodontal'
+        ].required = False
+
+        self.fields[
+            'profundidade_sondagem'
+        ].required = False
+
+        self.fields[
+            'sangramento_sondagem'
+        ].required = False
+
+        self.fields[
+            'mobilidade'
+        ].required = False
+
+        self.fields[
+            'recessao_gengival'
+        ].required = False
+
+        self.fields[
+            'nivel_insercao_clinica'
+        ].required = False
+
+        self.fields[
+            'procedimento_terapia'
         ].required = False
 
         self.fields[

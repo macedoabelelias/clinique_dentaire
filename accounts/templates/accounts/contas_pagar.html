@@ -274,7 +274,7 @@
 
                         <tr>
 
-                            <th>Fornecedor</th>
+                            <th>Destinatário</th>
 
                             <th>Descrição</th>
 
@@ -302,7 +302,13 @@
                         <tr>
 
                             <td>
-                                {{ conta.fornecedor.nome }}
+                                {% if conta.profissional %}
+                                    {{ conta.profissional.usuario.get_full_name|default:conta.profissional.usuario.username }}
+                                {% elif conta.fornecedor %}
+                                    {{ conta.fornecedor.nome }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
 
                             <td>

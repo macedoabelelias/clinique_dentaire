@@ -301,6 +301,11 @@ LAYOUT PRINCIPAL
 
             </button>
 
+            <button class="tab-btn" data-tab="periodontia">
+                <i class="fa-solid fa-tooth"></i>
+                Periodontia
+            </button>
+
         </div>
 
 
@@ -1373,6 +1378,337 @@ IMPLANTODONTIA
 
     {% endfor %}
 
+
+</div>
+
+<!-- =========================================
+     PERIODONTIA
+     ========================================= -->
+
+<div
+    class="tab-content"
+    id="tab-periodontia"
+    style="display:none;"
+>
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="mb-4">
+
+        <div class="d-flex justify-content-between align-items-start gap-3">
+
+            <div class="flex-grow-1">
+
+                <h5 class="mb-1">
+                    Periodontia
+                </h5>
+
+                <p class="mb-0 text-muted">
+                    Registro técnico dos tratamentos periodontais do paciente.
+                </p>
+
+            </div>
+
+            <div class="flex-shrink-0">
+
+                <a
+                    href="{% url 'novo_periodontia' paciente.id %}"
+                    class="btn btn-sm btn-outline-primary"
+                    title="Novo procedimento de Periodontia"
+                >
+
+                    <i class="fa-solid fa-plus me-1"></i>
+
+                    Novo
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         PROCEDIMENTOS DE PERIODONTIA
+         ========================================= -->
+
+    {% for periodontia in periodontias %}
+
+    <div class="timeline-item">
+
+        <div class="timeline-dot"></div>
+
+        <div class="timeline-content">
+
+            <!-- =========================================
+                 CABEÇALHO
+                 ========================================= -->
+
+            <div class="timeline-top">
+
+                <strong>
+
+                    <i class="fa-solid fa-tooth"></i>
+
+                    Periodontia — {{ periodontia.elemento }}
+
+                </strong>
+
+                <span>
+
+                    {% if periodontia.data_procedimento %}
+
+                        {{ periodontia.data_procedimento|date:"d/m/Y" }}
+
+                    {% else %}
+
+                        Data não informada
+
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 DENTISTA
+                 ========================================= -->
+
+            {% if periodontia.dentista_responsavel %}
+
+            <p class="mt-2 mb-1">
+
+                <strong>
+                    Dentista responsável:
+                </strong>
+
+                {{ periodontia.dentista_responsavel }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 DIAGNÓSTICO
+                 ========================================= -->
+
+            {% if periodontia.diagnostico_periodontal %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Diagnóstico periodontal:
+                </strong>
+
+                {{ periodontia.diagnostico_periodontal }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 PROFUNDIDADE DE SONDAGEM
+                 ========================================= -->
+
+            {% if periodontia.profundidade_sondagem %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Profundidade de sondagem:
+                </strong>
+
+                {{ periodontia.profundidade_sondagem|linebreaksbr }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 SANGRAMENTO
+                 ========================================= -->
+
+            {% if periodontia.sangramento_sondagem %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Sangramento à sondagem:
+                </strong>
+
+                {{ periodontia.sangramento_sondagem }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 MOBILIDADE
+                 ========================================= -->
+
+            {% if periodontia.mobilidade %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Mobilidade:
+                </strong>
+
+                {{ periodontia.mobilidade }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 RECESSÃO GENGIVAL
+                 ========================================= -->
+
+            {% if periodontia.recessao_gengival %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Recessão gengival:
+                </strong>
+
+                {{ periodontia.recessao_gengival }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 NÍVEL DE INSERÇÃO CLÍNICA
+                 ========================================= -->
+
+            {% if periodontia.nivel_insercao_clinica %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Nível de inserção clínica:
+                </strong>
+
+                {{ periodontia.nivel_insercao_clinica }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 PROCEDIMENTO / TERAPIA
+                 ========================================= -->
+
+            {% if periodontia.procedimento_terapia %}
+
+            <p class="mb-1">
+
+                <strong>
+                    Procedimento / Terapia:
+                </strong>
+
+                {{ periodontia.procedimento_terapia|linebreaksbr }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 OBSERVAÇÕES
+                 ========================================= -->
+
+            {% if periodontia.observacoes %}
+
+            <p class="mb-3">
+
+                <strong>
+                    Observações clínicas:
+                </strong>
+
+                {{ periodontia.observacoes|linebreaksbr }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- =========================================
+                 AÇÕES
+                 ========================================= -->
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+
+    <a
+        href="{% url 'editar_periodontia' periodontia.id %}"
+        class="btn btn-sm btn-outline-primary"
+        title="Editar Periodontia"
+    >
+
+        <i class="fa-solid fa-pen-to-square"></i>
+
+        Editar
+
+    </a>
+
+
+    <form
+        method="post"
+        action="{% url 'excluir_periodontia' periodontia.id %}"
+        class="d-inline"
+        onsubmit="return confirm(
+            'Deseja realmente excluir este registro de Periodontia?'
+        );"
+    >
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="btn btn-sm btn-outline-danger"
+            title="Excluir Periodontia"
+        >
+
+            <i class="fa-solid fa-trash"></i>
+
+            Excluir
+
+        </button>
+
+    </form>
+
+</div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty-timeline">
+
+        Nenhum procedimento de Periodontia cadastrado.
+
+    </div>
+
+    {% endfor %}
 
 </div>
 

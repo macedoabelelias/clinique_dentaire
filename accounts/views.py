@@ -55,11 +55,13 @@ from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 
 from reportlab.platypus import (
-    HRFlowable,
-    Image,
-    Paragraph,
     SimpleDocTemplate,
+    Paragraph,
     Spacer,
+    Image,
+    HRFlowable,
+    Table,
+    TableStyle,
 )
 
 from openpyxl import Workbook
@@ -92,6 +94,7 @@ from .forms import (
     ImplantodontiaImplanteForm,
     ImplantodontiaComponenteForm,
     EndodontiaForm,
+    PeriodontiaForm,
 )
 
 from .models import (
@@ -113,9 +116,11 @@ from .models import (
     ImplantodontiaImplante,
     ImplantodontiaComponente,
     Endodontia,
+    Periodontia,
     ItemCompra,
     ItemOrcamento,
     LivroCaixa,
+    FechamentoComissao,
     FechamentoMensal,
     LoteProduto,
     Medicamento,
@@ -4295,6 +4300,11 @@ def odontograma(request, id):
             and procedimento.nome.lower().startswith(
                 "tratamento endodôntico"
             )
+            and item.status in [
+                "planejado",
+                "andamento",
+                "realizado",
+            ]
             and dente
         ):
 
@@ -4345,13 +4355,18 @@ def odontograma(request, id):
 
             )
 
-        # =====================================
+                # =====================================
         # INTEGRAÇÃO COM IMPLANTODONTIA
         # =====================================
 
         if (
             procedimento
             and procedimento.nome == "Implante (fase cirúrgica)"
+            and item.status in [
+                "planejado",
+                "andamento",
+                "realizado",
+            ]
             and dente
         ):
 
@@ -5922,6 +5937,24 @@ def ficha_clinica(request, id):
         paciente=paciente
     )
 
+    # =========================================
+    # PERIODONTIA
+    # =========================================
+
+    periodontias = (
+        Periodontia.objects
+        .filter(
+            paciente=paciente
+        )
+        .select_related(
+            'dentista_responsavel'
+        )
+        .order_by(
+            '-data_procedimento',
+            '-criado_em'
+        )
+    )
+
 
     # =========================================
     # PROCEDIMENTOS DO ORÇAMENTO
@@ -5997,6 +6030,8 @@ def ficha_clinica(request, id):
         'implantodontias': implantodontias,
 
         'endodontias': endodontias,
+
+        'periodontias': periodontias,
 
         'receitas': receitas,
 
@@ -6366,6 +6401,216 @@ def editar_endodontia(request, id):
             'form': form,
             'endodontia': endodontia,
         }
+    )
+
+# =========================================
+# NOVA PERIODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def novo_periodontia(request, id):
+
+    paciente = get_object_or_404(
+        Paciente,
+        id=id
+    )
+
+    if request.method == 'POST':
+
+        form = PeriodontiaForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                documento = DocumentoClinico.objects.create(
+
+                    paciente=paciente,
+
+                    titulo=(
+                        f'Periodontia - '
+                        f'{paciente.nome}'
+                    ),
+
+                    tipo='personalizado',
+
+                    conteudo=(
+                        '<h2>PERIODONTIA</h2>'
+                        '<p>'
+                        'Registro técnico do tratamento '
+                        'periodontal.'
+                        '</p>'
+                    ),
+
+                    status='rascunho'
+
+                )
+
+                periodontia = form.save(
+                    commit=False
+                )
+
+                periodontia.documento = documento
+                periodontia.paciente = paciente
+
+                if not periodontia.dentista_responsavel:
+
+                    perfil_usuario = getattr(
+                        request.user,
+                        'perfil',
+                        None
+                    )
+
+                    if (
+                        perfil_usuario
+                        and
+                        getattr(
+                            perfil_usuario,
+                            'tipo_usuario',
+                            ''
+                        ) == PerfilUsuario.DENTISTA
+                    ):
+
+                        periodontia.dentista_responsavel = (
+                            perfil_usuario
+                        )
+
+                periodontia.save()
+
+            messages.success(
+                request,
+                'Procedimento de Periodontia criado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = PeriodontiaForm()
+
+        perfil_usuario = getattr(
+            request.user,
+            'perfil',
+            None
+        )
+
+        if (
+            perfil_usuario
+            and
+            getattr(
+                perfil_usuario,
+                'tipo_usuario',
+                ''
+            ) == PerfilUsuario.DENTISTA
+        ):
+
+            form.fields[
+                'dentista_responsavel'
+            ].initial = perfil_usuario
+
+    return render(
+        request,
+        'accounts/periodontia_form.html',
+        {
+            'paciente': paciente,
+            'form': form,
+        }
+    )
+
+# =========================================
+# EDITAR PERIODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def editar_periodontia(request, id):
+
+    periodontia = get_object_or_404(
+        Periodontia,
+        id=id
+    )
+
+    paciente = periodontia.paciente
+
+    if request.method == 'POST':
+
+        form = PeriodontiaForm(
+            request.POST,
+            instance=periodontia
+        )
+
+        if form.is_valid():
+
+            with transaction.atomic():
+
+                form.save()
+
+            messages.success(
+                request,
+                'Procedimento de Periodontia atualizado com sucesso.'
+            )
+
+            return redirect(
+                'ficha_clinica',
+                id=paciente.id
+            )
+
+    else:
+
+        form = PeriodontiaForm(
+            instance=periodontia
+        )
+
+    return render(
+        request,
+        'accounts/periodontia_form.html',
+        {
+            'paciente': paciente,
+            'form': form,
+            'periodontia': periodontia,
+        }
+    )
+
+# =========================================
+# EXCLUIR PERIODONTIA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("evolucoes", "visualizar")
+def excluir_periodontia(request, id):
+
+    periodontia = get_object_or_404(
+        Periodontia,
+        id=id
+    )
+
+    paciente = periodontia.paciente
+
+    if request.method == 'POST':
+
+        with transaction.atomic():
+
+            periodontia.delete()
+
+        messages.success(
+            request,
+            'Procedimento de Periodontia excluído com sucesso.'
+        )
+
+        return redirect(
+            'ficha_clinica',
+            id=paciente.id
+        )
+
+    return redirect(
+        'ficha_clinica',
+        id=paciente.id
     )
 
 # =========================================
@@ -11915,6 +12160,1810 @@ def imprimir_documento(request, id):
     return response
 
 # =========================================
+# RECIBO DE RECEBIMENTO DO PACIENTE
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("contas_receber", "visualizar")
+def imprimir_recibo_recebimento(request, conta_id):
+
+    import re
+
+    # =========================================
+    # LOCALIZA A CONTA
+    # =========================================
+
+    conta = get_object_or_404(
+        ContaReceber,
+        id=conta_id
+    )
+
+    paciente = conta.paciente
+
+    # =========================================
+    # RECIBO SOMENTE DE CONTA RECEBIDA
+    # =========================================
+
+    if conta.status != "RECEBIDO":
+
+        messages.error(
+            request,
+            "O recibo só pode ser emitido para "
+            "uma conta já recebida."
+        )
+
+        return redirect(
+            "contas_receber"
+        )
+
+    # =========================================
+    # CONFIGURAÇÃO DA CLÍNICA
+    # =========================================
+
+    config = ConfiguracaoClinica.objects.first()
+
+    # =========================================
+    # FUNÇÃO AUXILIAR
+    # FORMATA VALOR EM PADRÃO BRASILEIRO
+    # =========================================
+
+    def formatar_valor(valor):
+
+        valor = valor or 0
+
+        texto = f"{valor:,.2f}"
+
+        texto = (
+            texto
+            .replace(",", "X")
+            .replace(".", ",")
+            .replace("X", ".")
+        )
+
+        return texto
+
+    # =========================================
+    # FUNÇÃO AUXILIAR
+    # PROTEGE TEXTOS PARA REPORTLAB
+    # =========================================
+
+    from xml.sax.saxutils import escape
+
+    def texto_seguro(valor):
+
+        if valor is None:
+            return ""
+
+        return escape(
+            str(valor)
+        )
+
+    # =========================================
+    # CNPJ DA CLÍNICA
+    # COMPATÍVEL COM NUMÉRICO E ALFANUMÉRICO
+    # =========================================
+
+    cnpj_clinica = (
+        config.cnpj
+        if config and config.cnpj
+        else ''
+    )
+
+    cnpj_limpo = re.sub(
+        r'[^A-Za-z0-9]',
+        '',
+        str(cnpj_clinica)
+    ).upper()
+
+    if len(cnpj_limpo) == 14:
+
+        cnpj_clinica = (
+            f'{cnpj_limpo[0:2]}.'
+            f'{cnpj_limpo[2:5]}.'
+            f'{cnpj_limpo[5:8]}/'
+            f'{cnpj_limpo[8:12]}-'
+            f'{cnpj_limpo[12:14]}'
+        )
+
+    # =========================================
+    # RESPOSTA PDF
+    # =========================================
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = (
+        f'inline; '
+        f'filename="recibo_{conta.id}.pdf"'
+    )
+
+    # =========================================
+    # CONFIGURAÇÃO DO DOCUMENTO
+    # =========================================
+
+    doc = SimpleDocTemplate(
+        
+
+        response,
+
+        topMargin=30,
+        bottomMargin=35,
+        leftMargin=45,
+        rightMargin=45
+
+    )
+
+    styles = getSampleStyleSheet()
+
+    elementos = []
+
+    # =========================================
+    # LOGO
+    # =========================================
+
+    logo_path = os.path.join(
+
+        settings.BASE_DIR,
+        'static',
+        'img',
+        'logo_odonto2.png'
+
+    )
+
+    if os.path.exists(logo_path):
+
+        logo = Image(
+
+            logo_path,
+
+            width=200,
+            height=75
+
+        )
+
+        logo.hAlign = 'CENTER'
+
+        elementos.append(
+            logo
+        )
+
+        elementos.append(
+            Spacer(1, 8)
+        )
+
+    # =========================================
+    # NOME DA CLÍNICA
+    # =========================================
+
+    if config and config.nome_clinica:
+
+        estilo_clinica = ParagraphStyle(
+
+            'ClinicaRecibo',
+
+            parent=styles['Heading2'],
+
+            fontSize=12,
+            leading=14,
+            alignment=1,
+            spaceAfter=6
+
+        )
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <para align="center">
+                <b>
+                {texto_seguro(config.nome_clinica)}
+                </b>
+                </para>
+                ''',
+
+                estilo_clinica
+
+            )
+
+        )
+
+    # =========================================
+    # DADOS INSTITUCIONAIS
+    # =========================================
+
+    dados_clinica = []
+
+    if cnpj_clinica:
+
+        dados_clinica.append(
+            f"CNPJ: {texto_seguro(cnpj_clinica)}"
+        )
+
+    if config and config.cro:
+
+        dados_clinica.append(
+            f"CRO: {texto_seguro(config.cro)}"
+        )
+
+    if config and config.telefone:
+
+        dados_clinica.append(
+            f"Tel.: {texto_seguro(config.telefone)}"
+        )
+
+    if config and config.whatsapp:
+
+        dados_clinica.append(
+            f"WhatsApp: {texto_seguro(config.whatsapp)}"
+        )
+
+    if config and config.email:
+
+        dados_clinica.append(
+            texto_seguro(config.email)
+        )
+
+    if dados_clinica:
+
+        elementos.append(
+
+            Paragraph(
+
+                '<para align="center">'
+                + ' &nbsp; | &nbsp; '.join(
+                    dados_clinica
+                )
+                + '</para>',
+
+                styles['BodyText']
+
+            )
+
+        )
+
+    # =========================================
+    # ENDEREÇO
+    # =========================================
+
+    endereco = []
+
+    if config and config.endereco:
+
+        endereco.append(
+            texto_seguro(config.endereco)
+        )
+
+    if config and config.numero:
+
+        endereco.append(
+            f"nº {texto_seguro(config.numero)}"
+        )
+
+    if config and config.bairro:
+
+        endereco.append(
+            texto_seguro(config.bairro)
+        )
+
+    cidade_estado = ''
+
+    if config and config.cidade:
+
+        cidade_estado = (
+            texto_seguro(config.cidade)
+        )
+
+    if config and config.estado:
+
+        if cidade_estado:
+
+            cidade_estado += ' - '
+
+        cidade_estado += (
+            texto_seguro(config.estado)
+        )
+
+    if cidade_estado:
+
+        endereco.append(
+            cidade_estado
+        )
+
+    if config and config.cep:
+
+        endereco.append(
+            f"CEP: {texto_seguro(config.cep)}"
+        )
+
+    if endereco:
+
+        elementos.append(
+
+            Paragraph(
+
+                '<para align="center">'
+                + ' • '.join(endereco)
+                + '</para>',
+
+                styles['BodyText']
+
+            )
+
+        )
+
+    elementos.append(
+        Spacer(1, 18)
+    )
+
+    # =========================================
+    # LINHA
+    # =========================================
+
+    elementos.append(
+
+        HRFlowable(
+
+            width="100%",
+
+            thickness=1.2,
+
+            color=colors.HexColor(
+                '#1e40af'
+            )
+
+        )
+
+    )
+
+    elementos.append(
+        Spacer(1, 18)
+    )
+
+    # =========================================
+    # TÍTULO
+    # =========================================
+
+    estilo_titulo = ParagraphStyle(
+
+        'TituloRecibo',
+
+        parent=styles['Title'],
+
+        fontSize=18,
+        leading=22,
+
+        alignment=1,
+
+        spaceAfter=22
+
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            <para align="center">
+            <b>RECIBO</b>
+            </para>
+            ''',
+
+            estilo_titulo
+
+        )
+
+    )
+
+    # =========================================
+    # ESTILO DO TEXTO
+    # =========================================
+
+    estilo_texto = ParagraphStyle(
+
+        'TextoRecibo',
+
+        parent=styles['BodyText'],
+
+        fontSize=11,
+        leading=19,
+
+        alignment=4,
+
+        spaceAfter=12
+
+    )
+
+    # =========================================
+    # VALOR
+    # =========================================
+
+    valor_formatado = formatar_valor(
+        conta.valor
+    )
+
+    # =========================================
+    # TEXTO PRINCIPAL
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            Recebemos de
+            <b>{texto_seguro(paciente.nome)}</b>,
+            a importância de
+            <b>R$ {valor_formatado}</b>,
+            referente a
+            <b>{texto_seguro(conta.descricao)}</b>.
+            ''',
+
+            estilo_texto
+
+        )
+
+    )
+
+    # =========================================
+    # DADOS DO RECEBIMENTO
+    # =========================================
+
+    data_recebimento = (
+        conta.data_recebimento
+    )
+
+    if data_recebimento:
+
+        data_formatada = (
+            data_recebimento.strftime(
+                "%d/%m/%Y"
+            )
+        )
+
+    else:
+
+        data_formatada = "-"
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <b>Paciente:</b>
+            {texto_seguro(paciente.nome)}
+            <br/>
+
+            <b>Parcela:</b>
+            {texto_seguro(conta.numero_parcela)}
+            <br/>
+
+            <b>Forma de pagamento:</b>
+            {texto_seguro(conta.forma_pagamento)}
+            <br/>
+
+            <b>Data do recebimento:</b>
+            {data_formatada}
+            ''',
+
+            estilo_texto
+
+        )
+
+    )
+
+    # =========================================
+    # CPF
+    # =========================================
+
+    if paciente.cpf:
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <b>CPF:</b>
+                {texto_seguro(paciente.cpf)}
+                ''',
+
+                estilo_texto
+
+            )
+
+        )
+
+    # =========================================
+    # TRATAMENTO
+    # =========================================
+
+    tratamento = conta.tratamento
+
+    if tratamento:
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <b>Tratamento:</b>
+                {texto_seguro(tratamento.titulo)}
+                ''',
+
+                estilo_texto
+
+            )
+
+        )
+
+    # =========================================
+    # DENTISTA
+    # =========================================
+
+    dentista = conta.dentista
+
+    if dentista:
+
+        dentista_nome = (
+
+            dentista.get_full_name()
+
+            or dentista.username
+
+        )
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <b>Cirurgião-Dentista:</b>
+                {texto_seguro(dentista_nome)}
+                ''',
+
+                estilo_texto
+
+            )
+
+        )
+
+    # =========================================
+    # OBSERVAÇÃO
+    # =========================================
+
+    if conta.observacao:
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <b>Observação:</b>
+                {texto_seguro(conta.observacao)}
+                ''',
+
+                estilo_texto
+
+            )
+
+        )
+
+    elementos.append(
+        Spacer(1, 15)
+    )
+
+    # =========================================
+    # DECLARAÇÃO
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            Declaramos, para os devidos fins,
+            que o valor acima foi recebido
+            pela clínica.
+            ''',
+
+            estilo_texto
+
+        )
+
+    )
+
+    # =========================================
+    # DATA E LOCAL
+    # =========================================
+
+    cidade = ''
+
+    if config and config.cidade:
+
+        cidade = texto_seguro(
+            config.cidade
+        )
+
+    if data_recebimento:
+
+        data_documento = (
+            data_recebimento.strftime(
+                "%d/%m/%Y"
+            )
+        )
+
+    else:
+
+        data_documento = (
+            timezone.localdate().strftime(
+                "%d/%m/%Y"
+            )
+        )
+
+    if cidade:
+
+        texto_data = (
+            f'{cidade}, '
+            f'{data_documento}'
+        )
+
+    else:
+
+        texto_data = data_documento
+
+    elementos.append(
+        Spacer(1, 20)
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <para align="right">
+            {texto_data}
+            </para>
+            ''',
+
+            styles['Normal']
+
+        )
+
+    )
+
+    # =========================================
+    # ASSINATURA
+    # =========================================
+
+    elementos.append(
+        Spacer(1, 45)
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            <para align="center">
+            _______________________________________<br/>
+            Responsável pela Clínica
+            </para>
+            ''',
+
+            styles['Normal']
+
+        )
+
+    )
+
+    # =========================================
+    # RODAPÉ
+    # =========================================
+
+    elementos.append(
+        Spacer(1, 25)
+    )
+
+    elementos.append(
+
+        HRFlowable(
+
+            width="100%",
+
+            thickness=0.8,
+
+            color=colors.grey
+
+        )
+
+    )
+
+    elementos.append(
+        Spacer(1, 8)
+    )
+
+    if config and config.nome_clinica:
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <para align="center">
+                <b>
+                {texto_seguro(config.nome_clinica)}
+                </b>
+                </para>
+                ''',
+
+                styles['Normal']
+
+            )
+
+        )
+
+    # =========================================
+    # GERAR PDF
+    # =========================================
+
+    doc.build(
+        elementos
+    )
+
+    return response
+
+# =========================================
+# RECIBO DE COMISSÃO DO DENTISTA
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("contas_pagar", "visualizar")
+def imprimir_recibo_comissao(request, fechamento_id):
+
+    import re
+
+    from xml.sax.saxutils import escape
+
+    # =========================================
+    # LOCALIZA O FECHAMENTO
+    # =========================================
+
+    fechamento = get_object_or_404(
+        FechamentoComissao.objects
+        .select_related(
+            "profissional",
+            "profissional__usuario",
+            "usuario"
+        )
+        .prefetch_related("comissoes"),
+        id=fechamento_id
+    )
+
+    # =========================================
+    # CONFIRMA QUE O FECHAMENTO FOI REALIZADO
+    # =========================================
+
+    if fechamento.quantidade_comissoes <= 0:
+
+        messages.error(
+            request,
+            "Este fechamento não possui comissões."
+        )
+
+        return redirect(
+            "historico_fechamentos_comissoes"
+        )
+
+    # =========================================
+    # CONFIGURAÇÃO DA CLÍNICA
+    # =========================================
+
+    config = ConfiguracaoClinica.objects.first()
+
+    # =========================================
+    # DADOS DO DENTISTA
+    # =========================================
+
+    profissional = fechamento.profissional
+
+    dentista_nome = (
+        profissional.usuario.get_full_name()
+        or profissional.usuario.username
+    )
+
+    # =========================================
+    # FUNÇÃO AUXILIAR
+    # FORMATA VALOR EM PADRÃO BRASILEIRO
+    # =========================================
+
+    def formatar_valor(valor):
+
+        valor = valor or 0
+
+        texto = f"{valor:,.2f}"
+
+        texto = (
+            texto
+            .replace(",", "X")
+            .replace(".", ",")
+            .replace("X", ".")
+        )
+
+        return texto
+
+    # =========================================
+    # FUNÇÃO AUXILIAR
+    # PROTEGE TEXTOS PARA REPORTLAB
+    # =========================================
+
+    def texto_seguro(valor):
+
+        if valor is None:
+            return ""
+
+        return escape(
+            str(valor)
+        )
+
+    # =========================================
+    # CNPJ DA CLÍNICA
+    # COMPATÍVEL COM NUMÉRICO E ALFANUMÉRICO
+    # =========================================
+
+    cnpj_clinica = (
+        config.cnpj
+        if config and config.cnpj
+        else ''
+    )
+
+    cnpj_limpo = re.sub(
+        r'[^A-Za-z0-9]',
+        '',
+        str(cnpj_clinica)
+    ).upper()
+
+    if len(cnpj_limpo) == 14:
+
+        cnpj_clinica = (
+            f'{cnpj_limpo[0:2]}.'
+            f'{cnpj_limpo[2:5]}.'
+            f'{cnpj_limpo[5:8]}/'
+            f'{cnpj_limpo[8:12]}-'
+            f'{cnpj_limpo[12:14]}'
+        )
+
+    # =========================================
+    # RESPOSTA PDF
+    # =========================================
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = (
+        'inline; '
+        f'filename="recibo_comissao_{fechamento.id}.pdf"'
+    )
+
+    # =========================================
+    # CONFIGURAÇÃO DO DOCUMENTO
+    # =========================================
+
+    doc = SimpleDocTemplate(
+
+        response,
+
+        topMargin=18,
+        bottomMargin=18,
+        leftMargin=40,
+        rightMargin=40
+
+    )
+
+    styles = getSampleStyleSheet()
+
+    elementos = []
+
+    # =========================================
+    # LOGO
+    # =========================================
+
+    logo_path = os.path.join(
+
+        settings.BASE_DIR,
+        'static',
+        'img',
+        'logo_odonto2.png'
+
+    )
+
+    if os.path.exists(logo_path):
+
+        logo = Image(
+
+            logo_path,
+
+            width=165,
+            height=62
+
+        )
+
+        logo.hAlign = 'CENTER'
+
+        elementos.append(
+            logo
+        )
+
+        elementos.append(
+            Spacer(1, 4)
+        )
+
+    # =========================================
+    # NOME DA CLÍNICA
+    # =========================================
+
+    if config and config.nome_clinica:
+
+        estilo_clinica = ParagraphStyle(
+
+            'ClinicaReciboComissao',
+
+            parent=styles['Heading2'],
+
+            fontSize=11,
+            leading=13,
+
+            alignment=1,
+
+            spaceAfter=3
+
+        )
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <para align="center">
+                <b>
+                {texto_seguro(config.nome_clinica)}
+                </b>
+                </para>
+                ''',
+
+                estilo_clinica
+
+            )
+
+        )
+
+    # =========================================
+    # DADOS INSTITUCIONAIS
+    # =========================================
+
+    dados_clinica = []
+
+    if cnpj_clinica:
+
+        dados_clinica.append(
+            f"CNPJ: {texto_seguro(cnpj_clinica)}"
+        )
+
+    if config and config.cro:
+
+        dados_clinica.append(
+            f"CRO: {texto_seguro(config.cro)}"
+        )
+
+    if config and config.telefone:
+
+        dados_clinica.append(
+            f"Tel.: {texto_seguro(config.telefone)}"
+        )
+
+    if config and config.whatsapp:
+
+        dados_clinica.append(
+            f"WhatsApp: {texto_seguro(config.whatsapp)}"
+        )
+
+    if config and config.email:
+
+        dados_clinica.append(
+            texto_seguro(config.email)
+        )
+
+    if dados_clinica:
+
+        elementos.append(
+
+            Paragraph(
+
+                '<para align="center">'
+                + ' &nbsp; | &nbsp; '.join(
+                    dados_clinica
+                )
+                + '</para>',
+
+                ParagraphStyle(
+                    'DadosClinicaRecibo',
+                    parent=styles['BodyText'],
+                    fontSize=8.5,
+                    leading=10,
+                    alignment=1,
+                    spaceAfter=2
+                )
+
+            )
+
+        )
+
+    # =========================================
+    # ENDEREÇO
+    # =========================================
+
+    endereco = []
+
+    if config and config.endereco:
+
+        endereco.append(
+            texto_seguro(config.endereco)
+        )
+
+    if config and config.numero:
+
+        endereco.append(
+            f"nº {texto_seguro(config.numero)}"
+        )
+
+    if config and config.bairro:
+
+        endereco.append(
+            texto_seguro(config.bairro)
+        )
+
+    cidade_estado = ''
+
+    if config and config.cidade:
+
+        cidade_estado = (
+            texto_seguro(config.cidade)
+        )
+
+    if config and config.estado:
+
+        if cidade_estado:
+
+            cidade_estado += ' - '
+
+        cidade_estado += (
+            texto_seguro(config.estado)
+        )
+
+    if cidade_estado:
+
+        endereco.append(
+            cidade_estado
+        )
+
+    if config and config.cep:
+
+        endereco.append(
+            f"CEP: {texto_seguro(config.cep)}"
+        )
+
+    if endereco:
+
+        elementos.append(
+
+            Paragraph(
+
+                '<para align="center">'
+                + ' • '.join(endereco)
+                + '</para>',
+
+                ParagraphStyle(
+                    'EnderecoRecibo',
+                    parent=styles['BodyText'],
+                    fontSize=8.5,
+                    leading=10,
+                    alignment=1,
+                    spaceAfter=2
+                )
+
+            )
+
+        )
+
+    elementos.append(
+        Spacer(1, 8)
+    )
+
+    # =========================================
+    # LINHA
+    # =========================================
+
+    elementos.append(
+
+        HRFlowable(
+
+            width="100%",
+
+            thickness=1.2,
+
+            color=colors.HexColor(
+                '#1e40af'
+            )
+
+        )
+
+    )
+
+    elementos.append(
+        Spacer(1, 8)
+    )
+
+    # =========================================
+    # TÍTULO
+    # =========================================
+
+    estilo_titulo = ParagraphStyle(
+
+        'TituloReciboComissao',
+
+        parent=styles['Title'],
+
+        fontSize=17,
+        leading=19,
+
+        alignment=1,
+
+        spaceAfter=12
+
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            <para align="center">
+            <b>RECIBO</b>
+            </para>
+            ''',
+
+            estilo_titulo
+
+        )
+
+    )
+
+    # =========================================
+    # ESTILO DO TEXTO
+    # =========================================
+
+    estilo_texto = ParagraphStyle(
+
+        'TextoReciboComissao',
+
+        parent=styles['BodyText'],
+
+        fontSize=10,
+
+        leading=14,
+
+        alignment=4,
+
+        spaceAfter=7
+
+    )
+
+    # =========================================
+    # VALOR
+    # =========================================
+
+    valor_formatado = formatar_valor(
+        fechamento.total
+    )
+
+    # =========================================
+    # TEXTO PRINCIPAL
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            Recebi de
+            <b>
+            {texto_seguro(
+                config.nome_clinica
+                if config
+                else "Clinique Dentaire Ltda."
+            )}
+            </b>,
+            a importância de
+            <b>R$ {valor_formatado}</b>,
+            referente ao pagamento de
+            <b>comissões profissionais</b>
+            do período de
+            <b>
+            {fechamento.data_inicio.strftime("%d/%m/%Y")}
+            </b>
+            até
+            <b>
+            {fechamento.data_final.strftime("%d/%m/%Y")}
+            </b>.
+            ''',
+
+            estilo_texto
+
+        )
+
+    )
+
+    # =========================================
+    # DADOS DO FECHAMENTO
+    # =========================================
+
+    data_pagamento = (
+
+        fechamento.data_fechamento.strftime(
+            "%d/%m/%Y"
+        )
+
+        if fechamento.data_fechamento
+
+        else "-"
+
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <b>Dentista:</b>
+            {texto_seguro(dentista_nome)}
+            &nbsp;&nbsp;&nbsp;
+
+            <b>Fechamento:</b>
+            #{fechamento.id}
+
+            <br/>
+
+            <b>Período:</b>
+            {fechamento.data_inicio.strftime("%d/%m/%Y")}
+            até
+            {fechamento.data_final.strftime("%d/%m/%Y")}
+            &nbsp;&nbsp;&nbsp;
+
+            <b>Comissões:</b>
+            {fechamento.quantidade_comissoes}
+
+            <br/>
+
+            <b>Forma de pagamento:</b>
+            {texto_seguro(
+                fechamento.forma_pagamento
+            )}
+            &nbsp;&nbsp;&nbsp;
+
+            <b>Data do pagamento:</b>
+            {data_pagamento}
+            ''',
+
+            estilo_texto
+
+        )
+
+    )
+
+    # =========================================
+    # DETALHAMENTO DAS COMISSÕES
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            <b>Detalhamento das comissões</b>
+            ''',
+
+            ParagraphStyle(
+                'TituloTabelaComissao',
+                parent=styles['BodyText'],
+                fontSize=10,
+                leading=12,
+                spaceAfter=5
+            )
+
+        )
+
+    )
+
+    comissoes = fechamento.comissoes.all()
+
+    # =========================================
+    # CABEÇALHO DA TABELA
+    # =========================================
+
+    dados_comissoes = [
+
+        [
+            "Procedimento",
+            "Elemento",
+            "Comissão"
+        ]
+
+    ]
+
+    # =========================================
+    # COMISSÕES
+    # =========================================
+
+    for conta in comissoes:
+
+        descricao = (
+
+            conta.descricao
+
+            .replace(
+                "Comissão do procedimento - ",
+                ""
+            )
+
+        )
+
+        elemento = "-"
+
+        # =====================================
+        # LOCALIZA O ITEM DO ORÇAMENTO
+        # =====================================
+
+        match_item = re.search(
+            r"Item #(\d+)",
+            conta.descricao
+        )
+
+        if match_item:
+
+            try:
+
+                item_id = int(
+                    match_item.group(1)
+                )
+
+                item_orcamento = (
+                    ItemOrcamento.objects
+                    .filter(id=item_id)
+                    .first()
+                )
+
+                if item_orcamento:
+
+                    elemento = (
+
+                        getattr(
+                            item_orcamento,
+                            "dente",
+                            None
+                        )
+
+                        or
+
+                        getattr(
+                            item_orcamento,
+                            "elemento",
+                            None
+                        )
+
+                        or
+
+                        getattr(
+                            item_orcamento,
+                            "numero_dente",
+                            None
+                        )
+
+                        or
+
+                        "-"
+
+                    )
+
+            except (
+                ValueError,
+                TypeError
+            ):
+
+                elemento = "-"
+
+        # =====================================
+        # ADICIONA LINHA
+        # =====================================
+
+        dados_comissoes.append(
+
+            [
+
+                Paragraph(
+                    texto_seguro(descricao),
+                    ParagraphStyle(
+                        'TabelaDescricaoComissao',
+                        parent=styles['BodyText'],
+                        fontSize=8.5,
+                        leading=10
+                    )
+                ),
+
+                Paragraph(
+                    texto_seguro(elemento),
+                    ParagraphStyle(
+                        'TabelaElementoComissao',
+                        parent=styles['BodyText'],
+                        fontSize=8.5,
+                        leading=10,
+                        alignment=2
+                    )
+                ),
+
+                Paragraph(
+                    f"R$ {formatar_valor(conta.valor)}",
+                    ParagraphStyle(
+                        'TabelaValorComissao',
+                        parent=styles['BodyText'],
+                        fontSize=8.5,
+                        leading=10,
+                        alignment=2
+                    )
+                )
+
+            ]
+
+        )
+
+    # =========================================
+    # TABELA
+    # =========================================
+
+    tabela_comissoes = Table(
+
+        dados_comissoes,
+
+        colWidths=[
+            315,
+            65,
+            80
+        ],
+
+        repeatRows=1
+
+    )
+
+    tabela_comissoes.setStyle(
+
+        TableStyle(
+
+            [
+
+                (
+                    'BACKGROUND',
+                    (0, 0),
+                    (-1, 0),
+                    colors.HexColor(
+                        '#e5e7eb'
+                    )
+                ),
+
+                (
+                    'TEXTCOLOR',
+                    (0, 0),
+                    (-1, 0),
+                    colors.black
+                ),
+
+                (
+                    'FONTNAME',
+                    (0, 0),
+                    (-1, 0),
+                    'Helvetica-Bold'
+                ),
+
+                (
+                    'FONTSIZE',
+                    (0, 0),
+                    (-1, 0),
+                    8.5
+                ),
+
+                (
+                    'ALIGN',
+                    (1, 0),
+                    (-1, -1),
+                    'RIGHT'
+                ),
+
+                (
+                    'VALIGN',
+                    (0, 0),
+                    (-1, -1),
+                    'MIDDLE'
+                ),
+
+                (
+                    'GRID',
+                    (0, 0),
+                    (-1, -1),
+                    0.4,
+                    colors.grey
+                ),
+
+                (
+                    'TOPPADDING',
+                    (0, 0),
+                    (-1, -1),
+                    4
+                ),
+
+                (
+                    'BOTTOMPADDING',
+                    (0, 0),
+                    (-1, -1),
+                    4
+                ),
+
+                (
+                    'LEFTPADDING',
+                    (0, 0),
+                    (-1, -1),
+                    5
+                ),
+
+                (
+                    'RIGHTPADDING',
+                    (0, 0),
+                    (-1, -1),
+                    5
+                ),
+
+            ]
+
+        )
+
+    )
+
+    elementos.append(
+        tabela_comissoes
+    )
+
+    elementos.append(
+        Spacer(1, 7)
+    )
+
+    # =========================================
+    # TOTAL
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <para align="right">
+            <b>
+            TOTAL PAGO:
+            R$ {valor_formatado}
+            </b>
+            </para>
+            ''',
+
+            ParagraphStyle(
+                'TotalReciboComissao',
+                parent=styles['BodyText'],
+                fontSize=10.5,
+                leading=12,
+                alignment=2,
+                spaceAfter=5
+            )
+
+        )
+
+    )
+
+    # =========================================
+    # DECLARAÇÃO
+    # =========================================
+
+    elementos.append(
+
+        Paragraph(
+
+            '''
+            Declaro, para os devidos fins,
+            que recebi integralmente o valor acima
+            referente às comissões profissionais
+            discriminadas neste recibo.
+            ''',
+
+            ParagraphStyle(
+                'DeclaracaoReciboComissao',
+                parent=styles['BodyText'],
+                fontSize=9.5,
+                leading=13,
+                alignment=4,
+                spaceAfter=4
+            )
+
+        )
+
+    )
+
+    # =========================================
+    # DATA E LOCAL
+    # =========================================
+
+    cidade = ''
+
+    if config and config.cidade:
+
+        cidade = texto_seguro(
+            config.cidade
+        )
+
+    data_documento = (
+
+        fechamento.data_fechamento.strftime(
+            "%d/%m/%Y"
+        )
+
+        if fechamento.data_fechamento
+
+        else timezone.localdate().strftime(
+            "%d/%m/%Y"
+        )
+
+    )
+
+    if cidade:
+
+        texto_data = (
+            f'{cidade}, '
+            f'{data_documento}'
+        )
+
+    else:
+
+        texto_data = data_documento
+
+    elementos.append(
+        Spacer(1, 8)
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <para align="right">
+            {texto_data}
+            </para>
+            ''',
+
+            ParagraphStyle(
+                'DataReciboComissao',
+                parent=styles['Normal'],
+                fontSize=9,
+                leading=11,
+                alignment=2
+            )
+
+        )
+
+    )
+
+    # =========================================
+    # ASSINATURA DO DENTISTA
+    # =========================================
+
+    elementos.append(
+        Spacer(1, 20)
+    )
+
+    elementos.append(
+
+        Paragraph(
+
+            f'''
+            <para align="center">
+            _______________________________________<br/>
+            <b>{texto_seguro(dentista_nome)}</b><br/>
+            Cirurgião-Dentista
+            </para>
+            ''',
+
+            ParagraphStyle(
+                'AssinaturaReciboComissao',
+                parent=styles['Normal'],
+                fontSize=9,
+                leading=11,
+                alignment=1
+            )
+
+        )
+
+    )
+
+    # =========================================
+    # RODAPÉ
+    # =========================================
+
+    elementos.append(
+        Spacer(1, 8)
+    )
+
+    elementos.append(
+
+        HRFlowable(
+
+            width="100%",
+
+            thickness=0.6,
+
+            color=colors.grey
+
+        )
+
+    )
+
+    elementos.append(
+        Spacer(1, 3)
+    )
+
+    if config and config.nome_clinica:
+
+        elementos.append(
+
+            Paragraph(
+
+                f'''
+                <para align="center">
+                <b>
+                {texto_seguro(config.nome_clinica)}
+                </b>
+                </para>
+                ''',
+
+                ParagraphStyle(
+                    'RodapeReciboComissao',
+                    parent=styles['Normal'],
+                    fontSize=7.5,
+                    leading=9,
+                    alignment=1
+                )
+
+            )
+
+        )
+
+    # =========================================
+    # GERAR PDF
+    # =========================================
+
+    doc.build(
+        elementos
+    )
+
+    return response
+
+# =========================================
 # VISUALIZAR DOCUMENTO
 # =========================================
 
@@ -17112,6 +19161,443 @@ def contas_pagar(request):
         context
 
     )
+
+# =========================================
+# FECHAMENTO DE COMISSÕES
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("contas_pagar", "visualizar")
+def fechamento_comissoes(request):
+
+    from datetime import datetime
+    from decimal import Decimal
+
+    # =========================================
+    # DATA PADRÃO
+    # =========================================
+
+    hoje = timezone.localdate()
+
+    data_inicio = request.GET.get("data_inicio")
+    data_final = request.GET.get("data_final")
+    profissional_id = request.GET.get("profissional")
+
+    # =========================================
+    # DATAS PADRÃO
+    # =========================================
+
+    if not data_inicio:
+        data_inicio = hoje.replace(
+            day=1
+        ).strftime("%Y-%m-%d")
+
+    if not data_final:
+        data_final = hoje.strftime(
+            "%Y-%m-%d"
+        )
+
+    # =========================================
+    # DENTISTAS
+    # =========================================
+
+    profissionais = (
+        PerfilUsuario.objects
+        .filter(
+            perfil_acesso__nome="Dentista",
+            usuario__is_active=True
+        )
+        .select_related(
+            "usuario"
+        )
+        .order_by(
+            "usuario__first_name",
+            "usuario__last_name"
+        )
+    )
+
+    # =========================================
+    # COMISSÕES
+    # =========================================
+
+    comissoes = ContaPagar.objects.none()
+
+    if data_inicio and data_final:
+
+        try:
+
+            inicio = datetime.strptime(
+                data_inicio,
+                "%Y-%m-%d"
+            ).date()
+
+            final = datetime.strptime(
+                data_final,
+                "%Y-%m-%d"
+            ).date()
+
+            comissoes = (
+                ContaPagar.objects
+                .filter(
+                    profissional__isnull=False,
+                    status__in=[
+                        "PENDENTE",
+                        "VENCIDO"
+                    ],
+                    vencimento__range=[
+                        inicio,
+                        final
+                    ]
+                )
+                .select_related(
+                    "profissional",
+                    "profissional__usuario"
+                )
+                .order_by(
+                    "vencimento",
+                    "id"
+                )
+            )
+
+            # =========================================
+            # FILTRO POR DENTISTA
+            # =========================================
+
+            if profissional_id:
+
+                comissoes = comissoes.filter(
+                    profissional_id=profissional_id
+                )
+
+        except ValueError:
+
+            comissoes = ContaPagar.objects.none()
+
+    # =========================================
+    # TOTAL
+    # =========================================
+
+    total_comissao = sum(
+        (
+            conta.valor
+            for conta in comissoes
+        ),
+        Decimal("0.00")
+    )
+
+    context = {
+
+        "profissionais": profissionais,
+
+        "comissoes": comissoes,
+
+        "total_comissao": total_comissao,
+
+        "quantidade_comissoes": comissoes.count(),
+
+        "data_inicio": data_inicio,
+
+        "data_final": data_final,
+
+        "profissional_id": profissional_id,
+
+    }
+
+    return render(
+
+        request,
+
+        "accounts/fechamento_comissoes.html",
+
+        context
+
+    )
+
+@transaction.atomic
+@login_required(login_url="/")
+@permissao_required("contas_pagar", "editar")
+def pagar_comissoes(request):
+
+    if request.method != "POST":
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # COMISSÕES SELECIONADAS
+    # =========================================
+
+    ids_comissoes = request.POST.getlist("comissoes")
+
+    if not ids_comissoes:
+        messages.error(
+            request,
+            "Selecione pelo menos uma comissão para realizar o fechamento."
+        )
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # FORMA DE PAGAMENTO
+    # =========================================
+
+    forma_pagamento = request.POST.get("forma_pagamento")
+
+    formas_validas = [
+        "Dinheiro",
+        "PIX",
+        "Transferência bancária",
+        "Cartão",
+        "Outro",
+    ]
+
+    if forma_pagamento not in formas_validas:
+        messages.error(
+            request,
+            "Selecione uma forma de pagamento válida."
+        )
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # COMISSÕES
+    # =========================================
+
+    comissoes = (
+        ContaPagar.objects
+        .select_for_update()
+        .select_related(
+            "profissional",
+            "profissional__usuario"
+        )
+        .filter(
+            id__in=ids_comissoes,
+            profissional__isnull=False,
+            status__in=[
+                "PENDENTE",
+                "VENCIDO"
+            ]
+        )
+        .order_by(
+            "vencimento",
+            "id"
+        )
+    )
+
+    # =========================================
+    # VALIDAÇÃO
+    # =========================================
+
+    if comissoes.count() != len(set(ids_comissoes)):
+        messages.error(
+            request,
+            "Uma ou mais comissões selecionadas não estão mais disponíveis para pagamento."
+        )
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # UM ÚNICO DENTISTA
+    # =========================================
+
+    profissionais = set(
+        conta.profissional_id
+        for conta in comissoes
+    )
+
+    if len(profissionais) != 1:
+        messages.error(
+            request,
+            "O fechamento deve conter apenas comissões de um único dentista."
+        )
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # DENTISTA DO FECHAMENTO
+    # =========================================
+
+    profissional = comissoes.first().profissional
+
+    # =========================================
+    # PERÍODO DO FECHAMENTO
+    # =========================================
+
+    data_inicio_str = request.POST.get("data_inicio")
+    data_final_str = request.POST.get("data_final")
+
+    try:
+        data_inicio = (
+            datetime.strptime(
+                data_inicio_str,
+                "%Y-%m-%d"
+            ).date()
+            if data_inicio_str
+            else comissoes.first().vencimento
+        )
+
+        data_final = (
+            datetime.strptime(
+                data_final_str,
+                "%Y-%m-%d"
+            ).date()
+            if data_final_str
+            else comissoes.last().vencimento
+        )
+
+    except (TypeError, ValueError):
+
+        messages.error(
+            request,
+            "O período informado para o fechamento é inválido."
+        )
+
+        return redirect("fechamento_comissoes")
+
+    if data_inicio > data_final:
+
+        messages.error(
+            request,
+            "A data inicial não pode ser maior que a data final."
+        )
+
+        return redirect("fechamento_comissoes")
+
+    # =========================================
+    # DATA DO FECHAMENTO
+    # =========================================
+
+    hoje = timezone.localdate()
+
+    # =========================================
+    # TOTAL DO FECHAMENTO
+    # =========================================
+
+    total = sum(
+        (
+            conta.valor
+            for conta in comissoes
+        ),
+        Decimal("0.00")
+    )
+
+    quantidade = comissoes.count()
+
+    # =========================================
+    # CRIA FECHAMENTO
+    # =========================================
+
+    fechamento = FechamentoComissao.objects.create(
+        profissional=profissional,
+        data_inicio=data_inicio,
+        data_final=data_final,
+        data_fechamento=hoje,
+        quantidade_comissoes=quantidade,
+        total=total,
+        forma_pagamento=forma_pagamento,
+        usuario=request.user,
+    )
+
+    # =========================================
+    # PROCESSA CADA COMISSÃO
+    # =========================================
+
+    for conta in comissoes:
+
+        conta.status = "PAGO"
+        conta.data_pagamento = hoje
+        conta.forma_pagamento = forma_pagamento
+        conta.fechamento_comissao = fechamento
+
+        conta.save(
+            update_fields=[
+                "status",
+                "data_pagamento",
+                "forma_pagamento",
+                "fechamento_comissao",
+                "atualizado_em",
+            ]
+        )
+
+        # =====================================
+        # CAIXA
+        # =====================================
+
+        if not Caixa.objects.filter(
+            conta_pagar=conta
+        ).exists():
+
+            Caixa.objects.create(
+                data=hoje,
+                descricao=conta.descricao,
+                tipo="SAIDA",
+                valor=conta.valor,
+                conta_pagar=conta,
+                usuario=request.user
+            )
+
+        # =====================================
+        # LIVRO CAIXA
+        # =====================================
+
+        registrar_livro_caixa(
+            data=hoje,
+            tipo="SAIDA",
+            origem="CONTA_PAGAR",
+            descricao=conta.descricao,
+            valor=conta.valor,
+            fornecedor=conta.fornecedor,
+            profissional=conta.profissional,
+            conta_pagar=conta,
+            observacao=(
+                f"Pagamento de comissão "
+                f"da Conta a Pagar #{conta.id}. "
+                f"Fechamento de Comissão #{fechamento.id}."
+            )
+        )
+
+    # =========================================
+    # MENSAGEM
+    # =========================================
+
+    messages.success(
+        request,
+        (
+            f"Fechamento #{fechamento.id} realizado com sucesso. "
+            f"{quantidade} comissão(ões) paga(s), "
+            f"totalizando R$ {total:,.2f}."
+        )
+    )
+
+    return redirect(
+        "fechamento_comissoes"
+    )
+
+# =========================================
+# HISTÓRICO DE FECHAMENTOS DE COMISSÕES
+# =========================================
+
+@login_required(login_url="/")
+@permissao_required("contas_pagar", "visualizar")
+def historico_fechamentos_comissoes(request):
+
+    fechamentos = (
+        FechamentoComissao.objects
+        .select_related(
+            "profissional",
+            "profissional__usuario",
+            "usuario"
+        )
+        .order_by(
+            "-data_fechamento",
+            "-id"
+        )
+    )
+
+    context = {
+        "fechamentos": fechamentos,
+    }
+
+    return render(
+        request,
+        "accounts/historico_fechamentos_comissoes.html",
+        context
+    )
+
 # =========================================
 # NOVA CONTA A PAGAR
 # =========================================

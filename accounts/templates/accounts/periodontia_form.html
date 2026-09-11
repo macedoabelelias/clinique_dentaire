@@ -1,0 +1,385 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+
+                <i class="fa-solid fa-tooth me-2"></i>
+
+                Periodontia
+
+            </h4>
+
+            <div class="text-muted">
+
+                Paciente:
+
+                <strong>
+                    {{ paciente.nome }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'ficha_clinica' paciente.id %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="fa-solid fa-arrow-left me-1"></i>
+
+            Voltar
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         CARD
+         ========================================= -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="fa-solid fa-file-medical me-2"></i>
+
+                Registro Técnico de Periodontia
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- =========================================
+                     DENTE / DATA / DENTISTA
+                     ========================================= -->
+
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.elemento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Dente / Região
+                        </label>
+
+                        {{ form.elemento }}
+
+                        {% if form.elemento.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.elemento.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.data_procedimento.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Data do procedimento
+                        </label>
+
+                        {{ form.data_procedimento }}
+
+                        {% if form.data_procedimento.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.data_procedimento.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.dentista_responsavel.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Dentista responsável
+                        </label>
+
+                        {{ form.dentista_responsavel }}
+
+                        {% if form.dentista_responsavel.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.dentista_responsavel.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     DIAGNÓSTICO
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.diagnostico_periodontal.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Diagnóstico periodontal
+                    </label>
+
+                    {{ form.diagnostico_periodontal }}
+
+                    {% if form.diagnostico_periodontal.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.diagnostico_periodontal.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     AVALIAÇÃO PERIODONTAL
+                     ========================================= -->
+
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.profundidade_sondagem.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Profundidade de sondagem
+                        </label>
+
+                        {{ form.profundidade_sondagem }}
+
+                        {% if form.profundidade_sondagem.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.profundidade_sondagem.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.sangramento_sondagem.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Sangramento à sondagem
+                        </label>
+
+                        {{ form.sangramento_sondagem }}
+
+                        {% if form.sangramento_sondagem.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.sangramento_sondagem.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.mobilidade.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Mobilidade
+                        </label>
+
+                        {{ form.mobilidade }}
+
+                        {% if form.mobilidade.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.mobilidade.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.recessao_gengival.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Recessão gengival
+                        </label>
+
+                        {{ form.recessao_gengival }}
+
+                        {% if form.recessao_gengival.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.recessao_gengival.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.nivel_insercao_clinica.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Nível de inserção clínica
+                        </label>
+
+                        {{ form.nivel_insercao_clinica }}
+
+                        {% if form.nivel_insercao_clinica.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.nivel_insercao_clinica.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     PROCEDIMENTO / TERAPIA
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.procedimento_terapia.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Procedimento / Terapia realizada
+                    </label>
+
+                    {{ form.procedimento_terapia }}
+
+                    {% if form.procedimento_terapia.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.procedimento_terapia.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     OBSERVAÇÕES
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="{{ form.observacoes.id_for_label }}"
+                        class="form-label fw-semibold"
+                    >
+                        Observações clínicas
+                    </label>
+
+                    {{ form.observacoes }}
+
+                    {% if form.observacoes.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.observacoes.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     BOTÕES
+                     ========================================= -->
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a
+                        href="{% url 'ficha_clinica' paciente.id %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="fa-solid fa-xmark me-1"></i>
+
+                        Cancelar
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+
+                        Salvar Periodontia
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

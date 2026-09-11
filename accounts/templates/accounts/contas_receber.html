@@ -266,22 +266,35 @@
 
                             <td>
 
-                                {% if conta.status != 'RECEBIDO' %}
+    {% if conta.status != 'RECEBIDO' %}
 
-                                    <a
-                                        href="{% url 'receber_conta' conta.id %}"
-                                        class="btn btn-success btn-sm"
-                                        onclick="return confirm('Confirmar recebimento?')"
-                                        title="Receber Conta"
-                                    >
+        <a
+            href="{% url 'receber_conta' conta.id %}"
+            class="btn btn-success btn-sm"
+            onclick="return confirm('Confirmar recebimento?')"
+            title="Receber Conta"
+        >
 
-                                        <i class="fa-solid fa-check"></i>
+            <i class="fa-solid fa-check"></i>
 
-                                    </a>
+        </a>
 
-                                {% endif %}
+    {% else %}
 
-                            </td>
+        <a
+            href="{% url 'imprimir_recibo_recebimento' conta.id %}"
+            class="btn btn-outline-primary btn-sm"
+            target="_blank"
+            title="Emitir Recibo"
+        >
+
+            <i class="fa-solid fa-receipt"></i>
+
+        </a>
+
+    {% endif %}
+
+</td>
 
                         </tr>
 

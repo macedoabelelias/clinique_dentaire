@@ -391,6 +391,28 @@ path(
         name='editar_endodontia'
     ),
 
+    # =========================================
+    # PERIODONTIA
+    # =========================================
+
+    path(
+        'pacientes/<int:id>/periodontia/novo/',
+        views.novo_periodontia,
+        name='novo_periodontia'
+    ),
+
+    path(
+        'periodontia/<int:id>/editar/',
+        views.editar_periodontia,
+        name='editar_periodontia'
+    ),
+
+    path(
+        'periodontia/<int:id>/excluir/',
+        views.excluir_periodontia,
+        name='excluir_periodontia'
+    ),
+
     path(
         'implantodontia/<int:id>/implante/novo/',
         views.novo_implante,
@@ -1508,6 +1530,35 @@ path(
     name="editar_meta_dentista",
 ),
 
+path(
+    'contas-receber/<int:conta_id>/recibo/',
+    views.imprimir_recibo_recebimento,
+    name='imprimir_recibo_recebimento'
+),
+
+path(
+    "financeiro/fechamento-comissoes/",
+    views.fechamento_comissoes,
+    name="fechamento_comissoes"
+),
+
+path(
+    "financeiro/fechamento-comissoes/pagar/",
+    views.pagar_comissoes,
+    name="pagar_comissoes"
+),
+
+path(
+    "financeiro/fechamento-comissoes/<int:fechamento_id>/recibo/",
+    views.imprimir_recibo_comissao,
+    name="imprimir_recibo_comissao"
+),
+
+path(
+    "financeiro/historico-fechamentos-comissoes/",
+    views.historico_fechamentos_comissoes,
+    name="historico_fechamentos_comissoes"
+),
 
 
 ]

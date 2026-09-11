@@ -382,7 +382,17 @@ TABELA
         <span class="badge bg-primary rounded-pill px-3 py-2">Orçamento #{{ orcamento.id }}</span>
     </div>
 
-    <table class="table align-middle">
+    <div
+    style="
+        max-height: 520px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+    "
+>
+
+    <table class="table align-middle mb-0">
 
         <thead class="table-light">
 
@@ -577,6 +587,8 @@ TABELA
         </tbody>
 
     </table>
+
+</div>
 
 {% if orcamento.tem_itens_ativos %}
 

@@ -1,0 +1,1348 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- =========================================
+         CABEÇALHO
+         ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="mb-1">
+                Fechamento de Comissões
+            </h1>
+
+            <p class="text-muted mb-0">
+                Consulte e confira as comissões pendentes dos dentistas.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'contas_pagar' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="fa-solid fa-arrow-left me-1"></i>
+            Contas a Pagar
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         FILTROS
+         ========================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <!-- DENTISTA -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Dentista
+                        </label>
+
+                        <select
+                            name="profissional"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Todos os dentistas
+                            </option>
+
+                            {% for profissional in profissionais %}
+
+                                <option
+                                    value="{{ profissional.id }}"
+                                    {% if profissional_id|stringformat:"s" == profissional.id|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ profissional.usuario.get_full_name|default:profissional.usuario.username }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- DATA INICIAL -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Período inicial
+                        </label>
+
+                        <input
+                            type="date"
+                            name="data_inicio"
+                            class="form-control"
+                            value="{{ data_inicio }}"
+                        >
+
+                    </div>
+
+
+                    <!-- DATA FINAL -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Período final
+                        </label>
+
+                        <input
+                            type="date"
+                            name="data_final"
+                            class="form-control"
+                            value="{{ data_final }}"
+                        >
+
+                    </div>
+
+
+                    <!-- BOTÃO -->
+
+                    <div class="col-md-2 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+
+                            <i class="fa-solid fa-magnifying-glass me-1"></i>
+
+                            Consultar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         INDICADORES
+         ========================================= -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+
+            <div class="card border-primary shadow-sm">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Comissões encontradas
+                    </h6>
+
+                    <h3 class="mb-0">
+                        {{ quantidade_comissoes }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <div class="card border-success shadow-sm">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Total das comissões
+                    </h6>
+
+                    <h3 class="mb-0">
+                        R$ {{ total_comissao }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+     LISTAGEM / SELEÇÃO DE COMISSÕES
+     ========================================= -->
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form id="formFechamentoComissoes">
+
+            <div class="table-responsive">
+
+                <div
+    style="
+        max-height: 520px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+    "
+>
+
+    <table class="table table-hover align-middle mb-0">
+
+        <thead>
+
+            <tr>
+
+                <th width="50" class="text-center">
+
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="selecionarTodas"
+                        title="Selecionar todas"
+                    >
+
+                </th>
+
+                <th>Dentista</th>
+
+                <th>Descrição</th>
+
+                <th>Vencimento</th>
+
+                <th>Valor</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for conta in comissoes %}
+
+            <tr>
+
+                <!-- =====================================
+                     SELEÇÃO
+                     ===================================== -->
+
+                <td class="text-center">
+
+                    <input
+                        type="checkbox"
+                        class="form-check-input checkbox-comissao"
+                        name="comissoes"
+                        value="{{ conta.id }}"
+                        data-valor="{{ conta.valor }}"
+                    >
+
+                </td>
+
+
+                <!-- =====================================
+                     DENTISTA
+                     ===================================== -->
+
+                <td>
+
+                    {{ conta.profissional.usuario.get_full_name|default:conta.profissional.usuario.username }}
+
+                </td>
+
+
+                <!-- =====================================
+                     DESCRIÇÃO
+                     ===================================== -->
+
+                <td>
+
+                    {{ conta.descricao }}
+
+                </td>
+
+
+                <!-- =====================================
+                     VENCIMENTO
+                     ===================================== -->
+
+                <td>
+
+                    {{ conta.vencimento|date:"d/m/Y" }}
+
+                </td>
+
+
+                <!-- =====================================
+                     VALOR
+                     ===================================== -->
+
+                <td>
+
+                    R$ {{ conta.valor }}
+
+                </td>
+
+
+                <!-- =====================================
+                     STATUS
+                     ===================================== -->
+
+                <td>
+
+                    {% if conta.status == "PENDENTE" %}
+
+                        <span class="badge bg-warning text-dark">
+                            Pendente
+                        </span>
+
+                    {% elif conta.status == "VENCIDO" %}
+
+                        <span class="badge bg-danger">
+                            Vencido
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="text-center text-muted py-4"
+                >
+
+                    <i class="fa-solid fa-circle-info me-1"></i>
+
+                    Nenhuma comissão encontrada
+                    para o período selecionado.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+            </div>
+        
+        </form>
+
+
+            {% if comissoes %}
+
+<!-- =========================================
+     RESUMO DO FECHAMENTO
+     ========================================= -->
+
+<div class="border-top pt-4 mt-3">
+
+    <div class="row align-items-end g-3">
+
+        <!-- =====================================
+             QUANTIDADE
+             ===================================== -->
+
+        <div class="col-md-3">
+
+            <div class="text-muted">
+                Comissões selecionadas
+            </div>
+
+            <div
+                class="fs-4 fw-semibold"
+                id="quantidadeSelecionadas"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             TOTAL
+             ===================================== -->
+
+        <div class="col-md-3">
+
+            <div class="text-muted">
+                Total selecionado
+            </div>
+
+            <div
+                class="fs-4 fw-bold text-success"
+                id="totalSelecionado"
+            >
+                R$ 0,00
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FORMA DE PAGAMENTO
+             ===================================== -->
+
+        <div class="col-md-3">
+
+            <label
+                for="formaPagamento"
+                class="form-label"
+            >
+                Forma de pagamento
+            </label>
+
+            <select
+                id="formaPagamento"
+                class="form-select"
+                disabled
+            >
+
+                <option value="">
+                    Selecione...
+                </option>
+
+                <option value="Dinheiro">
+                    Dinheiro
+                </option>
+
+                <option value="PIX">
+                    PIX
+                </option>
+
+                <option value="Transferência bancária">
+                    Transferência bancária
+                </option>
+
+                <option value="Cartão">
+                    Cartão
+                </option>
+
+                <option value="Outro">
+                    Outro
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- =====================================
+             BOTÃO
+             ===================================== -->
+
+        <div class="col-md-3">
+
+            <button
+                type="button"
+                id="btnRegistrarPagamento"
+                class="btn btn-success w-100"
+                disabled
+            >
+
+                <i class="fa-solid fa-money-bill-transfer me-1"></i>
+
+                Registrar Pagamento
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- =========================================
+     MODAL DE CONFIRMAÇÃO
+     ========================================= -->
+
+<div
+    class="modal fade"
+    id="modalConfirmacaoPagamento"
+    tabindex="-1"
+    aria-labelledby="modalConfirmacaoPagamentoLabel"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalConfirmacaoPagamentoLabel"
+                >
+
+                    <i class="fa-solid fa-circle-check text-success me-2"></i>
+
+                    Confirmar Fechamento de Comissões
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <p class="text-muted mb-4">
+
+                    Confira os dados antes de confirmar o pagamento.
+
+                </p>
+
+
+                <!-- DENTISTA -->
+
+                <div class="mb-3">
+
+                    <div class="text-muted small">
+                        Dentista
+                    </div>
+
+                    <div
+                        class="fw-semibold"
+                        id="confirmacaoDentista"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+                <!-- PERÍODO -->
+
+                <div class="mb-3">
+
+                    <div class="text-muted small">
+                        Período
+                    </div>
+
+                    <div
+                        id="confirmacaoPeriodo"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+                <!-- QUANTIDADE -->
+
+                <div class="mb-3">
+
+                    <div class="text-muted small">
+                        Comissões
+                    </div>
+
+                    <div
+                        id="confirmacaoQuantidade"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- FORMA DE PAGAMENTO -->
+
+                <div class="mb-3">
+
+                    <div class="text-muted small">
+                        Forma de pagamento
+                    </div>
+
+                    <div
+                        class="fw-semibold"
+                        id="confirmacaoFormaPagamento"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="border-top pt-3 mt-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="fw-semibold">
+                            Total a pagar
+                        </span>
+
+                        <span
+                            class="fs-4 fw-bold text-success"
+                            id="confirmacaoTotal"
+                        >
+                            R$ 0,00
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancelar
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    id="btnConfirmarPagamento"
+                >
+
+                    <i class="fa-solid fa-check me-1"></i>
+
+                    Confirmar Pagamento
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     FORMULÁRIO REAL DE PAGAMENTO
+     ========================================= -->
+
+<form
+    method="post"
+    action="{% url 'pagar_comissoes' %}"
+    id="formPagamentoComissoes"
+    class="d-none"
+>
+
+    {% csrf_token %}
+
+    <input
+        type="hidden"
+        name="forma_pagamento"
+        id="inputFormaPagamento"
+    >
+
+    <input
+        type="hidden"
+        name="data_inicio"
+        id="inputDataInicio"
+        value="{{ data_inicio }}"
+    >
+
+    <input
+        type="hidden"
+        name="data_final"
+        id="inputDataFinal"
+        value="{{ data_final }}"
+    >
+
+    <div id="inputsComissoes"></div>
+
+</form>
+
+<!-- =========================================
+     JAVASCRIPT
+     ========================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        // =========================================
+        // ELEMENTOS
+        // =========================================
+
+        const selecionarTodas =
+            document.getElementById(
+                "selecionarTodas"
+            );
+
+        const checkboxes =
+            document.querySelectorAll(
+                ".checkbox-comissao"
+            );
+
+        const quantidadeSelecionadas =
+            document.getElementById(
+                "quantidadeSelecionadas"
+            );
+
+        const totalSelecionado =
+            document.getElementById(
+                "totalSelecionado"
+            );
+
+        const formaPagamento =
+            document.getElementById(
+                "formaPagamento"
+            );
+
+        const btnRegistrarPagamento =
+            document.getElementById(
+                "btnRegistrarPagamento"
+            );
+
+        const modalElement =
+            document.getElementById(
+                "modalConfirmacaoPagamento"
+            );
+
+        const btnConfirmarPagamento =
+            document.getElementById(
+                "btnConfirmarPagamento"
+            );
+
+        const inputFormaPagamento =
+            document.getElementById(
+                "inputFormaPagamento"
+            );
+
+        const inputsComissoes =
+            document.getElementById(
+                "inputsComissoes"
+            );
+
+        const campoInicio =
+            document.querySelector(
+                'input[name="data_inicio"]'
+            );
+
+        const campoFinal =
+            document.querySelector(
+                'input[name="data_final"]'
+            );
+
+
+        // =========================================
+        // FORMATA MOEDA
+        // =========================================
+
+        function formatarMoeda(valor) {
+
+            return valor.toLocaleString(
+                "pt-BR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+        }
+
+
+        // =========================================
+        // CONVERTE VALOR
+        // =========================================
+
+        function obterValor(checkbox) {
+
+            return parseFloat(
+                checkbox.dataset.valor
+                    .replace(",", ".")
+            ) || 0;
+
+        }
+
+
+        // =========================================
+        // ATUALIZA RESUMO
+        // =========================================
+
+        function atualizarResumo() {
+
+            let quantidade = 0;
+
+            let total = 0;
+
+
+            checkboxes.forEach(
+                function (checkbox) {
+
+                    if (checkbox.checked) {
+
+                        quantidade++;
+
+                        total += obterValor(
+                            checkbox
+                        );
+
+                    }
+
+                }
+            );
+
+
+            // =====================================
+            // QUANTIDADE
+            // =====================================
+
+            if (quantidadeSelecionadas) {
+
+                quantidadeSelecionadas.textContent =
+                    quantidade;
+
+            }
+
+
+            // =====================================
+            // TOTAL
+            // =====================================
+
+            if (totalSelecionado) {
+
+                totalSelecionado.textContent =
+                    "R$ " +
+                    formatarMoeda(total);
+
+            }
+
+
+            // =====================================
+            // FORMA DE PAGAMENTO
+            // =====================================
+
+            if (formaPagamento) {
+
+                formaPagamento.disabled =
+                    quantidade === 0;
+
+                if (quantidade === 0) {
+
+                    formaPagamento.value = "";
+
+                }
+
+            }
+
+
+            // =====================================
+            // BOTÃO
+            // =====================================
+
+            if (btnRegistrarPagamento) {
+
+                btnRegistrarPagamento.disabled =
+                    quantidade === 0;
+
+            }
+
+
+            // =====================================
+            // SELECIONAR TODAS
+            // =====================================
+
+            if (selecionarTodas) {
+
+                selecionarTodas.checked =
+                    checkboxes.length > 0 &&
+                    quantidade === checkboxes.length;
+
+            }
+
+        }
+
+
+        // =========================================
+        // SELECIONAR TODAS
+        // =========================================
+
+        if (selecionarTodas) {
+
+            selecionarTodas.addEventListener(
+                "change",
+                function () {
+
+                    checkboxes.forEach(
+                        function (checkbox) {
+
+                            checkbox.checked =
+                                selecionarTodas.checked;
+
+                        }
+                    );
+
+                    atualizarResumo();
+
+                }
+            );
+
+        }
+
+
+        // =========================================
+        // SELEÇÃO INDIVIDUAL
+        // =========================================
+
+        checkboxes.forEach(
+            function (checkbox) {
+
+                checkbox.addEventListener(
+                    "change",
+                    function () {
+
+                        atualizarResumo();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // =========================================
+        // ABRIR MODAL
+        // =========================================
+
+        if (btnRegistrarPagamento) {
+
+            btnRegistrarPagamento.addEventListener(
+                "click",
+                function () {
+
+                    // =====================================
+                    // VERIFICA SE EXISTE SELEÇÃO
+                    // =====================================
+
+                    const selecionadas =
+                        Array.from(
+                            checkboxes
+                        ).filter(
+                            function (checkbox) {
+                                return checkbox.checked;
+                            }
+                        );
+
+
+                    if (
+                        selecionadas.length === 0
+                    ) {
+
+                        alert(
+                            "Selecione pelo menos uma comissão."
+                        );
+
+                        return;
+
+                    }
+
+
+                    // =====================================
+                    // VERIFICA FORMA DE PAGAMENTO
+                    // =====================================
+
+                    if (
+                        !formaPagamento.value
+                    ) {
+
+                        alert(
+                            "Selecione a forma de pagamento."
+                        );
+
+                        formaPagamento.focus();
+
+                        return;
+
+                    }
+
+
+                    // =====================================
+                    // CALCULA TOTAL
+                    // =====================================
+
+                    let total = 0;
+
+                    selecionadas.forEach(
+                        function (checkbox) {
+
+                            total += obterValor(
+                                checkbox
+                            );
+
+                        }
+                    );
+
+
+                    // =====================================
+                    // DENTISTA
+                    // =====================================
+
+                    const selectDentista =
+                        document.querySelector(
+                            'select[name="profissional"]'
+                        );
+
+                    let dentista =
+                        "Todos os dentistas";
+
+
+                    if (
+                        selectDentista &&
+                        selectDentista.selectedIndex >= 0
+                    ) {
+
+                        dentista =
+                            selectDentista
+                                .options[
+                                    selectDentista.selectedIndex
+                                ]
+                                .text
+                                .trim();
+
+                    }
+
+
+                    // =====================================
+                    // PERÍODO
+                    // =====================================
+
+                    function formatarData(data) {
+
+                        if (!data) {
+                            return "-";
+                        }
+
+                        const partes =
+                            data.split("-");
+
+                        if (
+                            partes.length !== 3
+                        ) {
+
+                            return data;
+
+                        }
+
+                        return (
+                            partes[2] +
+                            "/" +
+                            partes[1] +
+                            "/" +
+                            partes[0]
+                        );
+
+                    }
+
+
+                    const periodo =
+                        formatarData(
+                            campoInicio
+                                ? campoInicio.value
+                                : ""
+                        )
+                        +
+                        " até "
+                        +
+                        formatarData(
+                            campoFinal
+                                ? campoFinal.value
+                                : ""
+                        );
+
+
+                    // =====================================
+                    // PREENCHE MODAL
+                    // =====================================
+
+                    document.getElementById(
+                        "confirmacaoDentista"
+                    ).textContent =
+                        dentista;
+
+
+                    document.getElementById(
+                        "confirmacaoPeriodo"
+                    ).textContent =
+                        periodo;
+
+
+                    document.getElementById(
+                        "confirmacaoQuantidade"
+                    ).textContent =
+                        selecionadas.length;
+
+
+                    document.getElementById(
+                        "confirmacaoFormaPagamento"
+                    ).textContent =
+                        formaPagamento.value;
+
+
+                    document.getElementById(
+                        "confirmacaoTotal"
+                    ).textContent =
+                        "R$ " +
+                        formatarMoeda(total);
+
+
+                    // =====================================
+                    // ABRE MODAL
+                    // =====================================
+
+                    const modal =
+                        bootstrap.Modal.getOrCreateInstance(
+                            modalElement
+                        );
+
+                    modal.show();
+
+                }
+            );
+
+        }
+
+
+        // =========================================
+        // CONFIRMAR PAGAMENTO
+        // =========================================
+
+        if (btnConfirmarPagamento) {
+
+            btnConfirmarPagamento.addEventListener(
+                "click",
+                function () {
+
+                    // =====================================
+                    // PROTEÇÃO
+                    // =====================================
+
+                    const selecionadas =
+                        Array.from(
+                            checkboxes
+                        ).filter(
+                            function (checkbox) {
+                                return checkbox.checked;
+                            }
+                        );
+
+
+                    if (
+                        selecionadas.length === 0
+                    ) {
+
+                        alert(
+                            "Nenhuma comissão selecionada."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !formaPagamento.value
+                    ) {
+
+                        alert(
+                            "Selecione a forma de pagamento."
+                        );
+
+                        return;
+
+                    }
+
+
+                    // =====================================
+// FORMA DE PAGAMENTO
+// =====================================
+
+inputFormaPagamento.value =
+    formaPagamento.value;
+
+
+// =====================================
+// PERÍODO DO FECHAMENTO
+// =====================================
+
+const inputDataInicio =
+    document.getElementById(
+        "inputDataInicio"
+    );
+
+const inputDataFinal =
+    document.getElementById(
+        "inputDataFinal"
+    );
+
+if (inputDataInicio && campoInicio) {
+
+    inputDataInicio.value =
+        campoInicio.value;
+
+}
+
+if (inputDataFinal && campoFinal) {
+
+    inputDataFinal.value =
+        campoFinal.value;
+
+}
+
+
+// =====================================
+// LIMPA IDS ANTERIORES
+// =====================================
+
+inputsComissoes.innerHTML = "";
+
+
+// =====================================
+// ADICIONA IDS
+// =====================================
+
+selecionadas.forEach(
+    function (checkbox) {
+
+        const input =
+            document.createElement(
+                "input"
+            );
+
+        input.type = "hidden";
+
+        input.name =
+            "comissoes";
+
+        input.value =
+            checkbox.value;
+
+        inputsComissoes.appendChild(
+            input
+        );
+
+    }
+);
+
+
+// =====================================
+// FORMULÁRIO REAL DE PAGAMENTO
+// =====================================
+
+const formPagamento =
+    document.getElementById(
+        "formPagamentoComissoes"
+    );
+
+if (!formPagamento) {
+
+    alert(
+        "Erro: formulário de pagamento não encontrado."
+    );
+
+    return;
+
+}
+
+
+// =====================================
+// CONFERE TOKEN CSRF
+// =====================================
+
+const csrfToken =
+    formPagamento.querySelector(
+        'input[name="csrfmiddlewaretoken"]'
+    );
+
+if (!csrfToken || !csrfToken.value) {
+
+    alert(
+        "Erro: token de segurança CSRF não encontrado."
+    );
+
+    return;
+
+}
+
+
+// =====================================
+// ENVIA PARA O DJANGO
+// =====================================
+
+formPagamento.submit();
+
+                }
+            );
+
+        }
+
+
+        // =========================================
+        // INICIALIZA
+        // =========================================
+
+        atualizarResumo();
+
+    }
+);
+
+</script>
+
+{% endblock %}
