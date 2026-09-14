@@ -447,23 +447,23 @@
 
                         </div>
 
+{% if consulta.paciente.whatsapp or consulta.paciente.telefone %}
 
-                        {% if consulta.paciente.whatsapp %}
+    <a
+        href="#"
+        onclick="abrirWhatsAppConfirmacao(
+            '{{ consulta.paciente.whatsapp|default:consulta.paciente.telefone|escapejs }}'
+        ); return false;"
+        class="btn btn-success btn-sm w-100"
+    >
 
-                            <a
-                                href="https://wa.me/55{{ consulta.paciente.whatsapp }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="btn btn-success btn-sm w-100"
-                            >
+        <i class="bi bi-whatsapp"></i>
 
-                                <i class="bi bi-whatsapp"></i>
+        Confirmar pelo WhatsApp
 
-                                Confirmar pelo WhatsApp
+    </a>
 
-                            </a>
-
-                        {% endif %}
+{% endif %}
 
 
                     </div>
@@ -535,21 +535,21 @@
 
                         {% if aniversariante.whatsapp or aniversariante.telefone %}
 
-                            <a
-                                href="#"
-                                onclick="abrirWhatsAppAniversario(
-                                    '{{ aniversariante.whatsapp|default:aniversariante.telefone|cut:' '|cut:'('|cut:')'|cut:'-' }}',
-                                    '{{ aniversariante.nome|escapejs }}'
-                                ); return false;"
-                                class="btn btn-success btn-sm secretaria-whatsapp-btn"
-                                title="Enviar mensagem de aniversário pelo WhatsApp"
-                            >
+    <a
+        href="#"
+        onclick="abrirWhatsAppAniversario(
+            '{{ aniversariante.whatsapp|default:aniversariante.telefone|escapejs }}',
+            '{{ aniversariante.nome|escapejs }}'
+        ); return false;"
+        class="btn btn-success btn-sm secretaria-whatsapp-btn"
+        title="Enviar mensagem de aniversário pelo WhatsApp"
+    >
 
-                                <i class="bi bi-whatsapp"></i>
+        <i class="bi bi-whatsapp"></i>
 
-                            </a>
+    </a>
 
-                        {% endif %}
+{% endif %}
 
 
                     </div>
@@ -580,20 +580,174 @@
 
 function abrirWhatsAppAniversario(numero, nome) {
 
+    // =========================================
+    // NORMALIZA O NÚMERO
+    // =========================================
+
+    numero = String(numero || "")
+        .replace(/\D/g, "");
+
+
+    // =========================================
+    // NÚMERO VAZIO
+    // =========================================
+
+    if (!numero) {
+
+        alert(
+            "Este paciente não possui telefone cadastrado."
+        );
+
+        return;
+    }
+
+
+    // =========================================
+    // ADICIONA CÓDIGO DO BRASIL
+    // =========================================
+
+    if (
+        numero.length === 10 ||
+        numero.length === 11
+    ) {
+        numero = "55" + numero;
+    }
+
+
+    // =========================================
+    // VALIDA NÚMERO BRASILEIRO
+    // =========================================
+
+    if (
+        numero.length !== 12 &&
+        numero.length !== 13
+    ) {
+
+        alert(
+            "O telefone cadastrado para este paciente não está em um formato válido para o WhatsApp."
+        );
+
+        return;
+    }
+
+
+    // =========================================
+    // MENSAGEM
+    // =========================================
+
     const mensagem =
         "Olá, " + nome + "!\n\n" +
         "A equipe da Clinique Dentaire deseja a você um feliz aniversário!\n\n" +
         "Que este novo ciclo seja repleto de saúde, felicidade e muitos momentos especiais.\n\n" +
         "Um grande abraço de toda a nossa equipe!";
 
+
+    // =========================================
+    // CODIFICA A MENSAGEM
+    // =========================================
+
     const mensagemCodificada =
         encodeURIComponent(mensagem);
+
+
+    // =========================================
+    // MONTA O LINK DO WHATSAPP
+    // =========================================
 
     const url =
         "https://wa.me/" +
         numero +
         "?text=" +
         mensagemCodificada;
+
+
+    // =========================================
+    // ABRE O WHATSAPP
+    // =========================================
+
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+function abrirWhatsAppConfirmacao(numero) {
+
+    // =========================================
+    // NORMALIZA O NÚMERO
+    // =========================================
+
+    numero = String(numero || "")
+        .replace(/\D/g, "");
+
+
+    // =========================================
+    // NÚMERO VAZIO
+    // =========================================
+
+    if (!numero) {
+
+        alert(
+            "Este paciente não possui telefone cadastrado."
+        );
+
+        return;
+    }
+
+
+    // =========================================
+    // ADICIONA CÓDIGO DO BRASIL
+    // SOMENTE SE NECESSÁRIO
+    // =========================================
+
+    if (
+        numero.length === 10 ||
+        numero.length === 11
+    ) {
+        numero = "55" + numero;
+    }
+
+
+    // =========================================
+    // VALIDA
+    // =========================================
+
+    if (
+        numero.length !== 12 &&
+        numero.length !== 13
+    ) {
+
+        alert(
+            "O telefone cadastrado para este paciente não está em um formato válido para o WhatsApp."
+        );
+
+        return;
+    }
+
+
+    // =========================================
+    // MENSAGEM
+    // =========================================
+
+    const mensagem =
+        "Olá! Gostaria de confirmar sua consulta na Clinique Dentaire.";
+
+
+    // =========================================
+    // MONTA O LINK
+    // =========================================
+
+    const url =
+        "https://wa.me/" +
+        numero +
+        "?text=" +
+        encodeURIComponent(mensagem);
+
+
+    // =========================================
+    // ABRE O WHATSAPP
+    // =========================================
 
     window.open(
         url,

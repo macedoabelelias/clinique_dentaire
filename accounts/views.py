@@ -1278,12 +1278,6 @@ def dashboard_view(request):
             consultas = consultas.none()
 
     # =========================================
-    # PRÓXIMAS CONSULTAS
-    # =========================================
-
-    proximas_consultas = consultas[:5]
-    
-    # =========================================
     # CARDS DO DASHBOARD
     # =========================================
 
@@ -1300,7 +1294,44 @@ def dashboard_view(request):
 
     consultas_hoje = consultas_hoje_qs.count()
 
-    proxima_consulta_hora = "--:--"
+
+   
+    # =========================================
+    # PRÓXIMAS CONSULTAS
+    # =========================================
+    #
+    # REGRA:
+    # Somente consultas de HOJE
+    # cujo horário ainda não passou.
+    #
+    # Consultas de dias futuros NÃO entram aqui.
+    # Consultas já passadas NÃO entram aqui.
+    # =========================================
+
+    proximas_consultas = (
+        consultas
+        .filter(
+            data=hoje,
+            hora_inicio__gte=hora_atual
+        )
+        .order_by(
+            "hora_inicio"
+        )[:5]
+    )
+
+
+    # =========================================
+    # PRÓXIMA CONSULTA
+    # =========================================
+
+    proxima_consulta = proximas_consultas[0] if proximas_consultas else None
+
+    if proxima_consulta:
+        proxima_consulta_hora = (
+            proxima_consulta.hora_inicio.strftime("%H:%M")
+        )
+    else:
+        proxima_consulta_hora = "--:--"
 
     # =========================================
     # PRÓXIMO ATENDIMENTO
@@ -1924,8 +1955,8 @@ def dashboard_view(request):
     # =========================================
 
     consultas_pendentes = Agendamento.objects.filter(
-        status="agendado",
-        data__gte=hoje
+        data=hoje,
+        status="agendado"
     ).count()
 
     if consultas_pendentes:
@@ -3214,7 +3245,11 @@ def dashboard_secretaria_ajax(request):
     # AGENDA DO DIA
     # =========================================
 
-    proximas_consultas = consultas[:5]
+    proximas_consultas = (
+        consultas_hoje_qs
+        .order_by("hora_inicio")
+        [:5]
+    )
 
     # =========================================
     # PENDÊNCIAS
@@ -3223,6 +3258,7 @@ def dashboard_secretaria_ajax(request):
     consultas_confirmar = (
         consultas
         .filter(
+            data=hoje,
             status="agendado",
         )
         .select_related(
@@ -4153,11 +4189,19 @@ def odontograma(request, id):
 
         if not tratamento:
 
-            return JsonResponse({
-                "sucesso": False,
-                "erro":
-                    "Paciente não possui tratamento ativo."
-            }, status=400)
+            messages.warning(
+                request,
+                (
+                    "Este paciente não possui um tratamento ativo. "
+                    "Abra um novo tratamento antes de cadastrar "
+                    "procedimentos no odontograma."
+                )
+            )
+
+            return redirect(
+                "odontograma",
+                id=paciente.id
+            )
 
         # =================================
         # ORÇAMENTO OBRIGATÓRIO
