@@ -2101,6 +2101,83 @@ class ConfiguracaoClinica(models.Model):
         blank=True
     )
 
+    # =========================================
+    # CONFIGURAÇÕES DA AGENDA
+    # =========================================
+
+    hora_inicio_agenda = models.TimeField(
+        default="08:00",
+        verbose_name="Início do atendimento"
+    )
+
+    hora_fim_agenda = models.TimeField(
+        default="18:00",
+        verbose_name="Fim do atendimento"
+    )
+
+    intervalo_agenda = models.PositiveIntegerField(
+        default=30,
+        choices=[
+            (15, "15 minutos"),
+            (30, "30 minutos"),
+            (60, "60 minutos"),
+        ],
+        verbose_name="Intervalo da agenda"
+    )
+
+    # =========================================
+    # INTERVALO DE ALMOÇO
+    # =========================================
+
+    hora_inicio_almoco = models.TimeField(
+        default="12:00",
+        verbose_name="Início do intervalo"
+    )
+
+    hora_fim_almoco = models.TimeField(
+        default="13:30",
+        verbose_name="Fim do intervalo"
+    )
+
+    # =========================================
+    # DIAS DE FUNCIONAMENTO
+    # =========================================
+
+    funciona_domingo = models.BooleanField(
+        default=False,
+        verbose_name="Domingo"
+    )
+
+    funciona_segunda = models.BooleanField(
+        default=True,
+        verbose_name="Segunda-feira"
+    )
+
+    funciona_terca = models.BooleanField(
+        default=True,
+        verbose_name="Terça-feira"
+    )
+
+    funciona_quarta = models.BooleanField(
+        default=True,
+        verbose_name="Quarta-feira"
+    )
+
+    funciona_quinta = models.BooleanField(
+        default=True,
+        verbose_name="Quinta-feira"
+    )
+
+    funciona_sexta = models.BooleanField(
+        default=True,
+        verbose_name="Sexta-feira"
+    )
+
+    funciona_sabado = models.BooleanField(
+        default=False,
+        verbose_name="Sábado"
+    )
+
     criado_em = models.DateTimeField(
         auto_now_add=True
     )
@@ -6460,6 +6537,46 @@ class VisualizacaoCampanha(models.Model):
             f"{self.campanha.nome} - "
             f"{self.quantidade} acesso(s)"
         )
-    
+
+# =========================================
+# CONSULTÓRIOS
+# =========================================
+
+class Consultorio(models.Model):
+
+    nome = models.CharField(
+        max_length=100,
+        verbose_name="Nome do consultório"
+    )
+
+    descricao = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Descrição"
+    )
+
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name="Ativo"
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["nome"]
+        verbose_name = "Consultório"
+        verbose_name_plural = "Consultórios"
+
+    def __str__(self):
+        return self.nome
+
+
 
 

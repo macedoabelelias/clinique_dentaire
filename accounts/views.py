@@ -105,6 +105,7 @@ from .models import (
     CaixaDiario,
     Compra,
     ConfiguracaoClinica,
+    Consultorio,
     ContaPagar,
     ContaReceber,
     Convenio,
@@ -3550,9 +3551,34 @@ def logout_view(request):
 @permissao_required("pacientes", "inserir")
 def novo_paciente(request):
 
+    # =========================================
+    # DADOS VINDOS DA AGENDA
+    # =========================================
+
+    origem = request.POST.get(
+        'origem',
+        request.GET.get('origem', '')
+    )
+
+    data_agendamento = request.POST.get(
+        'data_agendamento',
+        request.GET.get('data', '')
+    )
+
+    hora_agendamento = request.POST.get(
+        'hora_agendamento',
+        request.GET.get('hora', '')
+    )
+
+    # =========================================
+    # POST
+    # =========================================
+
     if request.method == 'POST':
 
-        dentista_id = request.POST.get('dentista')
+        dentista_id = request.POST.get(
+            'dentista'
+        )
 
         dentista = None
 
@@ -3571,44 +3597,75 @@ def novo_paciente(request):
             nome=request.POST.get('nome'),
             cpf=request.POST.get('cpf'),
             rg=request.POST.get('rg'),
-            nascimento=request.POST.get('nascimento') or None,
+            nascimento=request.POST.get(
+                'nascimento'
+            ) or None,
 
             genero=request.POST.get('genero'),
-            estado_civil=request.POST.get('estado_civil'),
-            profissao=request.POST.get('profissao'),
+            estado_civil=request.POST.get(
+                'estado_civil'
+            ),
+            profissao=request.POST.get(
+                'profissao'
+            ),
 
-            telefone=request.POST.get('telefone'),
-            whatsapp=request.POST.get('whatsapp'),
-            email=request.POST.get('email'),
+            telefone=request.POST.get(
+                'telefone'
+            ),
+            whatsapp=request.POST.get(
+                'whatsapp'
+            ),
+            email=request.POST.get(
+                'email'
+            ),
 
             cep=request.POST.get('cep'),
-            endereco=request.POST.get('endereco'),
+            endereco=request.POST.get(
+                'endereco'
+            ),
             numero=request.POST.get('numero'),
-            complemento=request.POST.get('complemento'),
+            complemento=request.POST.get(
+                'complemento'
+            ),
             bairro=request.POST.get('bairro'),
             cidade=request.POST.get('cidade'),
             estado=request.POST.get('estado'),
 
-            convenio=request.POST.get('convenio'),
-            carteirinha=request.POST.get('carteirinha'),
+            convenio=request.POST.get(
+                'convenio'
+            ),
+            carteirinha=request.POST.get(
+                'carteirinha'
+            ),
 
-            alergias=request.POST.get('alergias'),
-            medicamentos=request.POST.get('medicamentos'),
-            observacoes=request.POST.get('observacoes'),
+            alergias=request.POST.get(
+                'alergias'
+            ),
+            medicamentos=request.POST.get(
+                'medicamentos'
+            ),
+            observacoes=request.POST.get(
+                'observacoes'
+            ),
 
-            responsavel=request.POST.get('responsavel'),
-            cpf_responsavel=request.POST.get('cpf_responsavel'),
+            responsavel=request.POST.get(
+                'responsavel'
+            ),
+            cpf_responsavel=request.POST.get(
+                'cpf_responsavel'
+            ),
             telefone_responsavel=request.POST.get(
                 'telefone_responsavel'
             )
-
         )
 
-                # =========================================
+        # =========================================
         # AUDITORIA
         # =========================================
 
-        print("========== CHEGOU NA AUDITORIA ==========")
+        print(
+            "========== CHEGOU NA AUDITORIA =========="
+        )
 
         registrar_auditoria(
 
@@ -3637,6 +3694,33 @@ def novo_paciente(request):
             paciente.id
         )
 
+        # =========================================
+        # RETORNO PARA AGENDA
+        # =========================================
+        #
+        # Se o paciente foi cadastrado a partir
+        # da Agenda, volta diretamente para
+        # Novo Agendamento.
+        #
+        # O paciente recém-criado, a data e o
+        # horário são preservados.
+        # =========================================
+
+        if origem == 'agendamento':
+
+            url = (
+                '/agenda/novo/'
+                f'?paciente={paciente.id}'
+                f'&data={data_agendamento}'
+                f'&hora={hora_agendamento}'
+            )
+
+            return redirect(url)
+
+        # =========================================
+        # CADASTRO NORMAL DE PACIENTE
+        # =========================================
+
         return redirect(
 
             'perfil_paciente',
@@ -3644,6 +3728,10 @@ def novo_paciente(request):
             id=paciente.id
 
         )
+
+    # =========================================
+    # CONVÊNIOS
+    # =========================================
 
     convenios = Convenio.objects.filter(
         ativo=True
@@ -3665,6 +3753,10 @@ def novo_paciente(request):
 
     )
 
+    # =========================================
+    # CONTEXTO
+    # =========================================
+
     return render(
 
         request,
@@ -3677,7 +3769,12 @@ def novo_paciente(request):
 
             'dentistas': dentistas,
 
-            'modo': 'novo'
+            'modo': 'novo',
+
+            # Dados para retornar à Agenda
+            'origem': origem,
+            'data_agendamento': data_agendamento,
+            'hora_agendamento': hora_agendamento,
 
         }
 
@@ -14105,6 +14202,90 @@ def configuracao_clinica(request):
             )
         )
 
+        # =========================================
+        # CONFIGURAÇÕES DA AGENDA
+        # =========================================
+
+        hora_inicio = request.POST.get(
+            'hora_inicio_agenda'
+        )
+
+        hora_fim = request.POST.get(
+            'hora_fim_agenda'
+        )
+
+        hora_inicio = request.POST.get(
+            'hora_inicio_agenda'
+        )
+
+        hora_fim = request.POST.get(
+            'hora_fim_agenda'
+        )
+
+        intervalo = request.POST.get(
+            'intervalo_agenda'
+        )
+
+        hora_inicio_almoco = request.POST.get(
+            'hora_inicio_almoco'
+        )
+
+        hora_fim_almoco = request.POST.get(
+            'hora_fim_almoco'
+        )
+
+        if hora_inicio:
+            config.hora_inicio_agenda = hora_inicio
+
+        if hora_fim:
+            config.hora_fim_agenda = hora_fim
+
+        if intervalo:
+            config.intervalo_agenda = int(
+                intervalo
+            )
+
+        if hora_inicio_almoco:
+            config.hora_inicio_almoco = hora_inicio_almoco
+
+        if hora_fim_almoco:
+            config.hora_fim_almoco = hora_fim_almoco
+        # =========================================
+        # DIAS DE FUNCIONAMENTO
+        # =========================================
+
+        config.funciona_domingo = (
+            'funciona_domingo' in request.POST
+        )
+
+        config.funciona_segunda = (
+            'funciona_segunda' in request.POST
+        )
+
+        config.funciona_terca = (
+            'funciona_terca' in request.POST
+        )
+
+        config.funciona_quarta = (
+            'funciona_quarta' in request.POST
+        )
+
+        config.funciona_quinta = (
+            'funciona_quinta' in request.POST
+        )
+
+        config.funciona_sexta = (
+            'funciona_sexta' in request.POST
+        )
+
+        config.funciona_sabado = (
+            'funciona_sabado' in request.POST
+        )
+
+        # =========================================
+        # LOGO
+        # =========================================
+
         if request.FILES.get('logo'):
 
             config.logo = request.FILES.get(
@@ -14127,7 +14308,192 @@ def configuracao_clinica(request):
             'config': config
         }
 
-    ) 
+    )
+
+# =========================================
+# CONSULTÓRIOS
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("configuracoes", "visualizar")
+def lista_consultorios(request):
+
+    consultorios = (
+        Consultorio.objects
+        .order_by("nome")
+    )
+
+    return render(
+        request,
+        "accounts/consultorios_lista.html",
+        {
+            "consultorios": consultorios
+        }
+    )
+
+
+# =========================================
+# NOVO CONSULTÓRIO
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("configuracoes", "inserir")
+def novo_consultorio(request):
+
+    if request.method == "POST":
+
+        nome = (
+            request.POST.get("nome")
+            or ""
+        ).strip()
+
+        descricao = (
+            request.POST.get("descricao")
+            or ""
+        ).strip()
+
+        ativo = (
+            request.POST.get("ativo")
+            == "on"
+        )
+
+        if not nome:
+
+            messages.error(
+                request,
+                "Informe o nome do consultório."
+            )
+
+            return render(
+                request,
+                "accounts/consultorio_form.html"
+            )
+
+        Consultorio.objects.create(
+            nome=nome,
+            descricao=descricao or None,
+            ativo=ativo
+        )
+
+        messages.success(
+            request,
+            "Consultório cadastrado com sucesso."
+        )
+
+        return redirect(
+            "lista_consultorios"
+        )
+
+    return render(
+        request,
+        "accounts/consultorio_form.html"
+    )
+
+
+# =========================================
+# EDITAR CONSULTÓRIO
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("configuracoes", "editar")
+def editar_consultorio(request, id):
+
+    consultorio = get_object_or_404(
+        Consultorio,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        nome = (
+            request.POST.get("nome")
+            or ""
+        ).strip()
+
+        descricao = (
+            request.POST.get("descricao")
+            or ""
+        ).strip()
+
+        if not nome:
+
+            messages.error(
+                request,
+                "Informe o nome do consultório."
+            )
+
+            return render(
+                request,
+                "accounts/consultorio_form.html",
+                {
+                    "consultorio": consultorio
+                }
+            )
+
+        consultorio.nome = nome
+
+        consultorio.descricao = (
+            descricao or None
+        )
+
+        consultorio.ativo = (
+            request.POST.get("ativo")
+            == "on"
+        )
+
+        consultorio.save()
+
+        messages.success(
+            request,
+            "Consultório atualizado com sucesso."
+        )
+
+        return redirect(
+            "lista_consultorios"
+        )
+
+    return render(
+        request,
+        "accounts/consultorio_form.html",
+        {
+            "consultorio": consultorio
+        }
+    )
+
+
+# =========================================
+# EXCLUIR CONSULTÓRIO
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("configuracoes", "excluir")
+def excluir_consultorio(request, id):
+
+    consultorio = get_object_or_404(
+        Consultorio,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        consultorio.delete()
+
+        messages.success(
+            request,
+            "Consultório excluído com sucesso."
+        )
+
+        return redirect(
+            "lista_consultorios"
+        )
+
+    return render(
+        request,
+        "accounts/consultorio_excluir.html",
+        {
+            "consultorio": consultorio
+        }
+    )
 
 # =========================================
 # PDF ANAMNESE

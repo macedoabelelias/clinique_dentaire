@@ -1,0 +1,449 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                <i class="fa-solid fa-lock me-2"></i>
+                Bloqueios da Agenda
+            </h4>
+
+            <p class="text-muted mb-0">
+                Gerencie feriados, férias, ausências e outros períodos
+                sem atendimento.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <!-- IMPORTAR FERIADOS -->
+
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modalImportarFeriados"
+            >
+                <i class="fa-solid fa-flag me-1"></i>
+                Importar Feriados
+            </button>
+
+            <!-- NOVO BLOQUEIO -->
+
+            <a
+                href="{% url 'novo_bloqueio' %}"
+                class="btn btn-primary"
+            >
+                <i class="fa-solid fa-plus me-1"></i>
+                Novo Bloqueio
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         LISTA DE BLOQUEIOS
+         ===================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body p-0">
+
+            {% if bloqueios %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    Tipo
+                                </th>
+
+                                <th>
+                                    Período
+                                </th>
+
+                                <th>
+                                    Horário
+                                </th>
+
+                                <th>
+                                    Profissional
+                                </th>
+
+                                <th>
+                                    Descrição
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end pe-4">
+                                    Ações
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for bloqueio in bloqueios %}
+
+                                <tr>
+
+                                    <!-- TIPO -->
+
+                                    <td class="ps-4">
+
+                                        <span class="fw-semibold">
+
+                                            {% if bloqueio.tipo == "feriado" %}
+
+                                                🎉 Feriado
+
+                                            {% elif bloqueio.tipo == "ferias" %}
+
+                                                🏖️ Férias
+
+                                            {% elif bloqueio.tipo == "ausencia" %}
+
+                                                🚫 Ausência
+
+                                            {% elif bloqueio.tipo == "almoco" %}
+
+                                                🍽️ Almoço
+
+                                            {% elif bloqueio.tipo == "manual" %}
+
+                                                🔒 Bloqueio manual
+
+                                            {% elif bloqueio.tipo == "manutencao" %}
+
+                                                🔧 Manutenção
+
+                                            {% else %}
+
+                                                📌 Outro
+
+                                            {% endif %}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- PERÍODO -->
+
+                                    <td>
+
+                                        {{ bloqueio.data_inicio|date:"d/m/Y" }}
+
+                                        {% if bloqueio.data_fim != bloqueio.data_inicio %}
+
+                                            <span class="text-muted">
+                                                até
+                                            </span>
+
+                                            {{ bloqueio.data_fim|date:"d/m/Y" }}
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- HORÁRIO -->
+
+                                    <td>
+
+                                        {% if bloqueio.hora_inicio and bloqueio.hora_fim %}
+
+                                            {{ bloqueio.hora_inicio|time:"H:i" }}
+                                            -
+                                            {{ bloqueio.hora_fim|time:"H:i" }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                Dia inteiro
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- PROFISSIONAL -->
+
+                                    <td>
+
+                                        {% if bloqueio.profissional %}
+
+                                            {{ bloqueio.profissional.nome }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                Toda a clínica
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- DESCRIÇÃO -->
+
+                                    <td>
+
+                                        {{ bloqueio.descricao|default:"—" }}
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        {% if bloqueio.ativo %}
+
+                                            <span class="badge bg-success">
+                                                Ativo
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-secondary">
+                                                Inativo
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- AÇÕES -->
+
+                                    <td class="text-end pe-4">
+
+                                        <a
+                                            href="{% url 'editar_bloqueio' bloqueio.id %}"
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="Editar"
+                                        >
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+
+                                        <a
+                                            href="{% url 'excluir_bloqueio' bloqueio.id %}"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Excluir"
+                                        >
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <!-- =================================================
+                     NENHUM BLOQUEIO
+                     ================================================= -->
+
+                <div class="text-center py-5">
+
+                    <i
+                        class="fa-solid fa-calendar-xmark fa-3x text-muted mb-3"
+                    ></i>
+
+                    <h5>
+                        Nenhum bloqueio cadastrado
+                    </h5>
+
+                    <p class="text-muted mb-4">
+                        Ainda não existem bloqueios registrados
+                        na agenda.
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalImportarFeriados"
+                        >
+                            <i class="fa-solid fa-flag me-1"></i>
+                            Importar Feriados
+                        </button>
+
+                        <a
+                            href="{% url 'novo_bloqueio' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="fa-solid fa-plus me-1"></i>
+                            Criar primeiro bloqueio
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL — IMPORTAR FERIADOS NACIONAIS
+     ========================================================= -->
+
+<div
+    class="modal fade"
+    id="modalImportarFeriados"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <!-- CABEÇALHO DO MODAL -->
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="fa-solid fa-flag me-2"></i>
+
+                    Importar Feriados Nacionais
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+
+            </div>
+
+
+            <!-- FORMULÁRIO -->
+
+            <form
+                method="post"
+                action="{% url 'importar_feriados_nacionais' %}"
+            >
+
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <p class="text-muted">
+
+                        Selecione o ano para importar os
+                        feriados nacionais para a agenda.
+
+                    </p>
+
+
+                    <!-- ANO -->
+
+                    <label
+                        for="id_ano_feriados"
+                        class="form-label fw-semibold"
+                    >
+                        Ano
+                    </label>
+
+                    <input
+                        type="number"
+                        name="ano"
+                        id="id_ano_feriados"
+                        class="form-control"
+                        value="2026"
+                        min="2026"
+                        max="2100"
+                        step="1"
+                        required
+                    >
+
+
+                    <!-- AVISO -->
+
+                    <div class="alert alert-info mt-3 mb-0">
+
+                        <i class="fa-solid fa-circle-info me-1"></i>
+
+                        Os feriados já cadastrados não serão
+                        duplicados.
+
+                    </div>
+
+                </div>
+
+
+                <!-- RODAPÉ -->
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="fa-solid fa-download me-1"></i>
+                        Importar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

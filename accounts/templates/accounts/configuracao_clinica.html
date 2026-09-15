@@ -268,9 +268,503 @@
 
             </div>
 
+                </div>
+
+        <!-- CONFIGURAÇÃO DA AGENDA -->
+
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+
+                <i class="bi bi-calendar3 me-1"></i>
+
+                Configuração da Agenda
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <!-- HORÁRIO DE INÍCIO -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Início do atendimento
+
+                        </label>
+
+                        <input
+                            type="time"
+                            name="hora_inicio_agenda"
+                            class="form-control"
+                            value="{{ config.hora_inicio_agenda|time:'H:i' }}"
+                        >
+
+                    </div>
+
+                    <!-- HORÁRIO DE FIM -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Fim do atendimento
+
+                        </label>
+
+                        <input
+                            type="time"
+                            name="hora_fim_agenda"
+                            class="form-control"
+                            value="{{ config.hora_fim_agenda|time:'H:i' }}"
+                        >
+
+                    </div>
+
+                    <!-- INTERVALO -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Intervalo entre horários
+
+                        </label>
+
+                        <select
+                            name="intervalo_agenda"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="15"
+                                {% if config.intervalo_agenda == 15 %}
+                                    selected
+                                {% endif %}
+                            >
+                                15 minutos
+                            </option>
+
+                            <option
+                                value="30"
+                                {% if config.intervalo_agenda == 30 %}
+                                    selected
+                                {% endif %}
+                            >
+                                30 minutos
+                            </option>
+
+                            <option
+                                value="60"
+                                {% if config.intervalo_agenda == 60 %}
+                                    selected
+                                {% endif %}
+                            >
+                                60 minutos
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                                <hr>
+
+                <!-- =========================================
+                     INTERVALO DE ALMOÇO
+                     ========================================= -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-cup-hot me-1"></i>
+
+                        Intervalo de almoço
+
+                    </label>
+
+                    <div class="row">
+
+                        <!-- INÍCIO DO ALMOÇO -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Início do intervalo
+
+                            </label>
+
+                            <input
+                                type="time"
+                                name="hora_inicio_almoco"
+                                class="form-control"
+                                value="{{ config.hora_inicio_almoco|time:'H:i' }}"
+                            >
+
+                        </div>
+
+                        <!-- FIM DO ALMOÇO -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+
+                                Fim do intervalo
+
+                            </label>
+
+                            <input
+                                type="time"
+                                name="hora_fim_almoco"
+                                class="form-control"
+                                value="{{ config.hora_fim_almoco|time:'H:i' }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- =========================================
+     DIAS DE FUNCIONAMENTO
+     ========================================= -->
+
+<div class="mb-4">
+
+    <label class="form-label fw-semibold">
+
+        <i class="bi bi-calendar-week me-1"></i>
+
+        Dias de funcionamento
+
+    </label>
+
+    <div class="row">
+
+        <!-- DOMINGO -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_domingo"
+                    id="funciona_domingo"
+                    {% if config.funciona_domingo %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_domingo"
+                >
+                    Domingo
+                </label>
+
+            </div>
+
         </div>
 
-        <!-- LOGO -->
+
+        <!-- SEGUNDA -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_segunda"
+                    id="funciona_segunda"
+                    {% if config.funciona_segunda %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_segunda"
+                >
+                    Segunda-feira
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- TERÇA -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_terca"
+                    id="funciona_terca"
+                    {% if config.funciona_terca %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_terca"
+                >
+                    Terça-feira
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUARTA -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_quarta"
+                    id="funciona_quarta"
+                    {% if config.funciona_quarta %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_quarta"
+                >
+                    Quarta-feira
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUINTA -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_quinta"
+                    id="funciona_quinta"
+                    {% if config.funciona_quinta %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_quinta"
+                >
+                    Quinta-feira
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- SEXTA -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_sexta"
+                    id="funciona_sexta"
+                    {% if config.funciona_sexta %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_sexta"
+                >
+                    Sexta-feira
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- SÁBADO -->
+
+        <div class="col-md-3 col-sm-6 mb-3">
+
+            <div class="form-check">
+
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="funciona_sabado"
+                    id="funciona_sabado"
+                    {% if config.funciona_sabado %}
+                        checked
+                    {% endif %}
+                >
+
+                <label
+                    class="form-check-label"
+                    for="funciona_sabado"
+                >
+                    Sábado
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<hr class="my-4">
+
+
+<!-- =========================================
+     BLOQUEIOS E CONSULTÓRIOS
+========================================== -->
+
+<div class="row g-3 mb-4">
+
+    <!-- =========================================
+         BLOQUEIOS E FERIADOS
+    ========================================== -->
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+                <i class="bi bi-calendar-x me-1"></i>
+                Bloqueios e Feriados
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center gap-3">
+
+                    <div>
+
+                        <h6 class="fw-semibold mb-1">
+                            Feriados e bloqueios da agenda
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            Gerencie feriados, férias, ausências,
+                            horários de almoço e outros períodos
+                            sem atendimento.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="{% url 'lista_bloqueios' %}"
+                        class="btn btn-outline-primary flex-shrink-0"
+                    >
+                        <i class="bi bi-calendar-x me-1"></i>
+                        Gerenciar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CONSULTÓRIOS
+    ========================================== -->
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+                <i class="bi bi-door-open me-1"></i>
+                Consultórios
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center gap-3">
+
+                    <div>
+
+                        <h6 class="fw-semibold mb-1">
+                            Consultórios da clínica
+                        </h6>
+
+                        <p class="text-muted mb-0">
+                            Cadastre e gerencie os consultórios
+                            disponíveis para os atendimentos
+                            e para a agenda.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="{% url 'lista_consultorios' %}"
+                        class="btn btn-outline-primary flex-shrink-0"
+                    >
+                        <i class="bi bi-door-open me-1"></i>
+                        Gerenciar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FIM DA CONFIGURAÇÃO DA AGENDA -->
+
+</div>
+
+</div>
+
+
+<!-- LOGO -->
 
 <div class="card shadow-sm mb-4">
 

@@ -1,0 +1,332 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                <i class="fa-solid fa-lock me-2"></i>
+                {% if bloqueio %}
+                    Editar Bloqueio
+                {% else %}
+                    Novo Bloqueio
+                {% endif %}
+            </h4>
+
+            <p class="text-muted mb-0">
+                Configure um período em que não haverá atendimento.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'lista_bloqueios' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="fa-solid fa-arrow-left me-1"></i>
+            Voltar
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORMULÁRIO
+         ===================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <!-- TIPO -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Tipo de bloqueio
+                        </label>
+
+                        <select
+                            name="tipo"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione...
+                            </option>
+
+                            <option
+                                value="feriado"
+                                {% if bloqueio and bloqueio.tipo == "feriado" %}selected{% endif %}
+                            >
+                                Feriado
+                            </option>
+
+                            <option
+                                value="ferias"
+                                {% if bloqueio and bloqueio.tipo == "ferias" %}selected{% endif %}
+                            >
+                                Férias
+                            </option>
+
+                            <option
+                                value="ausencia"
+                                {% if bloqueio and bloqueio.tipo == "ausencia" %}selected{% endif %}
+                            >
+                                Ausência do profissional
+                            </option>
+
+                            <option
+                                value="almoco"
+                                {% if bloqueio and bloqueio.tipo == "almoco" %}selected{% endif %}
+                            >
+                                Horário de almoço
+                            </option>
+
+                            <option
+                                value="manual"
+                                {% if bloqueio and bloqueio.tipo == "manual" %}selected{% endif %}
+                            >
+                                Bloqueio manual
+                            </option>
+
+                            <option
+                                value="manutencao"
+                                {% if bloqueio and bloqueio.tipo == "manutencao" %}selected{% endif %}
+                            >
+                                Manutenção
+                            </option>
+
+                            <option
+                                value="outro"
+                                {% if bloqueio and bloqueio.tipo == "outro" %}selected{% endif %}
+                            >
+                                Outro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PROFISSIONAL -->
+
+                    <div class="col-md-8">
+
+                        <label class="form-label fw-semibold">
+                            Profissional
+                        </label>
+
+                        <select
+                            name="profissional"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Toda a clínica
+                            </option>
+
+                            {% for profissional in profissionais %}
+
+                                <option
+                                    value="{{ profissional.id }}"
+                                    {% if bloqueio and bloqueio.profissional_id == profissional.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ profissional.nome }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="form-text">
+                            Deixe como "Toda a clínica" para bloquear
+                            todos os profissionais.
+                        </div>
+
+                    </div>
+
+
+                    <!-- DATA INICIAL -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Data inicial
+                        </label>
+
+                        <input
+                            type="date"
+                            name="data_inicio"
+                            class="form-control"
+                            value="{% if bloqueio %}{{ bloqueio.data_inicio|date:'Y-m-d' }}{% endif %}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- DATA FINAL -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Data final
+                        </label>
+
+                        <input
+                            type="date"
+                            name="data_fim"
+                            class="form-control"
+                            value="{% if bloqueio %}{{ bloqueio.data_fim|date:'Y-m-d' }}{% endif %}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- HORA INICIAL -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Hora inicial
+                        </label>
+
+                        <input
+                            type="time"
+                            name="hora_inicio"
+                            class="form-control"
+                            value="{% if bloqueio and bloqueio.hora_inicio %}{{ bloqueio.hora_inicio|time:'H:i' }}{% endif %}"
+                        >
+
+                        <div class="form-text">
+                            Deixe vazio para bloquear o dia inteiro.
+                        </div>
+
+                    </div>
+
+
+                    <!-- HORA FINAL -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Hora final
+                        </label>
+
+                        <input
+                            type="time"
+                            name="hora_fim"
+                            class="form-control"
+                            value="{% if bloqueio and bloqueio.hora_fim %}{{ bloqueio.hora_fim|time:'H:i' }}{% endif %}"
+                        >
+
+                    </div>
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+                            Descrição
+                        </label>
+
+                        <input
+                            type="text"
+                            name="descricao"
+                            class="form-control"
+                            maxlength="255"
+                            value="{% if bloqueio %}{{ bloqueio.descricao|default:'' }}{% endif %}"
+                            placeholder="Ex.: Férias do Dr. João"
+                        >
+
+                    </div>
+
+
+                    {% if bloqueio %}
+
+                        <!-- ATIVO -->
+
+                        <div class="col-12">
+
+                            <div class="form-check">
+
+                                <input
+                                    type="checkbox"
+                                    name="ativo"
+                                    class="form-check-input"
+                                    id="id_ativo"
+                                    {% if bloqueio.ativo %}checked{% endif %}
+                                >
+
+                                <label
+                                    class="form-check-label"
+                                    for="id_ativo"
+                                >
+                                    Bloqueio ativo
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================================
+                     BOTÕES
+                     ================================================= -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a
+                        href="{% url 'lista_bloqueios' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="fa-solid fa-check me-1"></i>
+
+                        {% if bloqueio %}
+                            Salvar alterações
+                        {% else %}
+                            Criar bloqueio
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

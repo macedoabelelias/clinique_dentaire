@@ -60,6 +60,28 @@ Paciente | AM Systems
 
             {% csrf_token %}
 
+            {% if origem == 'agendamento' %}
+
+    <input
+        type="hidden"
+        name="origem"
+        value="agendamento"
+    >
+
+    <input
+        type="hidden"
+        name="data_agendamento"
+        value="{{ data_agendamento }}"
+    >
+
+    <input
+        type="hidden"
+        name="hora_agendamento"
+        value="{{ hora_agendamento }}"
+    >
+
+{% endif %}
+
             <!-- FOTO -->
 
             <div class="form-section">

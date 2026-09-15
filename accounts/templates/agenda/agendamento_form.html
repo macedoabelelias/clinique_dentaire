@@ -6,6 +6,45 @@ Novo Agendamento
 
 {% block content %}
 
+<style>
+    /* =========================================================
+   DESTAQUE DOS ERROS DE VALIDAÇÃO DA AGENDA
+   ========================================================= */
+
+.errorlist {
+    list-style: none;
+    margin: 8px 0 12px 0;
+    padding: 10px 14px 10px 42px;
+
+    background-color: #f8d7da;
+    border: 1px solid #f1aeb5;
+    border-radius: 8px;
+
+    color: #842029;
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    position: relative;
+}
+
+.errorlist::before {
+    content: "⚠";
+
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.errorlist li {
+    margin: 0;
+    padding: 0;
+}
+</style>
+
 <div class="container-fluid">
 
     <h1>Novo Agendamento</h1>
@@ -16,14 +55,186 @@ Novo Agendamento
 
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <!-- =========================================
+             PACIENTE
+             ========================================= -->
 
-        <button type="submit" class="btn btn-primary">
+        <p>
+
+            {{ form.paciente.label_tag }}
+
+            <div class="d-flex align-items-center gap-2">
+
+                <div>
+                    {{ form.paciente }}
+                </div>
+
+                <a
+                    href="{% url 'novo_paciente' %}?origem=agendamento{% if form.data.value %}&data={{ form.data.value }}{% endif %}{% if form.hora_inicio.value %}&hora={{ form.hora_inicio.value }}{% endif %}"
+                    class="btn btn-outline-primary btn-sm"
+                    title="Cadastrar novo paciente"
+                >
+
+                    <i class="bi bi-person-plus me-1"></i>
+
+                    Novo paciente
+
+                </a>
+
+            </div>
+
+            {{ form.paciente.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             PROFISSIONAL
+             ========================================= -->
+
+        <p>
+
+            {{ form.profissional.label_tag }}
+
+            {{ form.profissional }}
+
+            {{ form.profissional.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             PROCEDIMENTO
+             ========================================= -->
+
+        <p>
+
+            {{ form.procedimento.label_tag }}
+
+            {{ form.procedimento }}
+
+            {{ form.procedimento.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             DATA
+             ========================================= -->
+
+        <p>
+
+            {{ form.data.label_tag }}
+
+            {{ form.data }}
+
+            {{ form.data.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             HORA INÍCIO
+             ========================================= -->
+
+        {% if form.hora_inicio.errors %}
+
+            <div
+                class="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 mb-3"
+                role="alert"
+            >
+
+                <i
+                    class="bi bi-exclamation-triangle-fill fs-5"
+                ></i>
+
+                <div>
+
+                    <strong>Atenção!</strong>
+
+                    <div>
+                        {{ form.hora_inicio.errors.0 }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <p>
+
+            {{ form.hora_inicio.label_tag }}
+
+            {{ form.hora_inicio }}
+
+        </p>
+
+
+        <!-- =========================================
+             DURAÇÃO
+             ========================================= -->
+
+        <p>
+
+            {{ form.duracao.label_tag }}
+
+            {{ form.duracao }}
+
+            <span class="text-muted">
+                Duração em minutos
+            </span>
+
+            {{ form.duracao.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             STATUS
+             ========================================= -->
+
+        <p>
+
+            {{ form.status.label_tag }}
+
+            {{ form.status }}
+
+            {{ form.status.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             OBSERVAÇÕES
+             ========================================= -->
+
+        <p>
+
+            {{ form.observacoes.label_tag }}
+
+            {{ form.observacoes }}
+
+            {{ form.observacoes.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+             SALVAR
+             ========================================= -->
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-check-circle me-1"></i>
 
             Salvar
 
         </button>
-
 
     </form>
 

@@ -600,6 +600,34 @@ path(
     name='configuracao_clinica'
 ),
 
+# =========================================
+# CONSULTÓRIOS
+# =========================================
+
+path(
+    'consultorios/',
+    views.lista_consultorios,
+    name='lista_consultorios'
+),
+
+path(
+    'consultorios/novo/',
+    views.novo_consultorio,
+    name='novo_consultorio'
+),
+
+path(
+    'consultorios/<int:id>/editar/',
+    views.editar_consultorio,
+    name='editar_consultorio'
+),
+
+path(
+    'consultorios/<int:id>/excluir/',
+    views.excluir_consultorio,
+    name='excluir_consultorio'
+),
+
 path(
     'documento/<int:id>/pdf/',
     views.imprimir_documento,

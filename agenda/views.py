@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime, date, timedelta
 import json
 
 from urllib.parse import quote_plus
@@ -11,13 +11,19 @@ from django.shortcuts import (
 )
 from django.contrib.auth.decorators import login_required
 
+from django.contrib import messages
+
 from accounts.permissions import permissao_required
 
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from .forms import AgendamentoForm
-from agenda.models import Profissional, Agendamento
+from agenda.models import (
+    Profissional,
+    Agendamento,
+    BloqueioAgenda,
+)
 from accounts.models import (
     ItemOrcamento,
     Orcamento,
@@ -25,6 +31,7 @@ from accounts.models import (
     Procedimento,
     Tratamento,
     PerfilUsuario,
+    ConfiguracaoClinica,
 )
 
 from django.db.models import Q
@@ -565,6 +572,16 @@ def agenda_view(request):
         "hora_inicio"
     )
 
+    # =========================================
+    # CONFIGURAÇÃO DA AGENDA
+    # =========================================
+
+    config = (
+        ConfiguracaoClinica.objects
+        .filter(id=1)
+        .first()
+    )
+
     context = {
 
         "agendamentos": agendamentos,
@@ -572,6 +589,8 @@ def agenda_view(request):
         "modo": modo,
 
         "data_agenda": data_agenda,
+
+        "config": config,
 
         "total_agendado": agendamentos.filter(
             status="agendado"
@@ -642,6 +661,9 @@ def novo_agendamento(request):
 
     paciente_id = request.GET.get("paciente")
 
+    data_url = request.GET.get("data")
+    hora_url = request.GET.get("hora")
+
     paciente = None
     profissional_responsavel = None
 
@@ -687,9 +709,11 @@ def novo_agendamento(request):
                 commit=False
             )
 
-            # Se veio pela URL /novo/<paciente_id>/
-            if paciente:
+            # -------------------------------------
+            # PACIENTE
+            # -------------------------------------
 
+            if paciente:
                 agendamento.paciente = paciente
 
             agendamento.save()
@@ -706,12 +730,39 @@ def novo_agendamento(request):
 
         initial = {}
 
+        # -----------------------------------------
+        # PACIENTE
+        # -----------------------------------------
+
         if paciente:
 
             initial["paciente"] = paciente
+
+        # -----------------------------------------
+        # PROFISSIONAL
+        # -----------------------------------------
+
+        if profissional_responsavel:
+
             initial["profissional"] = (
                 profissional_responsavel
             )
+
+        # -----------------------------------------
+        # DATA CLICADA NA AGENDA
+        # -----------------------------------------
+
+        if data_url:
+
+            initial["data"] = data_url
+
+        # -----------------------------------------
+        # HORÁRIO CLICADO NA AGENDA
+        # -----------------------------------------
+
+        if hora_url:
+
+            initial["hora_inicio"] = hora_url
 
         form = AgendamentoForm(
             initial=initial
@@ -726,6 +777,10 @@ def novo_agendamento(request):
         "form": form,
 
         "paciente": paciente,
+
+        "data_url": data_url,
+
+        "hora_url": hora_url,
 
     }
 
@@ -969,18 +1024,25 @@ def eventos_agenda(request):
 
         eventos.append({
 
-            'id': agendamento.id,
+    'id': agendamento.id,
 
-            'title': (
-                f'{agendamento.hora_inicio.strftime("%H:%M")} • '
-                f'{agendamento.paciente.nome.split()[0]}'
-            ),
+    'title': (
+        f'{agendamento.paciente.nome.split()[0]}'
+    ),
 
-            'start': str(agendamento.data),
+    # =========================================
+    # DATA + HORÁRIO DO AGENDAMENTO
+    # =========================================
 
-            'url': f'/agenda/editar/{agendamento.id}/',
+    'start': (
+        f'{agendamento.data.isoformat()}T'
+        f'{agendamento.hora_inicio.strftime("%H:%M:%S")}'
+    ),
 
-            'extendedProps': {
+    'allDay': False,
+    'url': f'/agenda/editar/{agendamento.id}/',
+
+    'extendedProps': {
 
                 'status': agendamento.get_status_display(),
 
@@ -1046,7 +1108,359 @@ def eventos_agenda(request):
         safe=False
     )
 
+# =========================================
+# EVENTOS DE BLOQUEIO — FULLCALENDAR
+# =========================================
 
+@login_required(login_url='/')
+@permissao_required("agenda", "visualizar")
+def eventos_bloqueios(request):
+
+    modo = request.GET.get(
+        "modo",
+        "minha"
+    )
+
+    bloqueios = (
+        BloqueioAgenda.objects
+        .filter(
+            ativo=True
+        )
+        .select_related(
+            "profissional"
+        )
+        .order_by(
+            "data_inicio",
+            "hora_inicio"
+        )
+    )
+
+    eventos = []
+
+    # =========================================
+    # PERFIL DO USUÁRIO
+    # =========================================
+
+    perfil_usuario = getattr(
+        request.user,
+        "perfil",
+        None
+    )
+
+    tipo_usuario = (
+        perfil_usuario.tipo_usuario
+        if perfil_usuario
+        else None
+    )
+
+    # =========================================
+    # PROFISSIONAL DO USUÁRIO
+    # =========================================
+
+    profissional_usuario = None
+
+    if tipo_usuario == PerfilUsuario.DENTISTA:
+
+        try:
+
+            profissional_usuario = (
+                request.user.profissional
+            )
+
+        except Profissional.DoesNotExist:
+
+            profissional_usuario = None
+
+    # =========================================
+    # PROCESSA OS BLOQUEIOS
+    # =========================================
+
+    for bloqueio in bloqueios:
+
+        # =====================================
+        # BLOQUEIO PARA TODA A CLÍNICA
+        # =====================================
+
+        if bloqueio.profissional is None:
+
+            # ---------------------------------
+            # BLOQUEIO COM HORÁRIO
+            # ---------------------------------
+
+            if (
+                bloqueio.hora_inicio
+                and
+                bloqueio.hora_fim
+            ):
+
+                start = (
+                    f"{bloqueio.data_inicio.isoformat()}T"
+                    f"{bloqueio.hora_inicio.strftime('%H:%M:%S')}"
+                )
+
+                end = (
+                    f"{bloqueio.data_inicio.isoformat()}T"
+                    f"{bloqueio.hora_fim.strftime('%H:%M:%S')}"
+                )
+
+                eventos.append({
+
+                    "id": (
+                        f"bloqueio-{bloqueio.id}"
+                    ),
+
+                    "title": (
+                        f"🔒 "
+                        f"{bloqueio.get_tipo_display()}"
+                    ),
+
+                    "start": start,
+
+                    "end": end,
+
+                    "allDay": False,
+
+                    "display": "background",
+
+                    "backgroundColor": "#f8d7da",
+
+                    "borderColor": "#dc3545",
+
+                    "extendedProps": {
+
+                        "bloqueio": True,
+
+                        "tipo": (
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "descricao": (
+                            bloqueio.descricao
+                            or
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "profissional": (
+                            "Toda a clínica"
+                        ),
+
+                    },
+
+                })
+
+            # ---------------------------------
+            # BLOQUEIO DE DIA INTEIRO
+            # ---------------------------------
+
+            else:
+
+                data_fim = (
+                    bloqueio.data_fim
+                    + timedelta(days=1)
+                )
+
+                eventos.append({
+
+                    "id": (
+                        f"bloqueio-{bloqueio.id}"
+                    ),
+
+                    "title": (
+                        f"🔒 "
+                        f"{bloqueio.get_tipo_display()}"
+                    ),
+
+                    "start": (
+                        bloqueio.data_inicio.isoformat()
+                    ),
+
+                    "end": (
+                        data_fim.isoformat()
+                    ),
+
+                    "allDay": True,
+
+                    "display": "background",
+
+                    "backgroundColor": "#f8d7da",
+
+                    "borderColor": "#dc3545",
+
+                    "extendedProps": {
+
+                        "bloqueio": True,
+
+                        "tipo": (
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "descricao": (
+                            bloqueio.descricao
+                            or
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "profissional": (
+                            "Toda a clínica"
+                        ),
+
+                    },
+
+                })
+
+            continue
+
+        # =====================================
+        # BLOQUEIO DE PROFISSIONAL
+        # =====================================
+
+        # Só exibimos visualmente o bloqueio
+        # específico quando estamos na
+        # "Minha Agenda" daquele profissional.
+        #
+        # Na Agenda da Clínica não podemos pintar
+        # a grade inteira, pois o bloqueio pertence
+        # somente a um profissional.
+
+        if (
+            modo == "minha"
+            and
+            profissional_usuario
+            and
+            bloqueio.profissional_id
+            ==
+            profissional_usuario.id
+        ):
+
+            # ---------------------------------
+            # BLOQUEIO COM HORÁRIO
+            # ---------------------------------
+
+            if (
+                bloqueio.hora_inicio
+                and
+                bloqueio.hora_fim
+            ):
+
+                start = (
+                    f"{bloqueio.data_inicio.isoformat()}T"
+                    f"{bloqueio.hora_inicio.strftime('%H:%M:%S')}"
+                )
+
+                end = (
+                    f"{bloqueio.data_inicio.isoformat()}T"
+                    f"{bloqueio.hora_fim.strftime('%H:%M:%S')}"
+                )
+
+                eventos.append({
+
+                    "id": (
+                        f"bloqueio-{bloqueio.id}"
+                    ),
+
+                    "title": (
+                        f"🔒 "
+                        f"{bloqueio.get_tipo_display()}"
+                    ),
+
+                    "start": start,
+
+                    "end": end,
+
+                    "allDay": False,
+
+                    "display": "background",
+
+                    "backgroundColor": "#fff3cd",
+
+                    "borderColor": "#ffc107",
+
+                    "extendedProps": {
+
+                        "bloqueio": True,
+
+                        "tipo": (
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "descricao": (
+                            bloqueio.descricao
+                            or
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "profissional": (
+                            bloqueio.profissional.nome
+                        ),
+
+                    },
+
+                })
+
+            # ---------------------------------
+            # BLOQUEIO DE DIA INTEIRO
+            # ---------------------------------
+
+            else:
+
+                data_fim = (
+                    bloqueio.data_fim
+                    + timedelta(days=1)
+                )
+
+                eventos.append({
+
+                    "id": (
+                        f"bloqueio-{bloqueio.id}"
+                    ),
+
+                    "title": (
+                        f"🔒 "
+                        f"{bloqueio.get_tipo_display()}"
+                    ),
+
+                    "start": (
+                        bloqueio.data_inicio.isoformat()
+                    ),
+
+                    "end": (
+                        data_fim.isoformat()
+                    ),
+
+                    "allDay": True,
+
+                    "display": "background",
+
+                    "backgroundColor": "#fff3cd",
+
+                    "borderColor": "#ffc107",
+
+                    "extendedProps": {
+
+                        "bloqueio": True,
+
+                        "tipo": (
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "descricao": (
+                            bloqueio.descricao
+                            or
+                            bloqueio.get_tipo_display()
+                        ),
+
+                        "profissional": (
+                            bloqueio.profissional.nome
+                        ),
+
+                    },
+
+                })
+
+    return JsonResponse(
+        eventos,
+        safe=False
+    )
 
 
 # =========================================
@@ -1132,3 +1546,239 @@ def alterar_status_ajax(request):
         "sucesso": True,
         "status": agendamento.status
     })
+
+# =========================================================
+# BLOQUEIOS DA AGENDA
+# =========================================================
+
+@login_required(login_url='/')
+@permissao_required("agenda", "visualizar")
+def lista_bloqueios(request):
+
+    bloqueios = (
+        BloqueioAgenda.objects
+        .select_related("profissional")
+        .order_by(
+            "data_inicio",
+            "hora_inicio"
+        )
+    )
+
+    return render(
+        request,
+        "agenda/bloqueios_lista.html",
+        {
+            "bloqueios": bloqueios,
+        }
+    )
+
+
+@login_required(login_url='/')
+@permissao_required("agenda", "inserir")
+def novo_bloqueio(request):
+
+    if request.method == "POST":
+
+        tipo = request.POST.get("tipo")
+        data_inicio = request.POST.get("data_inicio")
+        data_fim = request.POST.get("data_fim")
+        hora_inicio = request.POST.get("hora_inicio")
+        hora_fim = request.POST.get("hora_fim")
+        profissional_id = request.POST.get("profissional")
+        descricao = request.POST.get("descricao")
+
+        profissional = None
+
+        if profissional_id:
+            profissional = get_object_or_404(
+                Profissional,
+                id=profissional_id
+            )
+
+        BloqueioAgenda.objects.create(
+            tipo=tipo,
+            data_inicio=data_inicio,
+            data_fim=data_fim,
+            hora_inicio=hora_inicio or None,
+            hora_fim=hora_fim or None,
+            profissional=profissional,
+            descricao=descricao or None,
+        )
+
+        return redirect(
+            "lista_bloqueios"
+        )
+
+    profissionais = (
+        Profissional.objects
+        .filter(ativo=True)
+        .order_by("nome")
+    )
+
+    return render(
+        request,
+        "agenda/bloqueio_form.html",
+        {
+            "profissionais": profissionais,
+        }
+    )
+
+
+@login_required(login_url='/')
+@permissao_required("agenda", "editar")
+def editar_bloqueio(request, id):
+
+    bloqueio = get_object_or_404(
+        BloqueioAgenda,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        bloqueio.tipo = request.POST.get("tipo")
+        bloqueio.data_inicio = request.POST.get(
+            "data_inicio"
+        )
+        bloqueio.data_fim = request.POST.get(
+            "data_fim"
+        )
+
+        bloqueio.hora_inicio = (
+            request.POST.get("hora_inicio")
+            or None
+        )
+
+        bloqueio.hora_fim = (
+            request.POST.get("hora_fim")
+            or None
+        )
+
+        profissional_id = request.POST.get(
+            "profissional"
+        )
+
+        if profissional_id:
+
+            bloqueio.profissional = get_object_or_404(
+                Profissional,
+                id=profissional_id
+            )
+
+        else:
+
+            bloqueio.profissional = None
+
+        bloqueio.descricao = (
+            request.POST.get("descricao")
+            or None
+        )
+
+        bloqueio.ativo = (
+            request.POST.get("ativo") == "on"
+        )
+
+        bloqueio.save()
+
+        return redirect(
+            "lista_bloqueios"
+        )
+
+    profissionais = (
+        Profissional.objects
+        .filter(ativo=True)
+        .order_by("nome")
+    )
+
+    return render(
+        request,
+        "agenda/bloqueio_form.html",
+        {
+            "bloqueio": bloqueio,
+            "profissionais": profissionais,
+        }
+    )
+
+
+@login_required(login_url='/')
+@permissao_required("agenda", "excluir")
+def excluir_bloqueio(request, id):
+
+    bloqueio = get_object_or_404(
+        BloqueioAgenda,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        bloqueio.delete()
+
+        return redirect(
+            "lista_bloqueios"
+        )
+
+    return render(
+        request,
+        "agenda/bloqueio_excluir.html",
+        {
+            "bloqueio": bloqueio,
+        }
+    )
+
+# =========================================================
+# IMPORTAÇÃO DE FERIADOS NACIONAIS
+# =========================================================
+
+@login_required(login_url='/')
+@permissao_required("agenda", "inserir")
+def importar_feriados_nacionais_view(request):
+
+    if request.method != "POST":
+        return redirect("lista_bloqueios")
+
+    ano = request.POST.get("ano")
+
+    try:
+        ano = int(ano)
+    except (TypeError, ValueError):
+
+        messages.error(
+            request,
+            "Ano inválido para importação dos feriados."
+        )
+
+        return redirect(
+            "lista_bloqueios"
+        )
+
+    from .feriados import importar_feriados_nacionais
+
+    resultado = importar_feriados_nacionais(
+        ano
+    )
+
+    criados = resultado["criados"]
+    existentes = resultado["existentes"]
+
+    if criados:
+
+        messages.success(
+            request,
+            (
+                f"{criados} feriado(s) nacional(is) "
+                f"de {ano} importado(s) com sucesso."
+            )
+        )
+
+    if existentes:
+
+        messages.info(
+            request,
+            (
+                f"{existentes} feriado(s) nacional(is) "
+                f"de {ano} já estava(m) cadastrado(s)."
+            )
+        )
+
+    return redirect(
+        "lista_bloqueios"
+    )

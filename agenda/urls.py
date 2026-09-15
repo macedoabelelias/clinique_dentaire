@@ -48,6 +48,12 @@ urlpatterns = [
     ),
 
     path(
+        'eventos-bloqueios/',
+        views.eventos_bloqueios,
+        name='eventos_bloqueios'
+    ),
+
+    path(
         'mover-agendamento/',
         views.mover_agendamento,
         name='mover_agendamento'
@@ -76,6 +82,42 @@ urlpatterns = [
         views.alterar_status_ajax,
         name='alterar_status_ajax'
     ),
+
+    # =========================================
+    # BLOQUEIOS DA AGENDA
+    # =========================================
+
+    path(
+        'bloqueios/',
+        views.lista_bloqueios,
+        name='lista_bloqueios'
+    ),
+
+    path(
+        'bloqueios/importar-feriados/',
+        views.importar_feriados_nacionais_view,
+        name='importar_feriados_nacionais'
+    ),
+
+    path(
+        'bloqueios/novo/',
+        views.novo_bloqueio,
+        name='novo_bloqueio'
+    ),
+
+    path(
+        'bloqueios/editar/<int:id>/',
+        views.editar_bloqueio,
+        name='editar_bloqueio'
+    ),
+
+    path(
+        'bloqueios/excluir/<int:id>/',
+        views.excluir_bloqueio,
+        name='excluir_bloqueio'
+    ),
+
+    
 
     
 ]

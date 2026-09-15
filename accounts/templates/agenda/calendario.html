@@ -3,16 +3,190 @@
 {% block content %}
 
 <style>
+
     #eventoModal .btn-sm {
         min-width: 75px;
         font-size: 0.67rem;
         font-weight: 500;
     }
 
+
     #eventoModal .modal-footer {
         padding-top: .75rem;
         padding-bottom: .75rem;
     }
+
+
+    /* =========================================
+       EVENTOS DA AGENDA
+       ========================================= */
+
+    .agenda-evento-conteudo {
+        width: 100%;
+        overflow: hidden;
+        line-height: 1.15;
+    }
+
+
+    .agenda-evento-hora {
+        font-size: 0.72rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+
+    .agenda-evento-paciente {
+        font-size: 0.78rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* =========================================
+       VISÃO MENSAL
+       ========================================= */
+
+    .fc-dayGridMonth-view .fc-daygrid-event {
+        border-radius: 5px;
+        padding: 3px 5px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+
+
+    .fc-dayGridMonth-view .agenda-evento-hora {
+        font-size: 0.70rem;
+    }
+
+
+    .fc-dayGridMonth-view .agenda-evento-paciente {
+        font-size: 0.76rem;
+    }
+
+
+    /* =========================================
+       SEMANA E DIA
+       ========================================= */
+
+    .fc-timegrid-event .agenda-evento-hora {
+        font-size: 0.78rem;
+    }
+
+
+    .fc-timegrid-event .agenda-evento-paciente {
+        font-size: 0.82rem;
+    }
+
+
+    /* =========================================
+       BLOQUEIOS DA AGENDA
+       ========================================= */
+
+    .fc-bg-event.bloqueio-visual {
+        opacity: 1 !important;
+        overflow: hidden;
+    }
+
+
+    /* =========================================
+       IDENTIFICAÇÃO DO BLOQUEIO
+       ========================================= */
+
+    .fc-bg-event.bloqueio-visual .bloqueio-label {
+
+        position: absolute;
+
+        inset: 0;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+        text-align: center;
+
+        padding: 4px 8px;
+
+        pointer-events: none;
+
+        z-index: 10;
+
+        color: #842029;
+
+        line-height: 1.2;
+
+    }
+
+
+    /* =========================================
+       NOME DO BLOQUEIO
+       ========================================= */
+
+    .fc-bg-event.bloqueio-visual
+    .bloqueio-label strong {
+
+        display: block;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        max-width: 100%;
+
+    }
+
+
+    /* =========================================
+       DESCRIÇÃO DO BLOQUEIO
+       ========================================= */
+
+    .fc-bg-event.bloqueio-visual
+    .bloqueio-label small {
+
+        display: block;
+
+        margin-top: 2px;
+
+        font-size: 10px;
+
+        font-weight: 500;
+
+        opacity: 0.85;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        max-width: 100%;
+
+    }
+
+
+    /* =========================================
+       BLOQUEIO DE DIA INTEIRO
+       ========================================= */
+
+    .fc-daygrid-bg-harness
+    .fc-bg-event.bloqueio-visual {
+
+        opacity: 1 !important;
+
+    }
+
+
 </style>
 
 <div class="container-fluid">
@@ -183,324 +357,1352 @@
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-        function getCookie(name) {
+    // =====================================================
+    // ESTILO VISUAL DA AGENDA
+    // =====================================================
 
-            let cookieValue = null;
+    const style = document.createElement('style');
 
-            if (document.cookie && document.cookie !== '') {
+    style.innerHTML = `
 
-                const cookies = document.cookie.split(';');
+        /* =================================================
+           AGENDA MENSAL
+           ================================================= */
 
-                for (let i = 0; i < cookies.length; i++) {
+        .fc-dayGridMonth-view .fc-daygrid-event {
 
-                    const cookie = cookies[i].trim();
+            border-radius: 5px !important;
 
-                    if (
-                        cookie.substring(0, name.length + 1) ===
-                        (name + '=')
-                    ) {
+            margin: 2px 4px !important;
 
-                        cookieValue = decodeURIComponent(
-                            cookie.substring(name.length + 1)
-                        );
+            padding: 3px 5px !important;
 
-                        break;
+            border: none !important;
 
-                    }
+            min-height: 23px;
 
-                }
-
-            }
-
-            return cookieValue;
+            overflow: hidden;
 
         }
 
-        const calendarEl = document.getElementById('calendar');
 
-        let eventoSelecionado = null;
+        /* Remove a bolinha */
 
-        const calendar = new FullCalendar.Calendar(calendarEl, {
+        .fc-dayGridMonth-view
+        .fc-daygrid-event-dot {
 
-            locale: 'pt-br',
+            display: none !important;
 
-            initialView: 'dayGridMonth',
+        }
 
-            height: 'auto',
-            contentHeight: 'auto',
-            aspectRatio: 1.8,
 
-            dayMaxEventRows: 3,
-            expandRows: true,
+        /* Conteúdo do evento mensal */
 
-            editable: true,
+        .fc-dayGridMonth-view
+        .fc-daygrid-event .fc-event-main {
 
-            events: '/agenda/eventos/?modo={{ modo }}',
+            padding: 1px 3px !important;
 
-            headerToolbar: {
+        }
 
-                left: 'prev,next today',
 
-                center: 'title',
+        /* Horário */
 
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        .fc-dayGridMonth-view
+        .fc-daygrid-event .fc-event-time {
 
-            },
+            font-weight: 600 !important;
 
-            buttonText: {
+            font-size: 11px !important;
 
-                today: 'Hoje',
+        }
 
-                month: 'Mês',
 
-                week: 'Semana',
+        /* Nome */
 
-                day: 'Dia'
+        .fc-dayGridMonth-view
+        .fc-daygrid-event .fc-event-title {
 
-            },
+            font-size: 12px !important;
 
-            eventDidMount: function (info) {
+            font-weight: 600 !important;
 
-                info.el.title =
+        }
 
-                    'Paciente: ' +
-                    info.event.extendedProps.paciente +
 
-                    '\nStatus: ' +
-                    info.event.extendedProps.status +
+        /* Mais eventos */
 
-                    '\nProcedimento: ' +
-                    info.event.extendedProps.procedimento +
+        .fc-dayGridMonth-view
+        .fc-daygrid-more-link {
 
-                    '\nProfissional: ' +
-                    info.event.extendedProps.profissional;
+            font-size: 12px !important;
 
-            },
+            font-weight: 600 !important;
 
-            eventClick: function (info) {
+            margin-left: 4px !important;
 
-                eventoSelecionado = info.event;
+        }
 
-                info.jsEvent.preventDefault();
 
-                document.getElementById(
-                    'modalPaciente'
-                ).innerText =
-                    info.event.extendedProps.paciente;
+        /* =================================================
+           SEMANA / DIA
+           ================================================= */
 
-                const statusEl = document.getElementById(
-                    'modalStatus'
-                );
+        .fc-timegrid-event {
 
-                statusEl.innerText =
-                    info.event.extendedProps.status;
+            border-radius: 4px !important;
 
-                statusEl.className =
-                    'badge fs-6';
+        }
+
+
+        .fc-timegrid-event .fc-event-main {
+
+            padding: 3px 4px !important;
+
+        }
+
+
+        .fc-timegrid-event .fc-event-time {
+
+            font-weight: 700 !important;
+
+            font-size: 12px !important;
+
+        }
+
+
+        .fc-timegrid-event .fc-event-title {
+
+            font-size: 12px !important;
+
+            font-weight: 600 !important;
+
+        }
+
+
+        /* =================================================
+           CURSOR
+           ================================================= */
+
+        .fc-timegrid-slot {
+
+            cursor: pointer;
+
+        }
+
+
+        .fc-daygrid-day {
+
+            cursor: pointer;
+
+        }
+
+    `;
+
+    document.head.appendChild(style);
+
+
+    // =====================================================
+    // CSRF
+    // =====================================================
+
+    function getCookie(name) {
+
+        let cookieValue = null;
+
+        if (
+            document.cookie &&
+            document.cookie !== ''
+        ) {
+
+            const cookies =
+                document.cookie.split(';');
+
+            for (
+                let i = 0;
+                i < cookies.length;
+                i++
+            ) {
+
+                const cookie =
+                    cookies[i].trim();
 
                 if (
-                    info.event.extendedProps.status ===
-                    'Confirmado'
+                    cookie.substring(
+                        0,
+                        name.length + 1
+                    ) ===
+                    (name + '=')
                 ) {
 
-                    statusEl.classList.add(
-                        'bg-success'
-                    );
+                    cookieValue =
+                        decodeURIComponent(
+                            cookie.substring(
+                                name.length + 1
+                            )
+                        );
 
-                } else if (
-
-                    info.event.extendedProps.status ===
-                    'Em Atendimento'
-
-                ) {
-
-                    statusEl.classList.add(
-                        'bg-warning'
-                    );
-
-                } else if (
-
-                    info.event.extendedProps.status ===
-                    'Finalizado'
-
-                ) {
-
-                    statusEl.classList.add(
-                        'bg-secondary'
-                    );
-
-                } else {
-
-                    statusEl.classList.add(
-                        'bg-primary'
-                    );
+                    break;
 
                 }
 
-                document.getElementById(
-                    'modalProcedimento'
-                ).innerText =
-                    info.event.extendedProps.procedimento;
+            }
 
-                document.getElementById(
-                    'modalProfissional'
-                ).innerText =
-                    info.event.extendedProps.profissional;
+        }
 
-                document.getElementById(
-                    'btnPerfil'
-                ).href =
-                    info.event.extendedProps.perfil_url;
+        return cookieValue;
 
-                document.getElementById(
-                    'btnEditar'
-                ).href =
-                    info.event.extendedProps.editar_url;
+    }
 
-                document.getElementById(
-                    'btnAtendimento'
-                ).href =
-                    info.event.extendedProps.iniciar_url;
 
-                console.log(
-                    info.event.extendedProps.whatsapp_url
-                );
+    // =====================================================
+    // ELEMENTO DO CALENDÁRIO
+    // =====================================================
 
-                document.getElementById(
-                    'btnWhatsapp'
-                ).href =
-                    info.event.extendedProps.whatsapp_url;
+    const calendarEl =
+        document.getElementById('calendar');
 
-                const modal = new bootstrap.Modal(
 
-                    document.getElementById(
-                        'eventoModal'
-                    )
+    if (!calendarEl) {
 
-                );
+        console.error(
+            'Elemento #calendar não encontrado.'
+        );
 
-                modal.show();
+        return;
 
-            },
+    }
 
-            eventDrop: function (info) {
 
-                fetch('/agenda/mover-agendamento/', {
+    // =====================================================
+    // EVENTO SELECIONADO
+    // =====================================================
 
-                    method: 'POST',
+    let eventoSelecionado = null;
 
-                    headers: {
 
-                        'Content-Type': 'application/json',
+    // =====================================================
+    // CALENDÁRIO
+    // =====================================================
 
-                        'X-CSRFToken': getCookie('csrftoken')
+    const calendar =
+        new FullCalendar.Calendar(
+            calendarEl,
+            {
 
-                    },
+                // =========================================
+                // CONFIGURAÇÕES GERAIS
+                // =========================================
 
-                    body: JSON.stringify({
+                locale: 'pt-br',
 
-                        agendamento_id: info.event.id,
+                initialView:
+                    'dayGridMonth',
 
-                        nova_data: info.event.startStr
 
-                    })
+                // =========================================
+                // DIMENSÕES
+                // =========================================
 
-                })
+                height: 'auto',
 
-                    .then(response => response.json())
+                contentHeight: 'auto',
 
-                    .then(data => {
+                aspectRatio: 1.8,
 
-                        if (!data.sucesso) {
+                expandRows: true,
 
-                            alert('Erro ao mover agendamento');
 
-                            info.revert();
+                // =========================================
+                // AGENDA MENSAL
+                // =========================================
+
+                dayMaxEventRows: 4,
+
+                eventDisplay: 'block',
+
+
+                // =========================================
+                // EDIÇÃO
+                // =========================================
+
+                editable: true,
+
+
+                // =========================================
+                // GRADE DE HORÁRIOS
+                // =========================================
+
+                slotMinTime:
+                    '08:00:00',
+
+                slotMaxTime:
+                    '19:00:00',
+
+                slotDuration:
+                    '00:30:00',
+
+                slotLabelInterval:
+                    '01:00:00',
+
+                snapDuration:
+                    '00:30:00',
+
+                allDaySlot: true,
+
+
+                // =========================================
+// EVENTOS
+// =========================================
+
+eventSources: [
+
+    // =====================================
+    // AGENDAMENTOS
+    // =====================================
+
+    {
+        url:
+            '/agenda/eventos/?modo={{ modo }}',
+
+        format:
+            'json'
+    },
+
+    // =====================================
+    // BLOQUEIOS
+    // =====================================
+
+    {
+        url:
+            '/agenda/eventos-bloqueios/?modo={{ modo }}',
+
+        format:
+            'json'
+    }
+
+],
+
+
+                // =========================================
+                // CABEÇALHO
+                // =========================================
+
+                headerToolbar: {
+
+                    left:
+                        'prev,next today',
+
+                    center:
+                        'title',
+
+                    right:
+                        'dayGridMonth,timeGridWeek,timeGridDay'
+
+                },
+
+
+                // =========================================
+                // BOTÕES
+                // =========================================
+
+                buttonText: {
+
+                    today: 'Hoje',
+
+                    month: 'Mês',
+
+                    week: 'Semana',
+
+                    day: 'Dia'
+
+                },
+
+
+                // =========================================
+                // CONTEÚDO DOS EVENTOS
+                // =========================================
+                //
+                // IMPORTANTE:
+                //
+                // Aqui tratamos separadamente:
+                //
+                // MÊS
+                // SEMANA
+                // DIA
+                //
+                // para não perder o nome/horário.
+                // =========================================
+
+                eventContent:
+                    function (arg) {
+
+                        const hora =
+                            arg.timeText || '';
+
+                        const paciente =
+                            arg.event
+                                .extendedProps
+                                .paciente || '';
+
+                        const container =
+                            document.createElement(
+                                'div'
+                            );
+
+
+                        // =================================
+                        // MÊS
+                        // =================================
+
+                        if (
+                            arg.view.type ===
+                            'dayGridMonth'
+                        ) {
+
+                            container.style.width =
+                                '100%';
+
+                            container.style.overflow =
+                                'hidden';
+
+
+                            const texto =
+                                document.createElement(
+                                    'span'
+                                );
+
+                            texto.textContent =
+                                hora
+                                +
+                                (
+                                    hora && paciente
+                                        ? ' '
+                                        : ''
+                                )
+                                +
+                                paciente;
+
+
+                            texto.style.display =
+                                'block';
+
+                            texto.style.whiteSpace =
+                                'nowrap';
+
+                            texto.style.overflow =
+                                'hidden';
+
+                            texto.style.textOverflow =
+                                'ellipsis';
+
+
+                            container.appendChild(
+                                texto
+                            );
+
+
+                            return {
+
+                                domNodes: [
+                                    container
+                                ]
+
+                            };
 
                         }
 
-                    });
+
+                        // =================================
+                        // SEMANA / DIA
+                        // =================================
+
+                        const horaEl =
+                            document.createElement(
+                                'div'
+                            );
+
+                        horaEl.textContent =
+                            hora;
+
+                        horaEl.style.fontWeight =
+                            '700';
+
+                        horaEl.style.fontSize =
+                            '12px';
+
+
+                        const pacienteEl =
+                            document.createElement(
+                                'div'
+                            );
+
+                        pacienteEl.textContent =
+                            paciente;
+
+                        pacienteEl.style.fontWeight =
+                            '600';
+
+                        pacienteEl.style.fontSize =
+                            '12px';
+
+
+                        container.appendChild(
+                            horaEl
+                        );
+
+                        container.appendChild(
+                            pacienteEl
+                        );
+
+
+                        return {
+
+                            domNodes: [
+                                container
+                            ]
+
+                        };
+
+                    },
+
+
+                // =========================================
+                // CLIQUE EM HORÁRIO VAZIO
+                // =========================================
+
+                dateClick:
+                    function (info) {
+
+                        // ---------------------------------
+                        // DATA LOCAL
+                        // ---------------------------------
+
+                        const data =
+                            info.date.getFullYear()
+                            +
+                            '-'
+                            +
+                            String(
+                                info.date.getMonth() + 1
+                            ).padStart(2, '0')
+                            +
+                            '-'
+                            +
+                            String(
+                                info.date.getDate()
+                            ).padStart(2, '0');
+
+
+                        // ---------------------------------
+                        // SEMANA / DIA
+                        // ---------------------------------
+
+                        const ehGradeHoraria =
+                            info.view.type ===
+                                'timeGridWeek'
+                            ||
+                            info.view.type ===
+                                'timeGridDay';
+
+
+                        // ---------------------------------
+                        // URL
+                        // ---------------------------------
+
+                        let url =
+                            "{% url 'novo_agendamento' %}"
+                            +
+                            "?data="
+                            +
+                            encodeURIComponent(
+                                data
+                            );
+
+
+                        // =================================
+                        // HORÁRIO
+                        // =================================
+
+                        if (ehGradeHoraria) {
+
+                            const hora =
+                                String(
+                                    info.date.getHours()
+                                ).padStart(2, '0');
+
+
+                            const minutoNumero =
+                                info.date.getMinutes();
+
+
+                            // ---------------------------------
+                            // GRADE DE 30 MINUTOS
+                            // ---------------------------------
+
+                            if (
+                                minutoNumero % 30 !== 0
+                            ) {
+
+                                alert(
+                                    'Selecione um horário disponível na grade da agenda.'
+                                );
+
+                                return;
+
+                            }
+
+
+                            const minuto =
+                                String(
+                                    minutoNumero
+                                ).padStart(2, '0');
+
+
+                            const horaFormatada =
+                                hora
+                                +
+                                ':'
+                                +
+                                minuto;
+
+
+                            url +=
+                                '&hora='
+                                +
+                                encodeURIComponent(
+                                    horaFormatada
+                                );
+
+                        }
+
+
+                        // =================================
+                        // ABRE NOVO AGENDAMENTO
+                        // =================================
+
+                        window.location.href =
+                            url;
+
+                    },
+
+
+                // =========================================
+// TOOLTIP / BLOQUEIOS
+// =========================================
+
+eventDidMount:
+    function (info) {
+
+        // =====================================
+        // BLOQUEIO DA AGENDA
+        // =====================================
+
+        if (
+            info.event
+                .extendedProps
+                .bloqueio
+        ) {
+
+            const tipo =
+                info.event
+                    .extendedProps
+                    .tipo
+                    || '';
+
+            const descricao =
+                info.event
+                    .extendedProps
+                    .descricao
+                    || '';
+
+            const profissional =
+                info.event
+                    .extendedProps
+                    .profissional
+                    || '';
+
+
+            // =================================
+            // CLASSE VISUAL
+            // =================================
+
+            info.el.classList.add(
+                'bloqueio-visual'
+            );
+
+
+            // =================================
+            // CONTAINER DO TEXTO
+            // =================================
+
+            const label =
+                document.createElement(
+                    'div'
+                );
+
+            label.className =
+                'bloqueio-label';
+
+
+            // =================================
+            // TEXTO PRINCIPAL
+            // =================================
+
+            const textoPrincipal =
+                document.createElement(
+                    'strong'
+                );
+
+            textoPrincipal.textContent =
+                '🔒 ' + tipo;
+
+            label.appendChild(
+                textoPrincipal
+            );
+
+
+            // =================================
+            // DESCRIÇÃO
+            // =================================
+
+            if (
+                descricao
+                &&
+                descricao !== tipo
+            ) {
+
+                const textoDescricao =
+                    document.createElement(
+                        'small'
+                    );
+
+                textoDescricao.textContent =
+                    descricao;
+
+                label.appendChild(
+                    textoDescricao
+                );
 
             }
 
-        });
 
-        function alterarStatus(status) {
+            // =================================
+            // PROFISSIONAL
+            // =================================
 
-            if (!eventoSelecionado) return;
+            if (
+                profissional
+                &&
+                profissional !==
+                    'Toda a clínica'
+            ) {
 
-            fetch('/agenda/alterar-status/', {
+                const textoProfissional =
+                    document.createElement(
+                        'small'
+                    );
+
+                textoProfissional.textContent =
+                    profissional;
+
+                label.appendChild(
+                    textoProfissional
+                );
+
+            }
+
+
+            // =================================
+            // INSERE O TEXTO NO BLOQUEIO
+            // =================================
+
+            info.el.appendChild(
+                label
+            );
+
+
+            // =================================
+            // TOOLTIP DO BLOQUEIO
+            // =================================
+
+            info.el.title =
+                tipo
+                +
+                (
+                    descricao
+                        ? '\n' + descricao
+                        : ''
+                )
+                +
+                (
+                    profissional
+                    &&
+                    profissional !==
+                        'Toda a clínica'
+                        ? '\n' + profissional
+                        : ''
+                );
+
+
+            // =================================
+            // IMPORTANTE
+            // Não tratar como paciente
+            // =================================
+
+            return;
+
+        }
+
+
+        // =====================================
+        // EVENTO NORMAL — PACIENTE
+        // =====================================
+
+        info.el.title =
+            'Paciente: ' +
+            (
+                info.event
+                    .extendedProps
+                    .paciente || ''
+            )
+            +
+            '\nStatus: ' +
+            (
+                info.event
+                    .extendedProps
+                    .status || ''
+            )
+            +
+            '\nProcedimento: ' +
+            (
+                info.event
+                    .extendedProps
+                    .procedimento || ''
+            )
+            +
+            '\nProfissional: ' +
+            (
+                info.event
+                    .extendedProps
+                    .profissional || ''
+            );
+
+    },
+
+
+                // =========================================
+                // CLIQUE NO EVENTO
+                // =========================================
+
+                eventClick:
+                    function (info) {
+
+                        eventoSelecionado =
+                            info.event;
+
+                        info.jsEvent.preventDefault();
+
+
+                        // ---------------------------------
+                        // PACIENTE
+                        // ---------------------------------
+
+                        const pacienteEl =
+                            document.getElementById(
+                                'modalPaciente'
+                            );
+
+                        if (pacienteEl) {
+
+                            pacienteEl.innerText =
+                                info.event
+                                    .extendedProps
+                                    .paciente || '';
+
+                        }
+
+
+                        // ---------------------------------
+                        // STATUS
+                        // ---------------------------------
+
+                        const statusEl =
+                            document.getElementById(
+                                'modalStatus'
+                            );
+
+                        if (statusEl) {
+
+                            const status =
+                                info.event
+                                    .extendedProps
+                                    .status || '';
+
+                            statusEl.innerText =
+                                status;
+
+                            statusEl.className =
+                                'badge fs-6';
+
+
+                            if (
+                                status ===
+                                'Confirmado'
+                            ) {
+
+                                statusEl.classList.add(
+                                    'bg-success'
+                                );
+
+                            }
+
+                            else if (
+                                status ===
+                                'Em Atendimento'
+                            ) {
+
+                                statusEl.classList.add(
+                                    'bg-warning'
+                                );
+
+                            }
+
+                            else if (
+                                status ===
+                                'Finalizado'
+                            ) {
+
+                                statusEl.classList.add(
+                                    'bg-secondary'
+                                );
+
+                            }
+
+                            else {
+
+                                statusEl.classList.add(
+                                    'bg-primary'
+                                );
+
+                            }
+
+                        }
+
+
+                        // ---------------------------------
+                        // PROCEDIMENTO
+                        // ---------------------------------
+
+                        const procedimentoEl =
+                            document.getElementById(
+                                'modalProcedimento'
+                            );
+
+                        if (procedimentoEl) {
+
+                            procedimentoEl.innerText =
+                                info.event
+                                    .extendedProps
+                                    .procedimento || '';
+
+                        }
+
+
+                        // ---------------------------------
+                        // PROFISSIONAL
+                        // ---------------------------------
+
+                        const profissionalEl =
+                            document.getElementById(
+                                'modalProfissional'
+                            );
+
+                        if (profissionalEl) {
+
+                            profissionalEl.innerText =
+                                info.event
+                                    .extendedProps
+                                    .profissional || '';
+
+                        }
+
+
+                        // ---------------------------------
+                        // PERFIL
+                        // ---------------------------------
+
+                        const btnPerfil =
+                            document.getElementById(
+                                'btnPerfil'
+                            );
+
+                        if (btnPerfil) {
+
+                            btnPerfil.href =
+                                info.event
+                                    .extendedProps
+                                    .perfil_url || '#';
+
+                        }
+
+
+                        // ---------------------------------
+                        // EDITAR
+                        // ---------------------------------
+
+                        const btnEditar =
+                            document.getElementById(
+                                'btnEditar'
+                            );
+
+                        if (btnEditar) {
+
+                            btnEditar.href =
+                                info.event
+                                    .extendedProps
+                                    .editar_url || '#';
+
+                        }
+
+
+                        // ---------------------------------
+                        // ATENDIMENTO
+                        // ---------------------------------
+
+                        const btnAtendimento =
+                            document.getElementById(
+                                'btnAtendimento'
+                            );
+
+                        if (btnAtendimento) {
+
+                            btnAtendimento.href =
+                                info.event
+                                    .extendedProps
+                                    .iniciar_url || '#';
+
+                        }
+
+
+                        // ---------------------------------
+                        // WHATSAPP
+                        // ---------------------------------
+
+                        const btnWhatsapp =
+                            document.getElementById(
+                                'btnWhatsapp'
+                            );
+
+                        if (btnWhatsapp) {
+
+                            btnWhatsapp.href =
+                                info.event
+                                    .extendedProps
+                                    .whatsapp_url || '#';
+
+                        }
+
+
+                        // ---------------------------------
+                        // MODAL
+                        // ---------------------------------
+
+                        const modalEl =
+                            document.getElementById(
+                                'eventoModal'
+                            );
+
+                        if (modalEl) {
+
+                            const modal =
+                                new bootstrap.Modal(
+                                    modalEl
+                                );
+
+                            modal.show();
+
+                        }
+
+                    },
+
+
+                // =========================================
+                // MOVER AGENDAMENTO
+                // =========================================
+
+                eventDrop:
+                    function (info) {
+
+                        fetch(
+                            '/agenda/mover-agendamento/',
+                            {
+
+                                method: 'POST',
+
+                                headers: {
+
+                                    'Content-Type':
+                                        'application/json',
+
+                                    'X-CSRFToken':
+                                        getCookie(
+                                            'csrftoken'
+                                        )
+
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        agendamento_id:
+                                            info.event.id,
+
+                                        nova_data:
+                                            info.event.startStr
+
+                                    })
+
+                            }
+                        )
+
+                        .then(
+                            response =>
+                                response.json()
+                        )
+
+                        .then(
+                            data => {
+
+                                if (
+                                    !data.sucesso
+                                ) {
+
+                                    alert(
+                                        data.mensagem
+                                        ||
+                                        'Erro ao mover agendamento.'
+                                    );
+
+                                    info.revert();
+
+                                }
+
+                            }
+                        )
+
+                        .catch(
+                            error => {
+
+                                console.error(
+                                    error
+                                );
+
+                                alert(
+                                    'Erro ao mover agendamento.'
+                                );
+
+                                info.revert();
+
+                            }
+                        );
+
+                    }
+
+            }
+        );
+
+
+    // =====================================================
+    // ALTERAR STATUS
+    // =====================================================
+
+    function alterarStatus(status) {
+
+        if (!eventoSelecionado) {
+
+            return;
+
+        }
+
+
+        fetch(
+            '/agenda/alterar-status/',
+            {
 
                 method: 'POST',
 
                 headers: {
 
-                    'Content-Type': 'application/json',
+                    'Content-Type':
+                        'application/json',
 
-                    'X-CSRFToken': getCookie('csrftoken')
+                    'X-CSRFToken':
+                        getCookie(
+                            'csrftoken'
+                        )
 
                 },
 
-                body: JSON.stringify({
+                body:
+                    JSON.stringify({
 
-                    agendamento_id: eventoSelecionado.id,
+                        agendamento_id:
+                            eventoSelecionado.id,
 
-                    status: status
+                        status:
+                            status
 
-                })
+                    })
 
-            })
+            }
+        )
 
-                .then(response => response.json())
+        .then(
+            response =>
+                response.json()
+        )
 
-                .then(data => {
+        .then(
+            data => {
 
-                    if (data.sucesso) {
+                if (data.sucesso) {
 
-                        let cor = '#0d6efd';
+                    let cor =
+                        '#0d6efd';
 
-                        if (status === 'confirmado')
-                            cor = '#198754';
 
-                        else if (status === 'atendimento')
-                            cor = '#f89847';
+                    if (
+                        status ===
+                        'confirmado'
+                    ) {
 
-                        else if (status === 'finalizado')
-                            cor = '#6c757d';
-
-                        else if (status === 'cancelado')
-                            cor = '#382a2b';
-
-                        else if (status === 'faltou')
-                            cor = '#e93636';
-
-                        eventoSelecionado.setProp(
-                            'backgroundColor',
-                            cor
-                        );
-
-                        eventoSelecionado.setProp(
-                            'borderColor',
-                            cor
-                        );
-
-                        bootstrap.Modal.getInstance(
-                            document.getElementById(
-                                'eventoModal'
-                            )
-                        ).hide();
+                        cor =
+                            '#198754';
 
                     }
 
-                });
+                    else if (
+                        status ===
+                        'atendimento'
+                    ) {
 
-        }
+                        cor =
+                            '#f89847';
 
+                    }
+
+                    else if (
+                        status ===
+                        'finalizado'
+                    ) {
+
+                        cor =
+                            '#6c757d';
+
+                    }
+
+                    else if (
+                        status ===
+                        'cancelado'
+                    ) {
+
+                        cor =
+                            '#382a2b';
+
+                    }
+
+                    else if (
+                        status ===
+                        'faltou'
+                    ) {
+
+                        cor =
+                            '#e93636';
+
+                    }
+
+
+                    eventoSelecionado.setProp(
+                        'backgroundColor',
+                        cor
+                    );
+
+                    eventoSelecionado.setProp(
+                        'borderColor',
+                        cor
+                    );
+
+
+                    const modalEl =
+                        document.getElementById(
+                            'eventoModal'
+                        );
+
+
+                    if (modalEl) {
+
+                        const modal =
+                            bootstrap.Modal
+                                .getInstance(
+                                    modalEl
+                                );
+
+
+                        if (modal) {
+
+                            modal.hide();
+
+                        }
+
+                    }
+
+                }
+
+                else {
+
+                    alert(
+                        data.mensagem
+                        ||
+                        'Não foi possível alterar o status.'
+                    );
+
+                }
+
+            }
+        )
+
+        .catch(
+            error => {
+
+                console.error(
+                    error
+                );
+
+                alert(
+                    'Erro ao alterar o status do agendamento.'
+                );
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // BOTÃO CONFIRMAR
+    // =====================================================
+
+    const btnConfirmar =
         document.getElementById(
             'btnConfirmar'
-        ).addEventListener(
+        );
+
+    if (btnConfirmar) {
+
+        btnConfirmar.addEventListener(
             'click',
             function (e) {
 
@@ -513,9 +1715,21 @@
             }
         );
 
+    }
+
+
+    // =====================================================
+    // BOTÃO FALTA
+    // =====================================================
+
+    const btnFalta =
         document.getElementById(
             'btnFalta'
-        ).addEventListener(
+        );
+
+    if (btnFalta) {
+
+        btnFalta.addEventListener(
             'click',
             function (e) {
 
@@ -528,9 +1742,21 @@
             }
         );
 
+    }
+
+
+    // =====================================================
+    // BOTÃO CANCELAR
+    // =====================================================
+
+    const btnCancelar =
         document.getElementById(
             'btnCancelar'
-        ).addEventListener(
+        );
+
+    if (btnCancelar) {
+
+        btnCancelar.addEventListener(
             'click',
             function (e) {
 
@@ -543,9 +1769,21 @@
             }
         );
 
+    }
+
+
+    // =====================================================
+    // BOTÃO FINALIZAR
+    // =====================================================
+
+    const btnFinalizar =
         document.getElementById(
             'btnFinalizar'
-        ).addEventListener(
+        );
+
+    if (btnFinalizar) {
+
+        btnFinalizar.addEventListener(
             'click',
             function (e) {
 
@@ -558,9 +1796,16 @@
             }
         );
 
-        calendar.render();
+    }
 
-    });
+
+    // =====================================================
+    // RENDERIZA O CALENDÁRIO
+    // =====================================================
+
+    calendar.render();
+
+});
 
 </script>
 
