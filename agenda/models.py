@@ -99,6 +99,15 @@ class Agendamento(models.Model):
         related_name="agendamentos",
     )
 
+    consultorio = models.ForeignKey(
+        "accounts.Consultorio",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="agendamentos",
+        verbose_name="Consultório",
+    )
+
     procedimento = models.ForeignKey(
         Procedimento,
         on_delete=models.SET_NULL,
@@ -268,41 +277,3 @@ class BloqueioAgenda(models.Model):
             f"{self.data_inicio.strftime('%d/%m/%Y')}"
         )
 
-# =====================================================
-# CONSULTÓRIOS
-# =====================================================
-
-class Consultorio(models.Model):
-
-    nome = models.CharField(
-        max_length=100,
-        verbose_name="Nome do consultório"
-    )
-
-    descricao = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Descrição"
-    )
-
-    ativo = models.BooleanField(
-        default=True,
-        verbose_name="Ativo"
-    )
-
-    criado_em = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    atualizado_em = models.DateTimeField(
-        auto_now=True
-    )
-
-    class Meta:
-        ordering = ["nome"]
-        verbose_name = "Consultório"
-        verbose_name_plural = "Consultórios"
-
-    def __str__(self):
-        return self.nome

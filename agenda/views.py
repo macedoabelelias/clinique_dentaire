@@ -1094,6 +1094,11 @@ def eventos_agenda(request):
                 ),
 
                 'whatsapp_url': whatsapp_url,
+                
+                "excluir_url": reverse(
+                    "excluir_agendamento",
+                    args=[agendamento.id]
+                ),
 
             },
 
@@ -1495,6 +1500,66 @@ def cancelar_agendamento(request, agendamento_id):
 
     return redirect(
         'agenda'
+    )
+
+# =========================================
+# EXCLUIR AGENDAMENTO
+# =========================================
+
+@login_required(login_url='/')
+@permissao_required("agenda", "excluir")
+def excluir_agendamento(request, agendamento_id):
+
+    agendamento = get_object_or_404(
+        Agendamento,
+        id=agendamento_id
+    )
+
+    # =========================================
+    # PROTEGE ATENDIMENTOS JÁ INICIADOS
+    # =========================================
+
+    if agendamento.status in [
+        "atendimento",
+        "finalizado",
+    ]:
+        messages.error(
+            request,
+            "Este agendamento não pode ser excluído "
+            "porque o atendimento já foi iniciado ou finalizado."
+        )
+
+        return redirect(
+            "agenda"
+        )
+
+    # =========================================
+    # CONFIRMAÇÃO
+    # =========================================
+
+    if request.method == "POST":
+
+        agendamento.delete()
+
+        messages.success(
+            request,
+            "Agendamento excluído com sucesso."
+        )
+
+        return redirect(
+            "agenda"
+        )
+
+    # =========================================
+    # TELA DE CONFIRMAÇÃO
+    # =========================================
+
+    return render(
+        request,
+        "agenda/agendamento_excluir.html",
+        {
+            "agendamento": agendamento,
+        }
     )
 
 # =========================================

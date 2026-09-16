@@ -78,6 +78,12 @@ urlpatterns = [
     ),
 
     path(
+        'excluir/<int:agendamento_id>/',
+        views.excluir_agendamento,
+        name='excluir_agendamento'
+    ),
+
+    path(
         'alterar-status/',
         views.alterar_status_ajax,
         name='alterar_status_ajax'

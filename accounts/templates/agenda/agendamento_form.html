@@ -11,38 +11,38 @@ Novo Agendamento
    DESTAQUE DOS ERROS DE VALIDAÇÃO DA AGENDA
    ========================================================= */
 
-.errorlist {
-    list-style: none;
-    margin: 8px 0 12px 0;
-    padding: 10px 14px 10px 42px;
+    .errorlist {
+        list-style: none;
+        margin: 8px 0 12px 0;
+        padding: 10px 14px 10px 42px;
 
-    background-color: #f8d7da;
-    border: 1px solid #f1aeb5;
-    border-radius: 8px;
+        background-color: #f8d7da;
+        border: 1px solid #f1aeb5;
+        border-radius: 8px;
 
-    color: #842029;
-    font-size: 0.95rem;
-    font-weight: 500;
+        color: #842029;
+        font-size: 0.95rem;
+        font-weight: 500;
 
-    position: relative;
-}
+        position: relative;
+    }
 
-.errorlist::before {
-    content: "⚠";
+    .errorlist::before {
+        content: "⚠";
 
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
 
-    font-size: 18px;
-    font-weight: bold;
-}
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-.errorlist li {
-    margin: 0;
-    padding: 0;
-}
+    .errorlist li {
+        margin: 0;
+        padding: 0;
+    }
 </style>
 
 <div class="container-fluid">
@@ -63,27 +63,24 @@ Novo Agendamento
 
             {{ form.paciente.label_tag }}
 
-            <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2">
 
-                <div>
-                    {{ form.paciente }}
-                </div>
-
-                <a
-                    href="{% url 'novo_paciente' %}?origem=agendamento{% if form.data.value %}&data={{ form.data.value }}{% endif %}{% if form.hora_inicio.value %}&hora={{ form.hora_inicio.value }}{% endif %}"
-                    class="btn btn-outline-primary btn-sm"
-                    title="Cadastrar novo paciente"
-                >
-
-                    <i class="bi bi-person-plus me-1"></i>
-
-                    Novo paciente
-
-                </a>
-
+            <div>
+                {{ form.paciente }}
             </div>
 
-            {{ form.paciente.errors }}
+            <a href="{% url 'novo_paciente' %}?origem=agendamento{% if form.data.value %}&data={{ form.data.value }}{% endif %}{% if form.hora_inicio.value %}&hora={{ form.hora_inicio.value }}{% endif %}"
+                class="btn btn-outline-primary btn-sm" title="Cadastrar novo paciente">
+
+                <i class="bi bi-person-plus me-1"></i>
+
+                Novo paciente
+
+            </a>
+
+        </div>
+
+        {{ form.paciente.errors }}
 
         </p>
 
@@ -104,8 +101,8 @@ Novo Agendamento
 
 
         <!-- =========================================
-             PROCEDIMENTO
-             ========================================= -->
+     PROCEDIMENTO
+     ========================================= -->
 
         <p>
 
@@ -114,6 +111,21 @@ Novo Agendamento
             {{ form.procedimento }}
 
             {{ form.procedimento.errors }}
+
+        </p>
+
+
+        <!-- =========================================
+        CONSULTÓRIO
+        ========================================= -->
+
+        <p>
+
+            {{ form.consultorio.label_tag }}
+
+            {{ form.consultorio }}
+
+            {{ form.consultorio.errors }}
 
         </p>
 
@@ -139,26 +151,21 @@ Novo Agendamento
 
         {% if form.hora_inicio.errors %}
 
-            <div
-                class="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 mb-3"
-                role="alert"
-            >
+        <div class="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 mb-3" role="alert">
 
-                <i
-                    class="bi bi-exclamation-triangle-fill fs-5"
-                ></i>
+            <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+
+            <div>
+
+                <strong>Atenção!</strong>
 
                 <div>
-
-                    <strong>Atenção!</strong>
-
-                    <div>
-                        {{ form.hora_inicio.errors.0 }}
-                    </div>
-
+                    {{ form.hora_inicio.errors.0 }}
                 </div>
 
             </div>
+
+        </div>
 
         {% endif %}
 
@@ -225,10 +232,7 @@ Novo Agendamento
              SALVAR
              ========================================= -->
 
-        <button
-            type="submit"
-            class="btn btn-primary"
-        >
+        <button type="submit" class="btn btn-primary">
 
             <i class="bi bi-check-circle me-1"></i>
 

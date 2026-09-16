@@ -18,6 +18,7 @@ class AgendamentoForm(forms.ModelForm):
 
             'paciente',
             'profissional',
+            'consultorio',
             'procedimento',
             'data',
             'hora_inicio',
@@ -49,7 +50,7 @@ class AgendamentoForm(forms.ModelForm):
 
         }
 
-    # =========================================
+        # =========================================
     # VALIDAÇÃO
     # =========================================
 
@@ -59,6 +60,10 @@ class AgendamentoForm(forms.ModelForm):
 
         profissional = cleaned_data.get(
             'profissional'
+        )
+
+        consultorio = cleaned_data.get(
+            'consultorio'
         )
 
         data = cleaned_data.get(
@@ -109,11 +114,9 @@ class AgendamentoForm(forms.ModelForm):
         # =========================================
 
         status_bloqueadores = [
-
             'agendado',
             'confirmado',
             'atendimento',
-
         ]
 
         # =========================================
@@ -138,9 +141,11 @@ class AgendamentoForm(forms.ModelForm):
 
             }
 
-            dia_funciona = dias_funcionamento.get(
-                data.weekday(),
-                False
+            dia_funciona = (
+                dias_funcionamento.get(
+                    data.weekday(),
+                    False
+                )
             )
 
             if not dia_funciona:
@@ -328,10 +333,10 @@ class AgendamentoForm(forms.ModelForm):
             )
         )
 
-        bloqueios = list(
-            bloqueios_clinica
-        ) + list(
-            bloqueios_profissional
+        bloqueios = (
+            list(bloqueios_clinica)
+            +
+            list(bloqueios_profissional)
         )
 
         # =========================================
@@ -372,9 +377,9 @@ class AgendamentoForm(forms.ModelForm):
                 self.add_error(
                     'data',
                     (
-                        f'Não é possível realizar '
-                        f'agendamento nesta data. '
-                        f'Existe um bloqueio '
+                        'Não é possível realizar '
+                        'agendamento nesta data. '
+                        'Existe um bloqueio '
                         f'{descricao_profissional}: '
                         f'{descricao}.'
                     )
@@ -415,7 +420,7 @@ class AgendamentoForm(forms.ModelForm):
                 self.add_error(
                     'hora_inicio',
                     (
-                        f'Horário indisponível. '
+                        'Horário indisponível. '
                         f'Existe um bloqueio de '
                         f'{bloqueio.hora_inicio.strftime("%H:%M")} '
                         f'às '
@@ -431,14 +436,13 @@ class AgendamentoForm(forms.ModelForm):
         # PROFISSIONAL E MESMA DATA
         # =========================================
 
-        conflitos = Agendamento.objects.filter(
-
-            profissional=profissional,
-
-            data=data,
-
-            status__in=status_bloqueadores
-
+        conflitos = (
+            Agendamento.objects
+            .filter(
+                profissional=profissional,
+                data=data,
+                status__in=status_bloqueadores
+            )
         )
 
         # =========================================
@@ -448,8 +452,10 @@ class AgendamentoForm(forms.ModelForm):
 
         if self.instance and self.instance.pk:
 
-            conflitos = conflitos.exclude(
-                pk=self.instance.pk
+            conflitos = (
+                conflitos.exclude(
+                    pk=self.instance.pk
+                )
             )
 
         # =========================================
@@ -497,5 +503,84 @@ class AgendamentoForm(forms.ModelForm):
                 )
 
                 break
+
+        # =========================================
+        # BUSCA AGENDAMENTOS DO MESMO
+        # CONSULTÓRIO E MESMA DATA
+        # =========================================
+
+        if consultorio:
+
+            conflitos_consultorio = (
+                Agendamento.objects
+                .filter(
+                    consultorio=consultorio,
+                    data=data,
+                    status__in=status_bloqueadores
+                )
+            )
+
+            # =====================================
+            # NA EDIÇÃO, IGNORA O PRÓPRIO
+            # AGENDAMENTO
+            # =====================================
+
+            if self.instance and self.instance.pk:
+
+                conflitos_consultorio = (
+                    conflitos_consultorio.exclude(
+                        pk=self.instance.pk
+                    )
+                )
+
+            # =====================================
+            # VERIFICA SOBREPOSIÇÃO
+            # =====================================
+
+            for agendamento in conflitos_consultorio:
+
+                inicio_existente = datetime.combine(
+                    agendamento.data,
+                    agendamento.hora_inicio
+                )
+
+                fim_existente = (
+                    inicio_existente
+                    +
+                    timedelta(
+                        minutes=int(
+                            agendamento.duracao
+                        )
+                    )
+                )
+
+                # =====================================
+                # REGRA DE SOBREPOSIÇÃO
+                # =====================================
+
+                if (
+                    inicio_novo < fim_existente
+                    and
+                    fim_novo > inicio_existente
+                ):
+
+                    self.add_error(
+                        'hora_inicio',
+                        (
+                            'Horário indisponível. '
+                            f'O consultório '
+                            f'{consultorio.nome} já possui '
+                            f'um agendamento das '
+                            f'{agendamento.hora_inicio.strftime("%H:%M")} '
+                            f'às '
+                            f'{fim_existente.strftime("%H:%M")}.'
+                        )
+                    )
+
+                    break
+
+        # =========================================
+        # RETORNA OS DADOS
+        # =========================================
 
         return cleaned_data

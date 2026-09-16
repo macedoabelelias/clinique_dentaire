@@ -326,24 +326,29 @@
 
                     <div class="d-flex justify-content-center gap-2">
 
-                        <a id="btnPerfil" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-person"></i>
-                            Perfil
-                        </a>
+                    <a id="btnPerfil" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-person"></i>
+                        Perfil
+                    </a>
 
-                        <a id="btnEditar" class="btn btn-primary btn-sm">
-                            <i class="bi bi-pencil-square"></i>
-                            Editar
-                        </a>
+                    <a id="btnEditar" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil-square"></i>
+                        Editar
+                    </a>
 
-                        <a id="btnWhatsapp" class="btn btn-success btn-sm" target="_blank">
+                    <a id="btnWhatsapp" class="btn btn-success btn-sm" target="_blank">
 
-                            <i class="bi bi-whatsapp"></i>
-                            WhatsApp
+                        <i class="bi bi-whatsapp"></i>
+                        WhatsApp
 
-                        </a>
+                    </a>
 
-                    </div>
+                    <a id="btnExcluir" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                        Excluir
+                    </a>
+
+                </div>
 
                 </div>
 
@@ -1194,239 +1199,258 @@ eventDidMount:
 
 
                 // =========================================
-                // CLIQUE NO EVENTO
-                // =========================================
+// CLIQUE NO EVENTO
+// =========================================
 
-                eventClick:
-                    function (info) {
+eventClick:
+    function (info) {
 
-                        eventoSelecionado =
-                            info.event;
+        eventoSelecionado =
+            info.event;
 
-                        info.jsEvent.preventDefault();
+        info.jsEvent.preventDefault();
 
 
-                        // ---------------------------------
-                        // PACIENTE
-                        // ---------------------------------
+        // ---------------------------------
+        // PACIENTE
+        // ---------------------------------
 
-                        const pacienteEl =
-                            document.getElementById(
-                                'modalPaciente'
-                            );
+        const pacienteEl =
+            document.getElementById(
+                'modalPaciente'
+            );
 
-                        if (pacienteEl) {
+        if (pacienteEl) {
 
-                            pacienteEl.innerText =
-                                info.event
-                                    .extendedProps
-                                    .paciente || '';
+            pacienteEl.innerText =
+                info.event
+                    .extendedProps
+                    .paciente || '';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // STATUS
-                        // ---------------------------------
+        // ---------------------------------
+        // STATUS
+        // ---------------------------------
 
-                        const statusEl =
-                            document.getElementById(
-                                'modalStatus'
-                            );
+        const statusEl =
+            document.getElementById(
+                'modalStatus'
+            );
 
-                        if (statusEl) {
+        if (statusEl) {
 
-                            const status =
-                                info.event
-                                    .extendedProps
-                                    .status || '';
+            const status =
+                info.event
+                    .extendedProps
+                    .status || '';
 
-                            statusEl.innerText =
-                                status;
+            statusEl.innerText =
+                status;
 
-                            statusEl.className =
-                                'badge fs-6';
+            statusEl.className =
+                'badge fs-6';
 
 
-                            if (
-                                status ===
-                                'Confirmado'
-                            ) {
+            if (
+                status ===
+                'Confirmado'
+            ) {
 
-                                statusEl.classList.add(
-                                    'bg-success'
-                                );
+                statusEl.classList.add(
+                    'bg-success'
+                );
 
-                            }
+            }
 
-                            else if (
-                                status ===
-                                'Em Atendimento'
-                            ) {
+            else if (
+                status ===
+                'Em Atendimento'
+            ) {
 
-                                statusEl.classList.add(
-                                    'bg-warning'
-                                );
+                statusEl.classList.add(
+                    'bg-warning'
+                );
 
-                            }
+            }
 
-                            else if (
-                                status ===
-                                'Finalizado'
-                            ) {
+            else if (
+                status ===
+                'Finalizado'
+            ) {
 
-                                statusEl.classList.add(
-                                    'bg-secondary'
-                                );
+                statusEl.classList.add(
+                    'bg-secondary'
+                );
 
-                            }
+            }
 
-                            else {
+            else {
 
-                                statusEl.classList.add(
-                                    'bg-primary'
-                                );
+                statusEl.classList.add(
+                    'bg-primary'
+                );
 
-                            }
+            }
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // PROCEDIMENTO
-                        // ---------------------------------
+        // ---------------------------------
+        // PROCEDIMENTO
+        // ---------------------------------
 
-                        const procedimentoEl =
-                            document.getElementById(
-                                'modalProcedimento'
-                            );
+        const procedimentoEl =
+            document.getElementById(
+                'modalProcedimento'
+            );
 
-                        if (procedimentoEl) {
+        if (procedimentoEl) {
 
-                            procedimentoEl.innerText =
-                                info.event
-                                    .extendedProps
-                                    .procedimento || '';
+            procedimentoEl.innerText =
+                info.event
+                    .extendedProps
+                    .procedimento || '';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // PROFISSIONAL
-                        // ---------------------------------
+        // ---------------------------------
+        // PROFISSIONAL
+        // ---------------------------------
 
-                        const profissionalEl =
-                            document.getElementById(
-                                'modalProfissional'
-                            );
+        const profissionalEl =
+            document.getElementById(
+                'modalProfissional'
+            );
 
-                        if (profissionalEl) {
+        if (profissionalEl) {
 
-                            profissionalEl.innerText =
-                                info.event
-                                    .extendedProps
-                                    .profissional || '';
+            profissionalEl.innerText =
+                info.event
+                    .extendedProps
+                    .profissional || '';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // PERFIL
-                        // ---------------------------------
+        // ---------------------------------
+        // PERFIL
+        // ---------------------------------
 
-                        const btnPerfil =
-                            document.getElementById(
-                                'btnPerfil'
-                            );
+        const btnPerfil =
+            document.getElementById(
+                'btnPerfil'
+            );
 
-                        if (btnPerfil) {
+        if (btnPerfil) {
 
-                            btnPerfil.href =
-                                info.event
-                                    .extendedProps
-                                    .perfil_url || '#';
+            btnPerfil.href =
+                info.event
+                    .extendedProps
+                    .perfil_url || '#';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // EDITAR
-                        // ---------------------------------
+        // ---------------------------------
+        // EDITAR
+        // ---------------------------------
 
-                        const btnEditar =
-                            document.getElementById(
-                                'btnEditar'
-                            );
+        const btnEditar =
+            document.getElementById(
+                'btnEditar'
+            );
 
-                        if (btnEditar) {
+        if (btnEditar) {
 
-                            btnEditar.href =
-                                info.event
-                                    .extendedProps
-                                    .editar_url || '#';
+            btnEditar.href =
+                info.event
+                    .extendedProps
+                    .editar_url || '#';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // ATENDIMENTO
-                        // ---------------------------------
+        // ---------------------------------
+        // ATENDIMENTO
+        // ---------------------------------
 
-                        const btnAtendimento =
-                            document.getElementById(
-                                'btnAtendimento'
-                            );
+        const btnAtendimento =
+            document.getElementById(
+                'btnAtendimento'
+            );
 
-                        if (btnAtendimento) {
+        if (btnAtendimento) {
 
-                            btnAtendimento.href =
-                                info.event
-                                    .extendedProps
-                                    .iniciar_url || '#';
+            btnAtendimento.href =
+                info.event
+                    .extendedProps
+                    .iniciar_url || '#';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // WHATSAPP
-                        // ---------------------------------
+        // ---------------------------------
+        // WHATSAPP
+        // ---------------------------------
 
-                        const btnWhatsapp =
-                            document.getElementById(
-                                'btnWhatsapp'
-                            );
+        const btnWhatsapp =
+            document.getElementById(
+                'btnWhatsapp'
+            );
 
-                        if (btnWhatsapp) {
+        if (btnWhatsapp) {
 
-                            btnWhatsapp.href =
-                                info.event
-                                    .extendedProps
-                                    .whatsapp_url || '#';
+            btnWhatsapp.href =
+                info.event
+                    .extendedProps
+                    .whatsapp_url || '#';
 
-                        }
+        }
 
 
-                        // ---------------------------------
-                        // MODAL
-                        // ---------------------------------
+        // ---------------------------------
+        // EXCLUIR
+        // ---------------------------------
 
-                        const modalEl =
-                            document.getElementById(
-                                'eventoModal'
-                            );
+        const btnExcluir =
+            document.getElementById(
+                'btnExcluir'
+            );
 
-                        if (modalEl) {
+        if (btnExcluir) {
 
-                            const modal =
-                                new bootstrap.Modal(
-                                    modalEl
-                                );
+            btnExcluir.href =
+                info.event
+                    .extendedProps
+                    .excluir_url || '#';
 
-                            modal.show();
+        }
 
-                        }
 
-                    },
+        // ---------------------------------
+        // MODAL
+        // ---------------------------------
+
+        const modalEl =
+            document.getElementById(
+                'eventoModal'
+            );
+
+        if (modalEl) {
+
+            const modal =
+                new bootstrap.Modal(
+                    modalEl
+                );
+
+            modal.show();
+
+        }
+
+    },
 
 
                 // =========================================
