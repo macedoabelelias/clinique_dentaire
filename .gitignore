@@ -51,3 +51,5 @@ env/
 
 .DS_Store
 Thumbs.db
+
+db_antes_limpeza_*.sqlite3
