@@ -756,7 +756,7 @@ class Procedimento(models.Model):
 
     )
 
-    # =========================================
+        # =========================================
     # TIPO
     # =========================================
 
@@ -767,6 +767,18 @@ class Procedimento(models.Model):
         choices=TIPOS,
 
         default='dente'
+
+    )
+
+    # =========================================
+    # SELEÇÃO MÚLTIPLA DE DENTES
+    # =========================================
+
+    permite_multiplos_dentes = models.BooleanField(
+
+        "Permite seleção múltipla de dentes",
+
+        default=False
 
     )
 

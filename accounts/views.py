@@ -4347,12 +4347,16 @@ def odontograma(request, id):
         )
 
         # =================================
-        # DENTE
+        # DENTES
         # =================================
 
-        dente = request.POST.get(
+        dentes = request.POST.getlist(
             "dente"
         )
+
+        # Mantém compatibilidade com
+        # procedimentos de um único dente.
+        dente = dentes[0] if dentes else None
 
         # =================================
         # FACE
@@ -4408,140 +4412,68 @@ def odontograma(request, id):
                     convenio.indice
                 )
 
-        # =================================
-        # CRIA ITEM DO ORÇAMENTO
-        # =================================
-
-        item = ItemOrcamento.objects.create(
-
-            orcamento=orcamento,
-
-            procedimento=procedimento,
-
-            tipo_local="dente",
-
-            dente=dente,
-
-            face=face,
-
-            posicao_icone=posicao_icone,
-
-            valor_unitario=valor_unitario,
-
-            status=status
-        )
-
                 # =====================================
-        # INTEGRAÇÃO COM ENDODONTIA
+        # CRIA ITENS DO ORÇAMENTO
         # =====================================
 
-        if (
-            procedimento
-            and procedimento.nome
-            and procedimento.nome.lower().startswith(
-                "tratamento endodôntico"
+        for dente_atual in dentes:
+
+            item = ItemOrcamento.objects.create(
+
+                orcamento=orcamento,
+
+                procedimento=procedimento,
+
+                tipo_local="dente",
+
+                dente=dente_atual,
+
+                face=face,
+
+                posicao_icone=posicao_icone,
+
+                valor_unitario=valor_unitario,
+
+                status=status
             )
-            and item.status in [
-                "planejado",
-                "andamento",
-                "realizado",
-            ]
-            and dente
-        ):
 
-            documento_endodontia = (
-                DocumentoClinico.objects.create(
-                    paciente=paciente,
+            # =====================================
+            # INTEGRAÇÃO COM ENDODONTIA
+            # =====================================
 
-                    titulo=(
-                        f"Endodontia - "
-                        f"Dente {dente}"
-                    ),
-
-                    tipo="personalizado",
-
-                    conteudo=(
-                        "<h2>ENDODONTIA</h2>"
-                        "<p>"
-                        f"Tratamento endodôntico "
-                        f"do dente {dente}."
-                        "</p>"
-                    ),
-
-                    status="rascunho"
+            if (
+                procedimento
+                and procedimento.nome
+                and procedimento.nome.lower().startswith(
+                    "tratamento endodôntico"
                 )
-            )
+                and item.status in [
+                    "planejado",
+                    "andamento",
+                    "realizado",
+                ]
+                and dente_atual
+            ):
 
-            dentista_responsavel = None
-
-            if tratamento:
-
-                dentista_responsavel = getattr(
-                    tratamento.dentista,
-                    "perfil",
-                    None
-                )
-
-            Endodontia.objects.create(
-
-                documento=documento_endodontia,
-
-                paciente=paciente,
-
-                item_orcamento=item,
-
-                elemento=str(dente),
-
-                dentista_responsavel=dentista_responsavel
-
-            )
-
-                # =====================================
-        # INTEGRAÇÃO COM IMPLANTODONTIA
-        # =====================================
-
-        if (
-            procedimento
-            and procedimento.nome == "Implante (fase cirúrgica)"
-            and item.status in [
-                "planejado",
-                "andamento",
-                "realizado",
-            ]
-            and dente
-        ):
-
-            # =================================
-            # LOCALIZA IMPLANTODONTIA DO PACIENTE
-            # =================================
-
-            implantodontia = (
-                Implantodontia.objects
-                .filter(
-                    paciente=paciente
-                )
-                .order_by("-criado_em")
-                .first()
-            )
-
-            # =================================
-            # CRIA A ESTRUTURA SE NÃO EXISTIR
-            # =================================
-
-            if not implantodontia:
-
-                documento_implantodontia = (
+                documento_endodontia = (
                     DocumentoClinico.objects.create(
                         paciente=paciente,
-                        titulo=f"Implantodontia - {paciente.nome}",
+
+                        titulo=(
+                            f"Endodontia - "
+                            f"Dente {dente_atual}"
+                        ),
+
                         tipo="personalizado",
+
                         conteudo=(
-                            "<h2>IMPLANTODONTIA</h2>"
+                            "<h2>ENDODONTIA</h2>"
                             "<p>"
-                            "Registro técnico dos "
-                            "implantes do paciente."
+                            f"Tratamento endodôntico "
+                            f"do dente {dente_atual}."
                             "</p>"
                         ),
+
                         status="rascunho"
                     )
                 )
@@ -4549,58 +4481,133 @@ def odontograma(request, id):
                 dentista_responsavel = None
 
                 if tratamento:
+
                     dentista_responsavel = getattr(
                         tratamento.dentista,
                         "perfil",
                         None
                     )
 
+                Endodontia.objects.create(
+
+                    documento=documento_endodontia,
+
+                    paciente=paciente,
+
+                    item_orcamento=item,
+
+                    elemento=str(dente_atual),
+
+                    dentista_responsavel=dentista_responsavel
+
+                )
+
+            # =====================================
+            # INTEGRAÇÃO COM IMPLANTODONTIA
+            # =====================================
+
+            if (
+                procedimento
+                and procedimento.nome == "Implante (fase cirúrgica)"
+                and item.status in [
+                    "planejado",
+                    "andamento",
+                    "realizado",
+                ]
+                and dente_atual
+            ):
+
+                # =================================
+                # LOCALIZA IMPLANTODONTIA DO PACIENTE
+                # =================================
+
                 implantodontia = (
-                    Implantodontia.objects.create(
-                        documento=documento_implantodontia,
-                        paciente=paciente,
-                        dentista_responsavel=dentista_responsavel
+                    Implantodontia.objects
+                    .filter(
+                        paciente=paciente
                     )
+                    .order_by("-criado_em")
+                    .first()
+                )
+
+                # =================================
+                # CRIA A ESTRUTURA SE NÃO EXISTIR
+                # =================================
+
+                if not implantodontia:
+
+                    documento_implantodontia = (
+                        DocumentoClinico.objects.create(
+                            paciente=paciente,
+                            titulo=f"Implantodontia - {paciente.nome}",
+                            tipo="personalizado",
+                            conteudo=(
+                                "<h2>IMPLANTODONTIA</h2>"
+                                "<p>"
+                                "Registro técnico dos "
+                                "implantes do paciente."
+                                "</p>"
+                            ),
+                            status="rascunho"
+                        )
+                    )
+
+                    dentista_responsavel = None
+
+                    if tratamento:
+
+                        dentista_responsavel = getattr(
+                            tratamento.dentista,
+                            "perfil",
+                            None
+                        )
+
+                    implantodontia = (
+                        Implantodontia.objects.create(
+                            documento=documento_implantodontia,
+                            paciente=paciente,
+                            dentista_responsavel=dentista_responsavel
+                        )
+                    )
+
+                # =================================
+                # CRIA O REGISTRO TÉCNICO DO IMPLANTE
+                # =================================
+
+                ImplantodontiaImplante.objects.get_or_create(
+                    item_orcamento=item,
+                    defaults={
+                        "implantodontia": implantodontia,
+                        "elemento": str(dente_atual),
+                    }
                 )
 
             # =================================
-            # CRIA O REGISTRO TÉCNICO DO IMPLANTE
+            # REGISTRA EVOLUÇÃO CLÍNICA
             # =================================
 
-            ImplantodontiaImplante.objects.get_or_create(
+            EvolucaoClinica.objects.create(
+
+                paciente=paciente,
+
+                tratamento=tratamento,
+
+                orcamento=orcamento,
+
                 item_orcamento=item,
-                defaults={
-                    "implantodontia": implantodontia,
-                    "elemento": str(dente),
-                }
+
+                dente=dente_atual,
+
+                face=face,
+
+                posicao_icone=posicao_icone,
+
+                procedimento=procedimento,
+
+                status=status,
+
+                descricao=descricao
             )
-
-        # =================================
-        # REGISTRA EVOLUÇÃO CLÍNICA
-        # =================================
-
-        EvolucaoClinica.objects.create(
-
-            paciente=paciente,
-
-            tratamento=tratamento,
-
-            orcamento=orcamento,
-
-            item_orcamento=item,
-
-            dente=dente,
-
-            face=face,
-
-            posicao_icone=posicao_icone,
-
-            procedimento=procedimento,
-
-            status=status,
-
-            descricao=descricao
-        )
 
         # =================================
         # RETORNA AO MESMO TRATAMENTO

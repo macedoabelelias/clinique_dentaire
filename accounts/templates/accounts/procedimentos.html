@@ -98,6 +98,27 @@
 
                     </div>
 
+<!-- SELEÇÃO MÚLTIPLA -->
+<div class="row g-3 mt-2">
+
+    <div class="col-md-12">
+
+        <div class="form-check">
+            {{ form.permite_multiplos_dentes }}
+
+            <label class="form-check-label fw-semibold" for="{{ form.permite_multiplos_dentes.id_for_label }}">
+                Permitir seleção múltipla de dentes
+            </label>
+        </div>
+
+        <small class="text-muted d-block mt-1">
+            Permite selecionar vários dentes simultaneamente para este procedimento no odontograma.
+        </small>
+
+    </div>
+
+</div>
+
 <!-- LINHA ÍCONE / POSIÇÃO / STATUS -->
 <div class="row g-4 align-items-start mt-2">
 

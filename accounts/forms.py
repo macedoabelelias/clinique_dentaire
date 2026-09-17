@@ -38,6 +38,7 @@ class ProcedimentoForm(forms.ModelForm):
             'nome',
             'categoria',
             'tipo',
+            'permite_multiplos_dentes',
             'status',
 
             'icone',

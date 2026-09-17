@@ -1317,6 +1317,52 @@
 
 
 /* =========================================================
+   SELEÇÃO MÚLTIPLA DE DENTES
+   ========================================================= */
+
+.dente-multiselecao {
+    outline: 3px solid #22c55e !important;
+    outline-offset: 4px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.dente-multiselecao:hover {
+    filter: brightness(1.03);
+}
+
+#barraSelecaoMultipla {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1060;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #dfe6ef;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+
+#barraSelecaoMultipla.ativa {
+    display: flex;
+}
+
+#barraSelecaoMultipla .contador {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+#barraSelecaoMultipla .texto {
+    font-size: 11px;
+    color: #667085;
+}
+
+/* =========================================================
    BARRA DE ROLAGEM DISCRETA
    ========================================================= */
 
@@ -2333,7 +2379,7 @@ LAYOUT
         data-posicao="rotacao-45"
         title="Rotação +45°">
 
-    <div class="desenho-posicao rotacao">
+    <div class="desenho-posicao rotacao-45">
         <img src="{% static 'img/dentes/46.png' %}">
     </div>
 
@@ -2348,7 +2394,7 @@ LAYOUT
         data-posicao="rotacao-menos-45"
         title="Rotação -45°">
 
-    <div class="desenho-posicao rotacao">
+    <div class="desenho-posicao rotacao-menos-45">
         <img src="{% static 'img/dentes/46.png' %}">
     </div>
 
@@ -2363,7 +2409,7 @@ LAYOUT
         data-posicao="rotacao-35"
         title="Rotação +35°">
 
-    <div class="desenho-posicao rotacao">
+    <div class="desenho-posicao rotacao-35">
         <img src="{% static 'img/dentes/46.png' %}">
     </div>
 
@@ -2378,7 +2424,7 @@ LAYOUT
         data-posicao="rotacao-menos-35"
         title="Rotação -35°">
 
-    <div class="desenho-posicao rotacao">
+    <div class="desenho-posicao rotacao-menos-35">
         <img src="{% static 'img/dentes/46.png' %}">
     </div>
 
@@ -3186,14 +3232,6 @@ CARD RADIOGRAFIAS E FOTOS
                                     Incluso — Inclinado para distal
                                 </option>
 
-                                <option value="inclinado_direita">
-                                    Inclinado para direita
-                                </option>
-
-                                <option value="inclinado_esquerda">
-                                    Inclinado para esquerda
-                                </option>
-
                                 <option value="rotacao">
                                     Rotação / Giro
                                 </option>
@@ -3235,7 +3273,10 @@ CARD RADIOGRAFIAS E FOTOS
 
                                     {% for procedimento in categoria.list %}
 
-                                    <option value="{{ procedimento.id }}">
+                                    <option
+                                        value="{{ procedimento.id }}"
+                                        data-multiplos="{{ procedimento.permite_multiplos_dentes|yesno:'true,false' }}"
+                                    >
                                         {{ procedimento.nome }}
                                     </option>
 
@@ -4088,6 +4129,432 @@ document.addEventListener(
 
 
         /* =====================================================
+           SELEÇÃO MÚLTIPLA DE DENTES
+           ===================================================== */
+
+        let modoMultiselecao = false;
+        const dentesMultiselecionados = new Set();
+
+        function procedimentoPermiteMultiplos() {
+
+            if (!campoProcedimento) {
+                return false;
+            }
+
+            const opcaoSelecionada =
+                campoProcedimento.options[
+                    campoProcedimento.selectedIndex
+                ];
+
+            return (
+                opcaoSelecionada &&
+                opcaoSelecionada.dataset.multiplos === "true"
+            );
+
+        }
+
+        function obterOuCriarBarraSelecao() {
+
+            let barra =
+                document.getElementById(
+                    "barraSelecaoMultipla"
+                );
+
+            if (barra) {
+                return barra;
+            }
+
+            barra = document.createElement("div");
+            barra.id = "barraSelecaoMultipla";
+            barra.innerHTML = `
+                <span class="contador">
+                    0 dentes selecionados
+                </span>
+                <span class="texto">
+                    Clique nos dentes para selecionar ou remover.
+                </span>
+                <button
+                    type="button"
+                    class="btn-anamnese-outline"
+                    id="cancelarSelecaoMultipla"
+                >
+                    Cancelar
+                </button>
+                <button
+                    type="button"
+                    class="btn-anamnese"
+                    id="concluirSelecaoMultipla"
+                >
+                    Concluir seleção
+                </button>
+            `;
+
+            document.body.appendChild(barra);
+
+            document
+                .getElementById("cancelarSelecaoMultipla")
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        sairModoMultiselecao();
+
+                    }
+                );
+
+            document
+    .getElementById("concluirSelecaoMultipla")
+    .addEventListener(
+        "click",
+        function () {
+
+            /* =========================================
+               VERIFICA SE EXISTE PELO MENOS UM DENTE
+               ========================================= */
+
+            if (
+                dentesMultiselecionados.size === 0
+            ) {
+                alert(
+                    "Selecione pelo menos um dente."
+                );
+                return;
+            }
+
+
+            /* =========================================
+               DENTES SELECIONADOS
+               ========================================= */
+
+            const dentesSelecionados =
+                Array.from(
+                    dentesMultiselecionados
+                );
+
+
+            /* =========================================
+               REMOVE CAMPOS OCULTOS ANTERIORES
+               ========================================= */
+
+            formEvolucao
+                .querySelectorAll(
+                    ".dente-multiselecao-hidden"
+                )
+                .forEach(function (campo) {
+
+                    campo.remove();
+
+                });
+
+
+            /* =========================================
+               PRIMEIRO DENTE
+               USA O CAMPO ORIGINAL DA MODAL
+               ========================================= */
+
+            const campoDenteModal =
+                document.getElementById(
+                    "denteSelecionado"
+                );
+
+            if (campoDenteModal) {
+
+                campoDenteModal.value =
+                    dentesSelecionados[0];
+
+            }
+
+
+            /* =========================================
+               DEMAIS DENTES
+               CRIA CAMPOS HIDDEN COM name="dente"
+               ========================================= */
+
+            dentesSelecionados
+                .slice(1)
+                .forEach(function (numeroDente) {
+
+                    const campo =
+                        document.createElement(
+                            "input"
+                        );
+
+                    campo.type = "hidden";
+
+                    campo.name = "dente";
+
+                    campo.value =
+                        numeroDente;
+
+                    campo.className =
+                        "dente-multiselecao-hidden";
+
+                    formEvolucao.appendChild(
+                        campo
+                    );
+
+                });
+
+
+            /* =========================================
+            ENCERRA O MODO DE SELEÇÃO
+            ========================================= */
+
+            modoMultiselecao = false;
+
+
+            dentes.forEach(function (dente) {
+
+                dente.classList.remove(
+                    "dente-multiselecao"
+                );
+
+            });
+
+
+            /* =========================================
+            REMOVE A BARRA DE SELEÇÃO
+            ========================================= */
+
+            const barra =
+                document.getElementById(
+                    "barraSelecaoMultipla"
+                );
+
+            if (barra) {
+
+                barra.remove();
+
+            }
+
+
+            /* =========================================
+            ABRE NOVAMENTE A MODAL
+            ========================================= */
+
+            const modalElement =
+                document.getElementById(
+                    "modalEvolucao"
+                );
+
+            if (modalElement) {
+
+                bootstrap.Modal
+                    .getOrCreateInstance(
+                        modalElement
+                    )
+                    .show();
+
+            }
+
+
+            console.log(
+                "SELEÇÃO MÚLTIPLA CONCLUÍDA:",
+                dentesSelecionados
+            );
+
+        }
+    );
+
+            return barra;
+
+        }
+
+        function atualizarSelecaoMultiplaUI() {
+
+            const barra =
+                obterOuCriarBarraSelecao();
+
+            const contador =
+                barra.querySelector(".contador");
+
+            const quantidade =
+                dentesMultiselecionados.size;
+
+            contador.textContent =
+                quantidade === 1
+                    ? "1 dente selecionado"
+                    : `${quantidade} dentes selecionados`;
+
+            barra.classList.toggle(
+                "ativa",
+                modoMultiselecao
+            );
+
+            barra.style.display =
+                modoMultiselecao
+                    ? "flex"
+                    : "none";
+
+            dentes.forEach(function (dente) {
+
+                const numero =
+                    String(dente.dataset.dente);
+
+                dente.classList.toggle(
+                    "dente-multiselecao",
+                    dentesMultiselecionados.has(numero)
+                );
+
+            });
+
+        }
+
+        function entrarModoMultiselecao(numeroInicial) {
+
+            removerCamposDentesMultiplos();
+
+            modoMultiselecao = true;
+            dentesMultiselecionados.clear();
+
+            if (numeroInicial) {
+                dentesMultiselecionados.add(
+                    String(numeroInicial)
+                );
+            }
+
+            atualizarSelecaoMultiplaUI();
+
+            const modalElement =
+                document.getElementById(
+                    "modalEvolucao"
+                );
+
+            if (modalElement) {
+
+                const instancia =
+                    bootstrap.Modal.getInstance(
+                        modalElement
+                    );
+
+                if (instancia) {
+                    instancia.hide();
+                }
+
+            }
+
+            console.log(
+                "MODO MULTISELEÇÃO ATIVO:",
+                Array.from(
+                    dentesMultiselecionados
+                )
+            );
+
+        }
+
+        function removerCamposDentesMultiplos() {
+
+            if (!formEvolucao) {
+                return;
+            }
+
+            formEvolucao
+                .querySelectorAll(
+                    ".dente-multiselecao-hidden"
+                )
+                .forEach(function (campo) {
+
+                    campo.remove();
+
+                });
+
+        }
+
+        function sairModoMultiselecao() {
+
+            removerCamposDentesMultiplos();
+
+            modoMultiselecao = false;
+            dentesMultiselecionados.clear();
+
+            dentes.forEach(function (dente) {
+
+                dente.classList.remove(
+                    "dente-multiselecao"
+                );
+
+            });
+
+            const barra =
+                document.getElementById(
+                    "barraSelecaoMultipla"
+                );
+
+            if (barra) {
+
+                barra.remove();
+
+            }
+
+            console.log(
+                "MODO MULTISELEÇÃO ENCERRADO."
+            );
+
+        }
+
+        function alternarDenteMultiselecao(numero) {
+
+            const chave =
+                String(numero);
+
+            if (
+                dentesMultiselecionados.has(
+                    chave
+                )
+            ) {
+
+                dentesMultiselecionados.delete(
+                    chave
+                );
+
+            } else {
+
+                dentesMultiselecionados.add(
+                    chave
+                );
+
+            }
+
+            atualizarSelecaoMultiplaUI();
+
+            console.log(
+                "DENTES SELECIONADOS:",
+                Array.from(
+                    dentesMultiselecionados
+                )
+            );
+
+        }
+
+        if (campoProcedimento) {
+
+            campoProcedimento.addEventListener(
+                "change",
+                function () {
+
+                    if (
+                        procedimentoPermiteMultiplos()
+                    ) {
+
+                        entrarModoMultiselecao(
+                            denteSelecionado
+                        );
+
+                    } else if (
+                        modoMultiselecao
+                    ) {
+
+                        sairModoMultiselecao();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
            MAPA DOS DENTES AUSENTES
            ===================================================== */
 
@@ -4460,7 +4927,7 @@ document.addEventListener(
            SELECIONAR DENTE
            ===================================================== */
 
-        dentes.forEach(function (dente) {
+       dentes.forEach(function (dente) {
 
             dente.addEventListener(
                 "click",
@@ -4469,15 +4936,46 @@ document.addEventListener(
                     event.preventDefault();
                     event.stopPropagation();
 
+                    /* =========================================
+                    DENTE CLICADO
+                    ========================================= */
+
+                    const numeroDente =
+                        this.dataset.dente;
+
+
+                    /* =========================================
+                    SELEÇÃO MÚLTIPLA
+                    ========================================= */
+
+                    if (modoMultiselecao) {
+
+                        alternarDenteMultiselecao(
+                            numeroDente
+                        );
+
+                        console.log(
+                            "DENTE SELECIONADO PARA MÚLTIPLOS:",
+                            numeroDente
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* =========================================
+                    PROCEDIMENTO INDIVIDUAL
+                    ========================================= */
 
                     abrirModalDente(
-                        this.dataset.dente
+                        numeroDente
                     );
 
 
                     /* =========================================
-                       REMOVE SELEÇÃO
-                       ========================================= */
+                    REMOVE SELEÇÃO DE POSICIONAMENTO
+                    ========================================= */
 
                     dentes.forEach(function (item) {
 
@@ -4489,8 +4987,8 @@ document.addEventListener(
 
 
                     /* =========================================
-                       MARCA DENTE
-                       ========================================= */
+                    MARCA DENTE PARA POSICIONAMENTO
+                    ========================================= */
 
                     this.classList.add(
                         "dente-posicao-selecionado"
@@ -4498,8 +4996,8 @@ document.addEventListener(
 
 
                     /* =========================================
-                       LIMPA OPÇÕES
-                       ========================================= */
+                    LIMPA OPÇÕES DE POSICIONAMENTO
+                    ========================================= */
 
                     opcoes.forEach(function (item) {
 
@@ -4543,6 +5041,35 @@ document.addEventListener(
 
                         event.preventDefault();
                         event.stopPropagation();
+
+
+                        if (modoMultiselecao) {
+
+                            const boxMulti =
+                                this.closest(
+                                    ".dente-box"
+                                );
+
+                            if (!boxMulti) {
+                                return;
+                            }
+
+                            const denteMulti =
+                                boxMulti.querySelector(
+                                    "[data-dente]"
+                                );
+
+                            if (!denteMulti) {
+                                return;
+                            }
+
+                            alternarDenteMultiselecao(
+                                denteMulti.dataset.dente
+                            );
+
+                            return;
+
+                        }
 
 
                         const box =
