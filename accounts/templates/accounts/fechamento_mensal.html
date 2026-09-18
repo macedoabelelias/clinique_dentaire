@@ -249,9 +249,7 @@ Fechamento Mensal
                         <button
                             type="submit"
                             class="btn btn-outline-warning"
-                            onclick="return confirm(
-                                'Deseja realmente reabrir esta competência?'
-                            );"
+                            onclick="return abrirConfirmacaoFechamentoMensal(event, this, 'abrir');"
                         >
 
                             <i class="bi bi-unlock-fill me-1"></i>
@@ -309,9 +307,7 @@ Fechamento Mensal
                         <button
                             type="submit"
                             class="btn btn-danger"
-                            onclick="return confirm(
-                                'Deseja realmente fechar esta competência? Após o fechamento, novas movimentações financeiras serão bloqueadas.'
-                            );"
+                            onclick="return abrirConfirmacaoFechamentoMensal(event, this, 'fechar');"
                         >
 
                             <i class="bi bi-lock-fill me-1"></i>
@@ -951,5 +947,376 @@ Fechamento Mensal
     </div>
 
 </div>
+
+
+
+<!-- =====================================================
+     MODAL PROFISSIONAL — CONFIRMAÇÃO DO FECHAMENTO MENSAL
+     ===================================================== -->
+
+<style>
+#modalConfirmacaoFechamentoMensal .modal-dialog {
+    max-width: 500px;
+}
+
+#modalConfirmacaoFechamentoMensal .modal-content {
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+#modalConfirmacaoFechamentoMensal .modal-header {
+    padding: 24px 24px 12px;
+}
+
+#modalConfirmacaoFechamentoMensal .modal-body {
+    padding: 12px 24px 22px;
+}
+
+#modalConfirmacaoFechamentoMensal .modal-footer {
+    padding: 0 24px 24px;
+    gap: 10px;
+}
+
+.confirmacao-fechamento-icone {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 21px;
+}
+
+.confirmacao-fechamento-icone.fechar {
+    background: #f8d7da;
+    color: #b02a37;
+}
+
+.confirmacao-fechamento-icone.abrir {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.confirmacao-fechamento-titulo {
+    font-weight: 700;
+    color: #172033;
+}
+
+.confirmacao-fechamento-subtitulo {
+    font-size: .82rem;
+    color: #7b8494;
+}
+
+.confirmacao-fechamento-mensagem {
+    font-size: 1rem;
+    color: #303746;
+    margin-bottom: 8px;
+}
+
+.confirmacao-fechamento-detalhe {
+    font-size: .88rem;
+    line-height: 1.55;
+    color: #737b8a;
+}
+
+#modalConfirmacaoFechamentoMensal .btn-confirmacao {
+    min-width: 155px;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-weight: 600;
+}
+
+#modalConfirmacaoFechamentoMensal .btn-cancelar-confirmacao {
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-weight: 500;
+}
+</style>
+
+<div
+    class="modal fade"
+    id="modalConfirmacaoFechamentoMensal"
+    tabindex="-1"
+    aria-labelledby="modalConfirmacaoFechamentoMensalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content shadow-lg">
+
+            <div class="modal-header border-0">
+
+                <div class="d-flex align-items-center">
+
+                    <div
+                        id="iconeConfirmacaoFechamentoMensal"
+                        class="confirmacao-fechamento-icone fechar me-3"
+                    >
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h5
+                            class="modal-title confirmacao-fechamento-titulo mb-1"
+                            id="modalConfirmacaoFechamentoMensalLabel"
+                        >
+                            Fechar Competência
+                        </h5>
+
+                        <div
+                            class="confirmacao-fechamento-subtitulo"
+                            id="subtituloConfirmacaoFechamentoMensal"
+                        >
+                            Confirmação do fechamento
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div
+                    class="confirmacao-fechamento-mensagem"
+                    id="mensagemConfirmacaoFechamentoMensal"
+                >
+                    Deseja realmente fechar esta competência?
+                </div>
+
+                <div
+                    class="confirmacao-fechamento-detalhe"
+                    id="detalheConfirmacaoFechamentoMensal"
+                >
+                    Após o fechamento, novas movimentações financeiras serão bloqueadas.
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-0">
+
+                <button
+                    type="button"
+                    class="btn btn-light border btn-cancelar-confirmacao"
+                    data-bs-dismiss="modal"
+                >
+                    <i class="bi bi-x-lg me-1"></i>
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger btn-confirmacao"
+                    id="confirmarAcaoFechamentoMensal"
+                >
+                    <i
+                        class="bi bi-lock-fill me-1"
+                        id="iconeBotaoConfirmarFechamentoMensal"
+                    ></i>
+
+                    <span id="textoBotaoConfirmarFechamentoMensal">
+                        Fechar Competência
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIRMAÇÃO PROFISSIONAL — FECHAMENTO MENSAL
+   ===================================================== */
+
+let formularioConfirmacaoFechamentoMensal = null;
+
+function abrirConfirmacaoFechamentoMensal(event, botao, acao) {
+
+    event.preventDefault();
+
+    formularioConfirmacaoFechamentoMensal =
+        botao.closest("form");
+
+    if (!formularioConfirmacaoFechamentoMensal) {
+        console.error(
+            "Formulário do Fechamento Mensal não encontrado."
+        );
+        return false;
+    }
+
+    const modalElement =
+        document.getElementById(
+            "modalConfirmacaoFechamentoMensal"
+        );
+
+    if (!modalElement) {
+        console.error(
+            "Modal de confirmação do Fechamento Mensal não encontrada."
+        );
+        return false;
+    }
+
+    const titulo =
+        document.getElementById(
+            "modalConfirmacaoFechamentoMensalLabel"
+        );
+
+    const subtitulo =
+        document.getElementById(
+            "subtituloConfirmacaoFechamentoMensal"
+        );
+
+    const mensagem =
+        document.getElementById(
+            "mensagemConfirmacaoFechamentoMensal"
+        );
+
+    const detalhe =
+        document.getElementById(
+            "detalheConfirmacaoFechamentoMensal"
+        );
+
+    const icone =
+        document.getElementById(
+            "iconeConfirmacaoFechamentoMensal"
+        );
+
+    const iconeBotao =
+        document.getElementById(
+            "iconeBotaoConfirmarFechamentoMensal"
+        );
+
+    const textoBotao =
+        document.getElementById(
+            "textoBotaoConfirmarFechamentoMensal"
+        );
+
+    if (acao === "abrir") {
+
+        titulo.textContent = "Reabrir Competência";
+        subtitulo.textContent = "Confirmação da reabertura";
+        mensagem.textContent =
+            "Deseja realmente reabrir esta competência?";
+        detalhe.textContent =
+            "A competência voltará a ficar aberta e poderá receber novas movimentações financeiras.";
+
+        icone.className =
+            "confirmacao-fechamento-icone abrir me-3";
+        icone.innerHTML =
+            '<i class="bi bi-unlock-fill"></i>';
+
+        iconeBotao.className =
+            "bi bi-unlock-fill me-1";
+        textoBotao.textContent =
+            "Reabrir Competência";
+
+        const botaoConfirmar =
+            document.getElementById(
+                "confirmarAcaoFechamentoMensal"
+            );
+        botaoConfirmar.className =
+            "btn btn-warning btn-confirmacao";
+
+    } else {
+
+        titulo.textContent = "Fechar Competência";
+        subtitulo.textContent = "Confirmação do fechamento";
+        mensagem.textContent =
+            "Deseja realmente fechar esta competência?";
+        detalhe.textContent =
+            "Após o fechamento, novas movimentações financeiras serão bloqueadas.";
+
+        icone.className =
+            "confirmacao-fechamento-icone fechar me-3";
+        icone.innerHTML =
+            '<i class="bi bi-lock-fill"></i>';
+
+        iconeBotao.className =
+            "bi bi-lock-fill me-1";
+        textoBotao.textContent =
+            "Fechar Competência";
+
+        const botaoConfirmar =
+            document.getElementById(
+                "confirmarAcaoFechamentoMensal"
+            );
+        botaoConfirmar.className =
+            "btn btn-danger btn-confirmacao";
+
+    }
+
+    const modal =
+        bootstrap.Modal.getOrCreateInstance(
+            modalElement
+        );
+
+    modal.show();
+
+    return false;
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const botaoConfirmar =
+            document.getElementById(
+                "confirmarAcaoFechamentoMensal"
+            );
+
+        if (!botaoConfirmar) {
+            return;
+        }
+
+        botaoConfirmar.addEventListener(
+            "click",
+            function () {
+
+                if (!formularioConfirmacaoFechamentoMensal) {
+                    return;
+                }
+
+                const formulario =
+                    formularioConfirmacaoFechamentoMensal;
+
+                const modalElement =
+                    document.getElementById(
+                        "modalConfirmacaoFechamentoMensal"
+                    );
+
+                const modal =
+                    bootstrap.Modal.getInstance(
+                        modalElement
+                    );
+
+                if (modal) {
+                    modal.hide();
+                }
+
+                HTMLFormElement.prototype.submit.call(
+                    formulario
+                );
+
+            }
+        );
+
+    }
+);
+</script>
 
 {% endblock %}

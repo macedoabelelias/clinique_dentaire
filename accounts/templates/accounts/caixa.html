@@ -59,6 +59,90 @@
     background: #fff !important;
 
 }
+
+/* =====================================================
+   MODAL PROFISSIONAL DE CONFIRMAÇÃO — CAIXA
+   ===================================================== */
+
+#modalConfirmacaoCaixa .modal-dialog {
+    max-width: 500px;
+}
+
+#modalConfirmacaoCaixa .modal-content {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 0;
+}
+
+#modalConfirmacaoCaixa .modal-header {
+    padding: 24px 24px 12px;
+}
+
+#modalConfirmacaoCaixa .modal-body {
+    padding: 12px 24px 22px;
+}
+
+#modalConfirmacaoCaixa .modal-footer {
+    padding: 0 24px 24px;
+    gap: 10px;
+}
+
+#modalConfirmacaoCaixa .confirmacao-icone {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 21px;
+}
+
+#modalConfirmacaoCaixa .confirmacao-icone.fechar {
+    background: #fff3cd;
+    color: #9a6700;
+}
+
+#modalConfirmacaoCaixa .confirmacao-icone.reabrir {
+    background: #fff3cd;
+    color: #856404;
+}
+
+#modalConfirmacaoCaixa .confirmacao-titulo {
+    font-weight: 700;
+    color: #172033;
+}
+
+#modalConfirmacaoCaixa .confirmacao-subtitulo {
+    font-size: .82rem;
+    color: #7b8494;
+}
+
+#modalConfirmacaoCaixa .confirmacao-mensagem {
+    font-size: 1rem;
+    color: #303746;
+    margin-bottom: 8px;
+}
+
+#modalConfirmacaoCaixa .confirmacao-detalhe {
+    font-size: .88rem;
+    line-height: 1.55;
+    color: #737b8a;
+}
+
+#modalConfirmacaoCaixa .btn-confirmacao {
+    min-width: 145px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 9px 18px;
+}
+
+#modalConfirmacaoCaixa .btn-cancelar-confirmacao {
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-weight: 500;
+}
+
 </style>
 
 
@@ -231,10 +315,10 @@
 
     {% endif %}
 
-    <button
+   <button
         type="submit"
         class="btn btn-danger"
-        onclick="return confirm('Deseja realmente fechar este Caixa?');"
+        onclick="return abrirConfirmacaoCaixa(event, this, 'fechar');"
     >
 
         <i class="fas fa-lock"></i>
@@ -260,7 +344,7 @@
                         {% csrf_token %}
 
                         <button type="submit" class="btn btn-warning"
-                            onclick="return confirm('Deseja realmente reabrir o Caixa do dia?');">
+                            onclick="return abrirConfirmacaoCaixa(event, this, 'reabrir');">
 
                             <i class="fas fa-lock-open"></i>
 
@@ -912,5 +996,382 @@ HISTÓRICO DE FECHAMENTOS
 
 </div>
 
+
+<!-- =====================================================
+     MODAL PROFISSIONAL DE CONFIRMAÇÃO — CAIXA
+     ===================================================== -->
+
+<div
+    class="modal fade"
+    id="modalConfirmacaoCaixa"
+    tabindex="-1"
+    aria-labelledby="modalConfirmacaoCaixaLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content shadow-lg">
+
+            <div class="modal-header border-0">
+
+                <div class="d-flex align-items-center">
+
+                    <div
+                        id="iconeConfirmacaoCaixa"
+                        class="confirmacao-icone fechar me-3"
+                    >
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div>
+
+                        <h5
+                            class="modal-title confirmacao-titulo mb-1"
+                            id="modalConfirmacaoCaixaLabel"
+                        >
+                            Fechar Caixa
+                        </h5>
+
+                        <div
+                            class="confirmacao-subtitulo"
+                            id="subtituloConfirmacaoCaixa"
+                        >
+                            Confirmação da operação
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div
+                    class="confirmacao-mensagem"
+                    id="mensagemConfirmacaoCaixa"
+                >
+                    Deseja realmente fechar este Caixa?
+                </div>
+
+                <div
+                    class="confirmacao-detalhe"
+                    id="detalheConfirmacaoCaixa"
+                >
+                    Após o fechamento, novas movimentações não poderão
+                    ser registradas neste Caixa até que ele seja reaberto.
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer border-0">
+
+                <button
+                    type="button"
+                    class="btn btn-light border btn-cancelar-confirmacao"
+                    data-bs-dismiss="modal"
+                >
+                    <i class="fas fa-times me-1"></i>
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger btn-confirmacao"
+                    id="confirmarAcaoCaixa"
+                >
+                    <i
+                        class="fas fa-lock me-1"
+                        id="iconeBotaoConfirmarCaixa"
+                    ></i>
+
+                    <span id="textoBotaoConfirmarCaixa">
+                        Fechar Caixa
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+/* =====================================================
+   CONFIRMAÇÃO PROFISSIONAL — CAIXA
+   ===================================================== */
+
+let formularioConfirmacaoCaixa = null;
+
+
+/* =====================================================
+   ABRE A MODAL DE CONFIRMAÇÃO
+   ===================================================== */
+
+function abrirConfirmacaoCaixa(
+    event,
+    botao,
+    acao
+) {
+
+    /*
+     * Impede o submit imediato.
+     */
+
+    event.preventDefault();
+
+
+    /*
+     * Localiza o formulário responsável pela ação.
+     */
+
+    formularioConfirmacaoCaixa =
+        botao.closest("form");
+
+
+    if (!formularioConfirmacaoCaixa) {
+
+        console.error(
+            "Formulário da ação do Caixa não encontrado."
+        );
+
+        return false;
+
+    }
+
+
+    /*
+     * Elementos da modal.
+     */
+
+    const modalElement =
+        document.getElementById(
+            "modalConfirmacaoCaixa"
+        );
+
+    const titulo =
+        document.getElementById(
+            "modalConfirmacaoCaixaLabel"
+        );
+
+    const subtitulo =
+        document.getElementById(
+            "subtituloConfirmacaoCaixa"
+        );
+
+    const mensagem =
+        document.getElementById(
+            "mensagemConfirmacaoCaixa"
+        );
+
+    const detalhe =
+        document.getElementById(
+            "detalheConfirmacaoCaixa"
+        );
+
+    const icone =
+        document.getElementById(
+            "iconeConfirmacaoCaixa"
+        );
+
+    const iconeBotao =
+        document.getElementById(
+            "iconeBotaoConfirmarCaixa"
+        );
+
+    const textoBotao =
+        document.getElementById(
+            "textoBotaoConfirmarCaixa"
+        );
+
+
+    if (!modalElement) {
+
+        console.error(
+            "Modal de confirmação do Caixa não encontrada."
+        );
+
+        return false;
+
+    }
+
+
+    /*
+     * Configuração para FECHAR.
+     */
+
+    if (acao === "fechar") {
+
+        titulo.textContent =
+            "Fechar Caixa";
+
+        subtitulo.textContent =
+            "Confirmação do fechamento";
+
+        mensagem.textContent =
+            "Deseja realmente fechar este Caixa?";
+
+        detalhe.textContent =
+            "Após o fechamento, novas movimentações não poderão ser registradas neste Caixa até que ele seja reaberto.";
+
+        icone.className =
+            "confirmacao-icone fechar me-3";
+
+        icone.innerHTML =
+            '<i class="fas fa-lock"></i>';
+
+        iconeBotao.className =
+            "fas fa-lock me-1";
+
+        textoBotao.textContent =
+            "Fechar Caixa";
+
+    }
+
+
+    /*
+     * Configuração para REABRIR.
+     */
+
+    else if (acao === "reabrir") {
+
+        titulo.textContent =
+            "Reabrir Caixa";
+
+        subtitulo.textContent =
+            "Confirmação da reabertura";
+
+        mensagem.textContent =
+            "Deseja realmente reabrir este Caixa?";
+
+        detalhe.textContent =
+            "O Caixa voltará ao status Aberto e poderá receber novas movimentações.";
+
+        icone.className =
+            "confirmacao-icone reabrir me-3";
+
+        icone.innerHTML =
+            '<i class="fas fa-lock-open"></i>';
+
+        iconeBotao.className =
+            "fas fa-lock-open me-1";
+
+        textoBotao.textContent =
+            "Reabrir Caixa";
+
+    }
+
+
+    /*
+     * Guarda a ação que será executada.
+     */
+
+    formularioConfirmacaoCaixa.dataset.acaoConfirmacao =
+        acao;
+
+
+    /*
+     * Abre a modal Bootstrap.
+     */
+
+    const modal =
+        bootstrap.Modal.getOrCreateInstance(
+            modalElement
+        );
+
+    modal.show();
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   CONFIRMA A AÇÃO
+   ===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const botaoConfirmar =
+            document.getElementById(
+                "confirmarAcaoCaixa"
+            );
+
+
+        if (!botaoConfirmar) {
+
+            return;
+
+        }
+
+
+        botaoConfirmar.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    !formularioConfirmacaoCaixa
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Fecha a modal.
+                 */
+
+                const modalElement =
+                    document.getElementById(
+                        "modalConfirmacaoCaixa"
+                    );
+
+                const modal =
+                    bootstrap.Modal.getInstance(
+                        modalElement
+                    );
+
+                if (modal) {
+
+                    modal.hide();
+
+                }
+
+
+                /*
+                 * Envia o formulário original.
+                 *
+                 * A lógica Django permanece exatamente
+                 * como já estava.
+                 */
+
+                HTMLFormElement.prototype.submit.call(
+                    formularioConfirmacaoCaixa
+                );
+
+            }
+        );
+
+    }
+);
+</script>
+
 {% endblock %}
+
 

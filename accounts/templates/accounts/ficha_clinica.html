@@ -128,6 +128,160 @@
     padding: 0;
 }
    
+
+/* =====================================================
+   CONFIRMAÇÃO PROFISSIONAL — FICHA CLÍNICA
+   ===================================================== */
+
+#modalConfirmacaoFicha {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(3px);
+}
+
+#modalConfirmacaoFicha.ativo {
+    display: flex;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-dialog {
+    width: min(500px, 100%);
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+    animation: fichaConfirmacaoEntrada .16s ease-out;
+}
+
+@keyframes fichaConfirmacaoEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 24px 12px;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-identificacao {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-icone {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 14px;
+    background: #fff1f2;
+    color: #dc3545;
+    font-size: 21px;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-icone.confirmacao-ficha-salvar {
+    background: #eff6ff;
+    color: #0d6efd;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-titulo {
+    margin: 0;
+    color: #172033;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-subtitulo {
+    margin-top: 3px;
+    color: #7b8494;
+    font-size: .82rem;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-fechar {
+    border: 0;
+    background: transparent;
+    color: #8a93a2;
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 6px;
+    cursor: pointer;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-fechar:hover {
+    color: #343a40;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-body {
+    padding: 10px 24px 22px;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-mensagem {
+    margin: 0 0 8px;
+    color: #303746;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-detalhe {
+    margin: 0;
+    color: #737b8a;
+    font-size: .88rem;
+    line-height: 1.55;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 24px 24px;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-btn {
+    min-width: 140px;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-cancelar {
+    border: 1px solid #dee2e6;
+    background: #fff;
+    color: #495057;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-cancelar:hover {
+    background: #f8f9fa;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-confirmar {
+    border: 1px solid #dc3545;
+    background: #dc3545;
+    color: #fff;
+}
+
+#modalConfirmacaoFicha .confirmacao-ficha-confirmar:hover {
+    background: #bb2d3b;
+    border-color: #b02a37;
+}
+
 </style>
 
 
@@ -195,7 +349,7 @@ LAYOUT PRINCIPAL
         </div>
 
 
-        <form method="POST">
+        <form method="POST" onsubmit="return abrirConfirmacaoFicha(event, this, 'salvar');">
 
             {% csrf_token %}
 
@@ -446,7 +600,7 @@ LAYOUT PRINCIPAL
 
 
                             <a href="{% url 'excluir_anexo_paciente' anexo.id %}" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('Deseja realmente excluir este anexo?');">
+                                onclick="return abrirConfirmacaoFicha(event, this, 'anexo');">
 
                                 <i class="fa-solid fa-trash"></i>
 
@@ -544,7 +698,7 @@ LAYOUT PRINCIPAL
 
 
                             <a href="{% url 'excluir_documento' documento.id %}" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('Deseja realmente excluir este documento?')">
+                                onclick="return abrirConfirmacaoFicha(event, this, 'documento');">
 
                                 Excluir
 
@@ -816,10 +970,7 @@ IMPLANTODONTIA
                         <form
                             method="post"
                             action="{% url 'excluir_implante' implante.id %}"
-                            onsubmit="return confirm(
-                                'Deseja realmente excluir o implante do elemento {{ implante.elemento }}?\\n\\n' +
-                                'Atenção: todos os componentes vinculados a este implante também serão excluídos.'
-                            );"
+                            onsubmit="return abrirConfirmacaoFicha(event, this, 'implante');"
                         >
 
                             {% csrf_token %}
@@ -1045,9 +1196,7 @@ IMPLANTODONTIA
                                 <form
                                     method="post"
                                     action="{% url 'excluir_componente_implante' componente.id %}"
-                                    onsubmit="return confirm(
-                                        'Deseja realmente excluir este componente?'
-                                    );"
+                                    onsubmit="return abrirConfirmacaoFicha(event, this, 'componente');"
                                 >
 
                                     {% csrf_token %}
@@ -1669,9 +1818,7 @@ IMPLANTODONTIA
         method="post"
         action="{% url 'excluir_periodontia' periodontia.id %}"
         class="d-inline"
-        onsubmit="return confirm(
-            'Deseja realmente excluir este registro de Periodontia?'
-        );"
+        onsubmit="return abrirConfirmacaoFicha(event, this, 'periodontia');"
     >
 
         {% csrf_token %}
@@ -1846,6 +1993,375 @@ LINHA INFERIOR
 
 </div>
 <!-- fim linha-inferior -->
+
+
+
+<!-- =====================================================
+     MODAL PROFISSIONAL DE CONFIRMAÇÃO — FICHA CLÍNICA
+     ===================================================== -->
+
+<div id="modalConfirmacaoFicha" aria-hidden="true">
+
+    <div class="confirmacao-ficha-dialog" role="dialog" aria-modal="true"
+         aria-labelledby="modalConfirmacaoFichaTitulo">
+
+        <div class="confirmacao-ficha-header">
+
+            <div class="confirmacao-ficha-identificacao">
+
+                <div id="confirmacaoFichaIcone" class="confirmacao-ficha-icone">
+                    <i class="fa-solid fa-trash"></i>
+                </div>
+
+                <div>
+                    <h5 id="modalConfirmacaoFichaTitulo"
+                        class="confirmacao-ficha-titulo">
+                        Confirmar exclusão
+                    </h5>
+
+                    <div id="modalConfirmacaoFichaSubtitulo"
+                         class="confirmacao-ficha-subtitulo">
+                        Confirmação da operação
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="button"
+                    class="confirmacao-ficha-fechar"
+                    id="fecharConfirmacaoFicha"
+                    aria-label="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="confirmacao-ficha-body">
+
+            <p id="modalConfirmacaoFichaMensagem"
+               class="confirmacao-ficha-mensagem">
+                Deseja realmente excluir este registro?
+            </p>
+
+            <p id="modalConfirmacaoFichaDetalhe"
+               class="confirmacao-ficha-detalhe">
+                Esta ação não poderá ser desfeita.
+            </p>
+
+        </div>
+
+
+        <div class="confirmacao-ficha-footer">
+
+            <button type="button"
+                    class="confirmacao-ficha-btn confirmacao-ficha-cancelar"
+                    id="cancelarConfirmacaoFicha">
+                <i class="fa-solid fa-xmark me-1"></i>
+                Cancelar
+            </button>
+
+            <button type="button"
+                    class="confirmacao-ficha-btn confirmacao-ficha-confirmar"
+                    id="confirmarConfirmacaoFicha">
+                <i class="fa-solid fa-trash me-1"
+                   id="confirmacaoFichaIconeBotao"></i>
+                <span id="confirmacaoFichaTextoBotao">
+                    Excluir
+                </span>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+/* =====================================================
+   CONFIRMAÇÃO PROFISSIONAL — FICHA CLÍNICA
+   ===================================================== */
+
+let acaoConfirmacaoFicha = null;
+let alvoConfirmacaoFicha = null;
+
+
+function abrirConfirmacaoFicha(event, alvo, tipo) {
+
+    event.preventDefault();
+
+    alvoConfirmacaoFicha = alvo;
+    acaoConfirmacaoFicha = tipo;
+
+    const modal =
+        document.getElementById("modalConfirmacaoFicha");
+
+    const titulo =
+        document.getElementById("modalConfirmacaoFichaTitulo");
+
+    const subtitulo =
+        document.getElementById("modalConfirmacaoFichaSubtitulo");
+
+    const mensagem =
+        document.getElementById("modalConfirmacaoFichaMensagem");
+
+    const detalhe =
+        document.getElementById("modalConfirmacaoFichaDetalhe");
+
+    const icone =
+        document.getElementById("confirmacaoFichaIcone");
+
+    const iconeBotao =
+        document.getElementById("confirmacaoFichaIconeBotao");
+
+    const textoBotao =
+        document.getElementById("confirmacaoFichaTextoBotao");
+
+
+    titulo.textContent = "Confirmar exclusão";
+    subtitulo.textContent = "Confirmação da operação";
+
+    icone.className =
+        "confirmacao-ficha-icone";
+
+    icone.innerHTML =
+        '<i class="fa-solid fa-trash"></i>';
+
+    iconeBotao.className =
+        "fa-solid fa-trash me-1";
+
+    textoBotao.textContent =
+        "Excluir";
+
+
+    if (tipo === "salvar") {
+
+        titulo.textContent =
+            "Salvar Registro Clínico";
+
+        subtitulo.textContent =
+            "Confirmação do salvamento";
+
+        icone.className =
+            "confirmacao-ficha-icone confirmacao-ficha-salvar";
+
+        icone.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i>';
+
+        iconeBotao.className =
+            "fa-solid fa-floppy-disk me-1";
+
+        textoBotao.textContent =
+            "Salvar";
+
+        mensagem.textContent =
+            "Deseja salvar este registro clínico?";
+
+        detalhe.textContent =
+            "As informações preenchidas serão adicionadas ao prontuário do paciente.";
+
+    }
+
+
+    else if (tipo === "anexo") {
+
+        mensagem.textContent =
+            "Deseja realmente excluir este anexo?";
+
+        detalhe.textContent =
+            "O arquivo será removido do prontuário do paciente e esta ação não poderá ser desfeita.";
+
+    }
+
+
+    else if (tipo === "documento") {
+
+        mensagem.textContent =
+            "Deseja realmente excluir este documento?";
+
+        detalhe.textContent =
+            "O documento clínico será removido do prontuário e esta ação não poderá ser desfeita.";
+
+    }
+
+
+    else if (tipo === "implante") {
+
+        titulo.textContent =
+            "Excluir Implante";
+
+        mensagem.textContent =
+            "Deseja realmente excluir o implante do elemento "
+            + "{{ implante.elemento }}?";
+
+        detalhe.textContent =
+            "Atenção: todos os componentes vinculados a este implante também serão excluídos.";
+
+    }
+
+
+    else if (tipo === "componente") {
+
+        titulo.textContent =
+            "Excluir Componente";
+
+        mensagem.textContent =
+            "Deseja realmente excluir este componente?";
+
+        detalhe.textContent =
+            "O componente será removido do implante e esta ação não poderá ser desfeita.";
+
+    }
+
+
+    else if (tipo === "periodontia") {
+
+        titulo.textContent =
+            "Excluir Periodontia";
+
+        mensagem.textContent =
+            "Deseja realmente excluir este registro de Periodontia?";
+
+        detalhe.textContent =
+            "O registro clínico será removido do prontuário e esta ação não poderá ser desfeita.";
+
+    }
+
+
+    modal.classList.add("ativo");
+    modal.setAttribute("aria-hidden", "false");
+
+    return false;
+}
+
+
+function fecharConfirmacaoFicha() {
+
+    const modal =
+        document.getElementById("modalConfirmacaoFicha");
+
+    modal.classList.remove("ativo");
+    modal.setAttribute("aria-hidden", "true");
+
+    alvoConfirmacaoFicha = null;
+    acaoConfirmacaoFicha = null;
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const modal =
+            document.getElementById("modalConfirmacaoFicha");
+
+        const cancelar =
+            document.getElementById("cancelarConfirmacaoFicha");
+
+        const fechar =
+            document.getElementById("fecharConfirmacaoFicha");
+
+        const confirmar =
+            document.getElementById("confirmarConfirmacaoFicha");
+
+
+        cancelar.addEventListener(
+            "click",
+            fecharConfirmacaoFicha
+        );
+
+
+        fechar.addEventListener(
+            "click",
+            fecharConfirmacaoFicha
+        );
+
+
+        modal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === modal) {
+
+                    fecharConfirmacaoFicha();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape"
+                    &&
+                    modal.classList.contains("ativo")
+                ) {
+
+                    fecharConfirmacaoFicha();
+
+                }
+
+            }
+        );
+
+
+        confirmar.addEventListener(
+            "click",
+            function () {
+
+                if (!alvoConfirmacaoFicha) {
+
+                    fecharConfirmacaoFicha();
+                    return;
+
+                }
+
+
+                /*
+                 * Se o alvo for um formulário,
+                 * envia o formulário original.
+                 */
+
+                if (
+                    alvoConfirmacaoFicha.tagName === "FORM"
+                ) {
+
+                    HTMLFormElement.prototype.submit.call(
+                        alvoConfirmacaoFicha
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Se o alvo for um link,
+                 * segue para a URL original.
+                 */
+
+                if (
+                    alvoConfirmacaoFicha.tagName === "A"
+                    &&
+                    alvoConfirmacaoFicha.href
+                ) {
+
+                    window.location.href =
+                        alvoConfirmacaoFicha.href;
+
+                }
+
+            }
+        );
+
+    }
+);
+</script>
 
 
 <script>
