@@ -671,6 +671,56 @@
 
 
 <!-- =========================================
+     MODAL PROFISSIONAL DE AVISO
+     ========================================= -->
+
+<div
+    class="modal fade"
+    id="modalAvisoComissao"
+    tabindex="-1"
+    aria-labelledby="modalAvisoComissaoLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAvisoComissaoLabel">
+                    <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>
+                    <span id="tituloAvisoComissao">Atenção</span>
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                <p
+                    class="mb-0 text-muted"
+                    id="mensagemAvisoComissao"
+                >
+                    Verifique as informações antes de continuar.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-dismiss="modal"
+                >
+                    <i class="fa-solid fa-check me-1"></i>
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================
      FORMULÁRIO REAL DE PAGAMENTO
      ========================================= -->
 
@@ -756,6 +806,21 @@ document.addEventListener(
                 "modalConfirmacaoPagamento"
             );
 
+        const modalAvisoElement =
+            document.getElementById(
+                "modalAvisoComissao"
+            );
+
+        const tituloAvisoComissao =
+            document.getElementById(
+                "tituloAvisoComissao"
+            );
+
+        const mensagemAvisoComissao =
+            document.getElementById(
+                "mensagemAvisoComissao"
+            );
+
         const btnConfirmarPagamento =
             document.getElementById(
                 "btnConfirmarPagamento"
@@ -796,6 +861,39 @@ document.addEventListener(
                 }
             );
 
+        }
+
+
+        // =========================================
+        // MODAL PROFISSIONAL DE AVISO
+        // =========================================
+
+        function mostrarAvisoComissao(
+            mensagem,
+            titulo = "Atenção"
+        ) {
+
+            if (
+                !modalAvisoElement ||
+                !mensagemAvisoComissao
+            ) {
+                return;
+            }
+
+            if (tituloAvisoComissao) {
+                tituloAvisoComissao.textContent =
+                    titulo;
+            }
+
+            mensagemAvisoComissao.textContent =
+                mensagem;
+
+            const modal =
+                bootstrap.Modal.getOrCreateInstance(
+                    modalAvisoElement
+                );
+
+            modal.show();
         }
 
 
@@ -986,8 +1084,9 @@ document.addEventListener(
                         selecionadas.length === 0
                     ) {
 
-                        alert(
-                            "Selecione pelo menos uma comissão."
+                        mostrarAvisoComissao(
+                            "Selecione pelo menos uma comissão.",
+                            "Seleção necessária"
                         );
 
                         return;
@@ -1003,8 +1102,9 @@ document.addEventListener(
                         !formaPagamento.value
                     ) {
 
-                        alert(
-                            "Selecione a forma de pagamento."
+                        mostrarAvisoComissao(
+                            "Selecione a forma de pagamento.",
+                            "Forma de pagamento"
                         );
 
                         formaPagamento.focus();
@@ -1188,8 +1288,9 @@ document.addEventListener(
                         selecionadas.length === 0
                     ) {
 
-                        alert(
-                            "Nenhuma comissão selecionada."
+                        mostrarAvisoComissao(
+                            "Nenhuma comissão selecionada.",
+                            "Seleção necessária"
                         );
 
                         return;
@@ -1201,8 +1302,9 @@ document.addEventListener(
                         !formaPagamento.value
                     ) {
 
-                        alert(
-                            "Selecione a forma de pagamento."
+                        mostrarAvisoComissao(
+                            "Selecione a forma de pagamento.",
+                            "Forma de pagamento"
                         );
 
                         return;
@@ -1293,9 +1395,10 @@ const formPagamento =
 
 if (!formPagamento) {
 
-    alert(
-        "Erro: formulário de pagamento não encontrado."
-    );
+    mostrarAvisoComissao(
+                            "Erro: formulário de pagamento não encontrado.",
+                            "Erro"
+                        );
 
     return;
 
@@ -1313,9 +1416,10 @@ const csrfToken =
 
 if (!csrfToken || !csrfToken.value) {
 
-    alert(
-        "Erro: token de segurança CSRF não encontrado."
-    );
+    mostrarAvisoComissao(
+                            "Erro: token de segurança CSRF não encontrado.",
+                            "Erro de segurança"
+                        );
 
     return;
 

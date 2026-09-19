@@ -56,7 +56,9 @@
 
             <div class="documento-corpo">
 
-                <pre class="documento-texto">{{ documento.conteudo }}</pre>
+                <div class="documento-texto">
+                    {{ documento.conteudo|safe }}
+                </div>
 
             </div>
             

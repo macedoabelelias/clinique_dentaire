@@ -1,0 +1,160 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-4">
+
+            <h2 class="fw-bold mb-4">
+                Editar Modelo de Receita
+            </h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <!-- NOME -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Nome do modelo
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nome"
+                            class="form-control"
+                            value="{{ modelo.nome }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- MEDICAMENTO -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Medicamento
+                        </label>
+
+                        <input
+                            type="text"
+                            name="medicamento"
+                            class="form-control"
+                            value="{{ modelo.medicamento }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- QUANTIDADE -->
+
+                    <div class="col-md-2">
+
+                        <label class="form-label fw-semibold">
+                            Quantidade
+                        </label>
+
+                        <input
+                            type="text"
+                            name="quantidade"
+                            class="form-control"
+                            value="{{ modelo.quantidade }}"
+                        >
+
+                    </div>
+
+
+                    <!-- POSOLOGIA -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Posologia
+                        </label>
+
+                        <input
+                            type="text"
+                            name="posologia"
+                            class="form-control"
+                            value="{{ modelo.posologia }}"
+                        >
+
+                    </div>
+
+
+                    <!-- ATIVO -->
+
+                    <div class="col-12">
+
+                        <div class="form-check">
+
+                            <input
+                                type="checkbox"
+                                name="ativo"
+                                class="form-check-input"
+                                id="ativo"
+                                {% if modelo.ativo %}checked{% endif %}
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="ativo"
+                            >
+                                Modelo ativo
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTÕES -->
+
+                <div class="mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+
+                        Salvar Alterações
+
+                    </button>
+
+
+                    <a
+                        href="{% url 'modelos_receita' %}"
+                        class="btn btn-light border ms-2"
+                    >
+
+                        <i class="fa-solid fa-arrow-left me-1"></i>
+
+                        Voltar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -6574,6 +6574,10 @@ def novo_periodontia(request, id):
 
             with transaction.atomic():
 
+                # =========================================
+                # CRIA O DOCUMENTO CLÍNICO
+                # =========================================
+
                 documento = DocumentoClinico.objects.create(
 
                     paciente=paciente,
@@ -6585,17 +6589,15 @@ def novo_periodontia(request, id):
 
                     tipo='personalizado',
 
-                    conteudo=(
-                        '<h2>PERIODONTIA</h2>'
-                        '<p>'
-                        'Registro técnico do tratamento '
-                        'periodontal.'
-                        '</p>'
-                    ),
+                    conteudo='',
 
                     status='rascunho'
 
                 )
+
+                # =========================================
+                # SALVA O REGISTRO DE PERIODONTIA
+                # =========================================
 
                 periodontia = form.save(
                     commit=False
@@ -6603,6 +6605,10 @@ def novo_periodontia(request, id):
 
                 periodontia.documento = documento
                 periodontia.paciente = paciente
+
+                # =========================================
+                # DENTISTA RESPONSÁVEL
+                # =========================================
 
                 if not periodontia.dentista_responsavel:
 
@@ -6627,6 +6633,69 @@ def novo_periodontia(request, id):
                         )
 
                 periodontia.save()
+
+                # =========================================
+                # DATA DO PROCEDIMENTO
+                # =========================================
+
+                data_procedimento = ''
+
+                if periodontia.data_procedimento:
+
+                    data_procedimento = (
+                        periodontia.data_procedimento.strftime(
+                            '%d/%m/%Y'
+                        )
+                    )
+
+                # =========================================
+                # CONTEÚDO DO DOCUMENTO
+                # =========================================
+
+                conteudo_documento = (
+
+                    '<h2>PERIODONTIA</h2>'
+
+                    f'<p><strong>Elemento:</strong> '
+                    f'{periodontia.elemento or ""}</p>'
+
+                    f'<p><strong>Data do procedimento:</strong> '
+                    f'{data_procedimento}</p>'
+
+                    f'<p><strong>Diagnóstico periodontal:</strong> '
+                    f'{periodontia.diagnostico_periodontal or ""}</p>'
+
+                    f'<p><strong>Profundidade de sondagem:</strong><br>'
+                    f'{periodontia.profundidade_sondagem or ""}</p>'
+
+                    f'<p><strong>Sangramento à sondagem:</strong> '
+                    f'{periodontia.sangramento_sondagem or ""}</p>'
+
+                    f'<p><strong>Mobilidade:</strong> '
+                    f'{periodontia.mobilidade or ""}</p>'
+
+                    f'<p><strong>Recessão gengival:</strong> '
+                    f'{periodontia.recessao_gengival or ""}</p>'
+
+                    f'<p><strong>Nível de inserção clínica:</strong> '
+                    f'{periodontia.nivel_insercao_clinica or ""}</p>'
+
+                    f'<p><strong>Procedimento / Terapia:</strong><br>'
+                    f'{periodontia.procedimento_terapia or ""}</p>'
+
+                    f'<p><strong>Observações clínicas:</strong><br>'
+                    f'{periodontia.observacoes or ""}</p>'
+                )
+
+                # =========================================
+                # ATUALIZA O DOCUMENTO
+                # =========================================
+
+                documento.conteudo = conteudo_documento
+
+                documento.save(
+                    update_fields=['conteudo']
+                )
 
             messages.success(
                 request,
@@ -9997,31 +10066,29 @@ def cabecalho_rodape_contrato(canvas, doc):
     # =========================================
 
     largura_pagina = 210 * mm
+  
 
     # =========================================
-    # CABEÇALHO
+    # LOGO DA CLÍNICA
     # =========================================
 
-    logo_path = os.path.join(
-        settings.BASE_DIR,
-        'static',
-        'img',
-        'logo_odonto2.png'
-    )
+    if config and config.logo:
 
-    if os.path.exists(logo_path):
+        logo_path = config.logo.path
 
-        logo = ImageReader(logo_path)
+        if os.path.exists(logo_path):
 
-        canvas.drawImage(
-            logo,
-            20 * mm,
-            268 * mm,
-            width=45 * mm,
-            height=17 * mm,
-            preserveAspectRatio=True,
-            mask='auto'
-        )
+            logo = ImageReader(logo_path)
+
+            canvas.drawImage(
+                logo,
+                20 * mm,
+                268 * mm,
+                width=45 * mm,
+                height=17 * mm,
+                preserveAspectRatio=True,
+                mask='auto'
+            )
 
     # =========================================
     # DADOS DA CLÍNICA
@@ -27859,6 +27926,18 @@ def pdf_auditoria(request):
     context = obter_dados_auditoria(request)
 
     # =========================================
+    # CONFIGURAÇÃO DA CLÍNICA
+    # =========================================
+
+    context["config"] = ConfiguracaoClinica.objects.first()
+
+    # =========================================
+    # TÍTULO DO RELATÓRIO
+    # =========================================
+
+    context["titulo_relatorio"] = "Auditoria do Sistema"
+
+    # =========================================
     # NOME DO USUÁRIO
     # =========================================
 
@@ -27935,6 +28014,7 @@ def pdf_auditoria(request):
         context,
 
     )
+
 # =========================================
 # EXCEL - AUDITORIA
 # =========================================
